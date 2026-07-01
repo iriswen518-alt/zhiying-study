@@ -179,6 +179,38 @@
     display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
     border: 2px solid #fff;
   }
+  .cecile-fab { border: 2px solid rgba(255,255,255,.7); cursor: pointer; font-family: inherit; }
+
+  /* ===== Cécile 聊聊 彈窗 ===== */
+  .cecile-pop {
+    position: fixed; right: 16px; bottom: 74px; z-index: 60; width: min(360px, calc(100vw - 32px));
+    height: min(70vh, 520px); background: var(--card); border-radius: 18px; overflow: hidden;
+    box-shadow: 0 12px 34px rgba(60,110,130,.34); border: 2px solid rgba(255,255,255,.8);
+    display: none; flex-direction: column;
+  }
+  .cecile-pop.show { display: flex; }
+  .cp-head { background: linear-gradient(135deg, #b6d8cf, #8fbfd8); color: #21454f; padding: .7rem .85rem; display: flex; align-items: center; gap: .5rem; }
+  .cp-head .avatar { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #d7e8ec); display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 2px solid #fff; }
+  .cp-head .who { flex: 1; font-weight: 800; font-size: .92rem; }
+  .cp-head .who small { display: block; font-weight: 600; font-size: .68rem; opacity: .8; }
+  .cp-head .x { background: rgba(255,255,255,.35); border: none; color: #21454f; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 1rem; font-weight: 700; }
+  .cp-msgs { flex: 1; overflow-y: auto; padding: .8rem .7rem; display: flex; flex-direction: column; gap: .6rem; background: #f4faf8; }
+  .cp-row { display: flex; flex-direction: column; }
+  .cp-row.me { align-items: flex-end; }
+  .cp-row.ce { align-items: flex-start; }
+  .cp-bubble { max-width: 82%; padding: .55rem .8rem; border-radius: 15px; font-size: .9rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .cp-bubble.me { background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
+  .cp-bubble.ce { background: #fff; border: 1px solid #dcebef; color: var(--text); border-bottom-left-radius: 4px; }
+  .cp-typing { background: #fff; border: 1px solid #dcebef; border-radius: 15px; border-bottom-left-radius: 4px; padding: .55rem .75rem; width: fit-content; display: flex; gap: 4px; }
+  .cp-typing span { width: 7px; height: 7px; border-radius: 50%; background: #a8d4c8; animation: cpb 1.2s infinite; }
+  .cp-typing span:nth-child(2) { animation-delay: .2s; }
+  .cp-typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes cpb { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+  .cp-in { display: flex; gap: .4rem; padding: .55rem; border-top: 1px solid var(--border); background: #fff; }
+  .cp-in input { flex: 1; border: 1.5px solid var(--border); border-radius: 20px; padding: .5rem .8rem; font-size: .9rem; font-family: inherit; outline: none; }
+  .cp-in input:focus { border-color: #8fbfd8; }
+  .cp-in button { background: linear-gradient(135deg, #b6d8cf, #8fbfd8); color: #21454f; border: none; border-radius: 20px; padding: .5rem .9rem; font-weight: 800; font-size: .85rem; cursor: pointer; font-family: inherit; }
+  .cp-in button:disabled { opacity: .5; cursor: not-allowed; }
 
   /* ===== 闖關遊戲 ===== */
   .game-start { text-align: center; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem 1.2rem; }
@@ -307,10 +339,22 @@
   </div>
 </div>
 
-<!-- Cécile 聊聊 FAB -->
-<a class="cecile-fab" href="https://claude.ai/new" target="_blank" rel="noopener">
+<!-- Cécile 聊聊 -->
+<button class="cecile-fab" id="cecileFab" onclick="toggleCecile()">
   <span class="avatar">🎵</span>Cécile 聊聊
-</a>
+</button>
+<div class="cecile-pop" id="cecilePop">
+  <div class="cp-head">
+    <span class="avatar">🎵</span>
+    <span class="who">Cécile<small>之盈的學習小夥伴</small></span>
+    <button class="x" onclick="toggleCecile()" aria-label="關閉">×</button>
+  </div>
+  <div class="cp-msgs" id="cecileMsgs"></div>
+  <div class="cp-in">
+    <input id="cecileInput" type="text" placeholder="問我功課、或聊聊音樂～" onkeydown="if(event.key==='Enter')sendCecile()">
+    <button id="cecileSend" onclick="sendCecile()">送出</button>
+  </div>
+</div>
 
 <script>
 /* ================= 內容資料（範例，可自行增修） ================= */
@@ -627,6 +671,66 @@ document.getElementById('encourage').textContent = ENCOURAGE[new Date().getDate(
   document.getElementById('countdown').innerHTML =
     `<div class="cd-box"><div class="cd-num">${days}</div><div class="cd-label">天後升小五</div></div>`;
 })();
+
+/* ================= Cécile 聊聊（接 Gemini AI，連不上給溫柔提示） ================= */
+const CECILE_API_URL = 'https://ziyu-chat.iriswen518.workers.dev';
+let cecileHistory = [];
+let cecileStarted = false;
+function toggleCecile() {
+  const pop = document.getElementById('cecilePop');
+  const open = pop.classList.toggle('show');
+  if (open && !cecileStarted) {
+    cecileStarted = true;
+    cecileAppend('ce', '哈囉之盈！我是 Cécile 🎵\n功課有問題，或想聊聊音樂、鋼琴練習，都可以問我喔～');
+  }
+  if (open) setTimeout(function(){ const i=document.getElementById('cecileInput'); if(i) i.focus(); }, 100);
+}
+function cecileAppend(who, text) {
+  const box = document.getElementById('cecileMsgs');
+  const row = document.createElement('div'); row.className = 'cp-row ' + (who === 'me' ? 'me' : 'ce');
+  const b = document.createElement('div'); b.className = 'cp-bubble ' + (who === 'me' ? 'me' : 'ce');
+  b.textContent = text;
+  row.appendChild(b); box.appendChild(row); box.scrollTop = box.scrollHeight;
+}
+function cecileTyping(on) {
+  const box = document.getElementById('cecileMsgs');
+  let t = document.getElementById('cecileTyping');
+  if (on) {
+    if (t) return;
+    const row = document.createElement('div'); row.className = 'cp-row ce'; row.id = 'cecileTyping';
+    row.innerHTML = '<div class="cp-typing"><span></span><span></span><span></span></div>';
+    box.appendChild(row); box.scrollTop = box.scrollHeight;
+  } else if (t) { t.remove(); }
+}
+async function sendCecile() {
+  const input = document.getElementById('cecileInput');
+  const btn = document.getElementById('cecileSend');
+  const text = (input ? input.value : '').trim();
+  if (!text) return;
+  input.value = ''; if (btn) btn.disabled = true;
+  cecileAppend('me', text);
+  const prior = cecileHistory.slice(-8);
+  cecileHistory.push({ role: 'user', text: text });
+  cecileTyping(true);
+  let reply = '';
+  try {
+    const ctrl = new AbortController();
+    const to = setTimeout(function(){ ctrl.abort(); }, 20000);
+    const r = await fetch(CECILE_API_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bot: 'cecile', q: text, history: prior }), signal: ctrl.signal,
+    });
+    clearTimeout(to);
+    const data = await r.json();
+    if (data && data.reply) reply = data.reply;
+  } catch (e) { /* 網路問題，給溫柔提示 */ }
+  cecileTyping(false);
+  if (!reply) reply = '嗚，我這邊網路好像不太順，等一下再問我一次好嗎？🎵';
+  cecileAppend('ce', reply);
+  cecileHistory.push({ role: 'assistant', text: reply });
+  if (btn) btn.disabled = false;
+  if (input) input.focus();
+}
 
 render();
 gameHome();
