@@ -783,19 +783,39 @@ function updateStarTotal(){
 }
 const GAME_ROUND = 10; // 每局隨機抽幾題
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+/* 已答對（學會）的題目就隱藏，之後不再出現 */
+function getMastered(){ try { return new Set(JSON.parse(localStorage.getItem('gameMastered') || '[]')); } catch(e){ return new Set(); } }
+function addMastered(qtext){ const s = getMastered(); s.add(qtext); localStorage.setItem('gameMastered', JSON.stringify([...s])); }
+function resetMastered(){ localStorage.removeItem('gameMastered'); gameHome(); }
+function remainingQs(){ const m = getMastered(); return DATA.game.filter(x => !m.has(x.q)); }
 function gameStart(){
-  gameQs = shuffle(DATA.game).slice(0, GAME_ROUND);
+  const pool = remainingQs();
+  if (pool.length === 0){ return gameAllDone(); }
+  gameQs = shuffle(pool).slice(0, GAME_ROUND);
   gameIdx = 0; gameScore = 0; gameLocked = false;
   gameRenderQ();
 }
 function gameHome(){
+  const remain = remainingQs().length;
+  const learned = DATA.game.length - remain;
+  if (remain === 0){ return gameAllDone(); }
   document.getElementById('game-area').innerHTML =
     `<div class="game-start">
        <div class="big">🎮⭐</div>
        <h3>準備好闖關了嗎？</h3>
-       <p>每局隨機 ${GAME_ROUND} 題（題庫共 ${DATA.game.length} 題），來自小五課程和英文。<br>答對越多，星星越多！</p>
+       <p>每局隨機 ${Math.min(GAME_ROUND, remain)} 題，答對的題目會學起來、之後就不再出現。<br>還沒學會 <b>${remain}</b> 題　已經學會 <b>${learned}</b> 題。</p>
        <p style="font-weight:800;color:var(--caramel)">🌟 你已經累積 ${getTotalStars()} 顆星星！</p>
        <button class="btn-primary" onclick="gameStart()">開始闖關 🚀</button>
+       ${learned > 0 ? '<button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="resetMastered()">全部重新練習 🔁</button>' : ''}
+     </div>`;
+}
+function gameAllDone(){
+  document.getElementById('game-area').innerHTML =
+    `<div class="game-result">
+       <div class="trophy">🏆</div>
+       <h3>太厲害了！全部題目都學會了！</h3>
+       <div class="score">你把 ${DATA.game.length} 題全部答對過了，第一名就是你！<br>之後老師會再加新題目上來喔～</div>
+       <button class="btn-primary btn-ghost" onclick="resetMastered()">全部重新練習 🔁</button>
      </div>`;
 }
 function gameRenderQ(){
@@ -828,8 +848,9 @@ function gameAnswer(i){
   let head;
   if (i === q.ans){
     gameScore++;
+    addMastered(q.q);
     btns[i].classList.add('correct');
-    fb.className = 'game-fb ok'; head = '答對了！太棒了 🎉';
+    fb.className = 'game-fb ok'; head = '答對了！太棒了 🎉（這題學會囉，之後不會再出現）';
   } else {
     btns[i].classList.add('wrong');
     btns[q.ans].classList.add('correct');
