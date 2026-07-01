@@ -262,6 +262,12 @@
   .game-fb { margin-top: .8rem; font-weight: 800; text-align: center; font-size: 1rem; min-height: 1.4rem; }
   .game-fb.ok { color: var(--success); }
   .game-fb.no { color: #d67; }
+  .game-exp {
+    margin: .7rem 0 0; padding: .7rem .85rem; border-radius: 12px;
+    background: #fff6dc; border: 1px dashed var(--primary-deep);
+    color: #6b4415; font-weight: 600; font-size: .9rem; line-height: 1.6; text-align: left;
+  }
+  .game-next { display: block; width: 100%; margin-top: .9rem; }
   .game-result { text-align: center; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.8rem 1.2rem; }
   .game-result .trophy { font-size: 3rem; }
   .game-result h3 { color: var(--caramel); font-size: 1.4rem; margin: .5rem 0; }
@@ -573,42 +579,42 @@ const DATA = {
     ['為什麼鉛筆盒總是很吵？', '因為裡面有好多「筆（嗶）」聲！'],
   ],
   game: [
-    { tag: '數學', q: '12 和 18 的最大公因數是多少？', options: ['3', '6', '9', '12'], ans: 1 },
-    { tag: '數學', q: '4 和 6 的最小公倍數是多少？', options: ['10', '12', '18', '24'], ans: 1 },
-    { tag: '數學', q: '1/2 + 1/4 等於多少？', options: ['2/6', '1/6', '3/4', '2/4'], ans: 2 },
-    { tag: '數學', q: '一個長方形長 8 公分、寬 5 公分，面積是多少平方公分？', options: ['13', '26', '40', '45'], ans: 2 },
-    { tag: '數學', q: '0.6 × 0.2 等於多少？', options: ['0.12', '1.2', '0.8', '0.012'], ans: 0 },
-    { tag: '國語', q: '「果然」的「然」，正確注音是？', options: ['ㄖㄢˊ', 'ㄋㄢˊ', 'ㄌㄢˊ', 'ㄩㄢˊ'], ans: 0 },
-    { tag: '國語', q: '「他跑得像風一樣快」用了哪一種修辭？', options: ['擬人', '譬喻', '排比', '誇飾'], ans: 1 },
-    { tag: '國語', q: '「花兒對我微笑」用了哪一種修辭？', options: ['譬喻', '排比', '擬人', '反問'], ans: 2 },
-    { tag: '自然', q: '水變成水蒸氣，這個變化叫做什麼？', options: ['凝結', '蒸發', '結冰', '融化'], ans: 1 },
-    { tag: '自然', q: '水結成冰時，體積會怎麼變？', options: ['變大', '變小', '不變', '先變小再變大'], ans: 0 },
-    { tag: '社會', q: '台灣最長的河川是哪一條？', options: ['淡水河', '高屏溪', '濁水溪', '大甲溪'], ans: 2 },
-    { tag: '英文', q: 'piano 的中文意思是？', options: ['小提琴', '鋼琴', '吉他', '長笛'], ans: 1 },
-    { tag: '英文', q: '「第一名」的英文是？', options: ['number one', 'first day', 'top ten', 'big one'], ans: 0 },
-    { tag: '英文', q: 'She is good ___ telling jokes.（她很會講笑話）空格填？', options: ['at', 'in', 'on', 'to'], ans: 0 },
-    { tag: '英文', q: 'harp 是哪一種樂器？', options: ['鼓', '豎琴', '喇叭', '鋼琴'], ans: 1 },
-    { tag: '英文', q: '「勇敢的」英文是哪一個？', options: ['careful', 'clever', 'brave', 'proud'], ans: 2 },
-    { tag: '數學', q: '24 和 36 的最大公因數是多少？', options: ['6', '8', '12', '18'], ans: 2 },
-    { tag: '數學', q: '3/5 － 1/5 等於多少？', options: ['2/5', '2/10', '4/5', '1/5'], ans: 0 },
-    { tag: '數學', q: '一個三角形底 10、高 6，面積是多少？', options: ['30', '60', '16', '26'], ans: 0 },
-    { tag: '數學', q: '2.5 ÷ 5 等於多少？', options: ['0.5', '5', '0.05', '1.25'], ans: 0 },
-    { tag: '數學', q: '下列哪個是質數（只有 1 和自己兩個因數）？', options: ['9', '15', '17', '21'], ans: 2 },
-    { tag: '數學', q: '一小時 15 分鐘等於幾分鐘？', options: ['65', '75', '105', '90'], ans: 1 },
-    { tag: '國語', q: '「一絲不苟」的「苟」是什麼意思？', options: ['狗', '隨便、馬虎', '苟且偷生', '一種草'], ans: 1 },
-    { tag: '國語', q: '「畫蛇添足」比喻什麼？', options: ['很會畫畫', '多此一舉', '動作很快', '很有創意'], ans: 1 },
-    { tag: '國語', q: '「他的歌聲像黃鶯出谷」是什麼修辭？', options: ['擬人', '誇飾', '譬喻', '排比'], ans: 2 },
-    { tag: '國語', q: '「井然有序」的「井然」形容什麼？', options: ['很深', '整齊有條理', '很多水', '很危險'], ans: 1 },
-    { tag: '自然', q: '植物行光合作用需要什麼？', options: ['月光', '陽光、水和二氧化碳', '土壤和石頭', '風'], ans: 1 },
-    { tag: '自然', q: '下列哪個是導電的？', options: ['塑膠', '玻璃', '銅線', '木頭'], ans: 2 },
-    { tag: '自然', q: '月亮本身會發光嗎？', options: ['會，自己發光', '不會，反射太陽光', '只有滿月會', '會發熱不發光'], ans: 1 },
-    { tag: '社會', q: '台灣最高的山是哪一座？', options: ['阿里山', '玉山', '雪山', '合歡山'], ans: 1 },
-    { tag: '社會', q: '台灣位於哪一個大洲？', options: ['歐洲', '非洲', '亞洲', '美洲'], ans: 2 },
-    { tag: '社會', q: '總統是由誰選出來的？', options: ['立法院', '全體人民投票', '縣市長', '大法官'], ans: 1 },
-    { tag: '英文', q: '「星期三」的英文是？', options: ['Tuesday', 'Wednesday', 'Thursday', 'Sunday'], ans: 1 },
-    { tag: '英文', q: 'I ___ a student.（我是學生）空格填？', options: ['am', 'is', 'are', 'be'], ans: 0 },
-    { tag: '英文', q: '「快樂的」英文是？', options: ['angry', 'happy', 'sad', 'tired'], ans: 1 },
-    { tag: '英文', q: 'How ___ apples? 四個蘋果，問數量用哪個？', options: ['much', 'many', 'old', 'long'], ans: 1 },
+    { tag: '數學', q: '12 和 18 的最大公因數是多少？', options: ['3', '6', '9', '12'], ans: 1, exp: '12＝2×2×3，18＝2×3×3，共同的是 2×3＝6，所以最大公因數是 6。' },
+    { tag: '數學', q: '4 和 6 的最小公倍數是多少？', options: ['10', '12', '18', '24'], ans: 1, exp: '4 的倍數 4、8、12…，6 的倍數 6、12…，最先一起出現的是 12。' },
+    { tag: '數學', q: '1/2 + 1/4 等於多少？', options: ['2/6', '1/6', '3/4', '2/4'], ans: 2, exp: '先通分：1/2＝2/4，再加 1/4，2/4＋1/4＝3/4。' },
+    { tag: '數學', q: '一個長方形長 8 公分、寬 5 公分，面積是多少平方公分？', options: ['13', '26', '40', '45'], ans: 2, exp: '長方形面積＝長×寬＝8×5＝40 平方公分。' },
+    { tag: '數學', q: '0.6 × 0.2 等於多少？', options: ['0.12', '1.2', '0.8', '0.012'], ans: 0, exp: '先算 6×2＝12，兩個數各一位小數共兩位，所以是 0.12。' },
+    { tag: '國語', q: '「果然」的「然」，正確注音是？', options: ['ㄖㄢˊ', 'ㄋㄢˊ', 'ㄌㄢˊ', 'ㄩㄢˊ'], ans: 0, exp: '「然」念 ㄖㄢˊ，和「燃」同音，注意不是 ㄋ 或 ㄌ 的音。' },
+    { tag: '國語', q: '「他跑得像風一樣快」用了哪一種修辭？', options: ['擬人', '譬喻', '排比', '誇飾'], ans: 1, exp: '用「像」把跑步比成風，這是「譬喻」（打比方）。' },
+    { tag: '國語', q: '「花兒對我微笑」用了哪一種修辭？', options: ['譬喻', '排比', '擬人', '反問'], ans: 2, exp: '花不會笑，把花當成人來寫，這是「擬人」。' },
+    { tag: '自然', q: '水變成水蒸氣，這個變化叫做什麼？', options: ['凝結', '蒸發', '結冰', '融化'], ans: 1, exp: '液體的水變成氣體的水蒸氣，叫「蒸發」；反過來氣變液才是凝結。' },
+    { tag: '自然', q: '水結成冰時，體積會怎麼變？', options: ['變大', '變小', '不變', '先變小再變大'], ans: 0, exp: '水結冰時體積會「變大」，這也是為什麼水管在冬天會被冰撐破。' },
+    { tag: '社會', q: '台灣最長的河川是哪一條？', options: ['淡水河', '高屏溪', '濁水溪', '大甲溪'], ans: 2, exp: '濁水溪全長約 187 公里，是台灣最長的河川。' },
+    { tag: '英文', q: 'piano 的中文意思是？', options: ['小提琴', '鋼琴', '吉他', '長笛'], ans: 1, exp: 'piano 就是「鋼琴」；小提琴是 violin，吉他是 guitar。' },
+    { tag: '英文', q: '「第一名」的英文是？', options: ['number one', 'first day', 'top ten', 'big one'], ans: 0, exp: '「第一名」是 number one；first day 是第一天，意思不一樣。' },
+    { tag: '英文', q: 'She is good ___ telling jokes.（她很會講笑話）空格填？', options: ['at', 'in', 'on', 'to'], ans: 0, exp: '固定用法 be good at＋事情，表示「很擅長某件事」。' },
+    { tag: '英文', q: 'harp 是哪一種樂器？', options: ['鼓', '豎琴', '喇叭', '鋼琴'], ans: 1, exp: 'harp 是「豎琴」，就是 Cécile Corbel 彈的那種樂器喔！' },
+    { tag: '英文', q: '「勇敢的」英文是哪一個？', options: ['careful', 'clever', 'brave', 'proud'], ans: 2, exp: 'brave 是勇敢；careful 小心、clever 聰明、proud 驕傲。' },
+    { tag: '數學', q: '24 和 36 的最大公因數是多少？', options: ['6', '8', '12', '18'], ans: 2, exp: '24＝2×2×2×3，36＝2×2×3×3，共同的是 2×2×3＝12。' },
+    { tag: '數學', q: '3/5 － 1/5 等於多少？', options: ['2/5', '2/10', '4/5', '1/5'], ans: 0, exp: '分母相同時，分子相減：3－1＝2，分母 5 不變，得 2/5。' },
+    { tag: '數學', q: '一個三角形底 10、高 6，面積是多少？', options: ['30', '60', '16', '26'], ans: 0, exp: '三角形面積＝底×高÷2＝10×6÷2＝30。別忘了要除以 2！' },
+    { tag: '數學', q: '2.5 ÷ 5 等於多少？', options: ['0.5', '5', '0.05', '1.25'], ans: 0, exp: '2.5÷5＝0.5；可以想成 25÷5＝5，再把小數點移回來。' },
+    { tag: '數學', q: '下列哪個是質數（只有 1 和自己兩個因數）？', options: ['9', '15', '17', '21'], ans: 2, exp: '17 只能被 1 和 17 整除，是質數；9＝3×3、15＝3×5、21＝3×7 都不是。' },
+    { tag: '數學', q: '一小時 15 分鐘等於幾分鐘？', options: ['65', '75', '105', '90'], ans: 1, exp: '一小時＝60 分鐘，60＋15＝75 分鐘。' },
+    { tag: '國語', q: '「一絲不苟」的「苟」是什麼意思？', options: ['狗', '隨便、馬虎', '苟且偷生', '一種草'], ans: 1, exp: '「苟」是隨便、馬虎；一絲不苟就是做事非常認真、一點都不馬虎。' },
+    { tag: '國語', q: '「畫蛇添足」比喻什麼？', options: ['很會畫畫', '多此一舉', '動作很快', '很有創意'], ans: 1, exp: '蛇本來沒有腳，多畫了腳反而不對，比喻「多此一舉」、做了多餘的事。' },
+    { tag: '國語', q: '「他的歌聲像黃鶯出谷」是什麼修辭？', options: ['擬人', '誇飾', '譬喻', '排比'], ans: 2, exp: '用「像」把歌聲比成黃鶯的叫聲，是「譬喻」。' },
+    { tag: '國語', q: '「井然有序」的「井然」形容什麼？', options: ['很深', '整齊有條理', '很多水', '很危險'], ans: 1, exp: '「井然」形容整齊、有條理的樣子，跟井水深不深沒關係。' },
+    { tag: '自然', q: '植物行光合作用需要什麼？', options: ['月光', '陽光、水和二氧化碳', '土壤和石頭', '風'], ans: 1, exp: '光合作用需要陽光、水和二氧化碳，才能製造養分並放出氧氣。' },
+    { tag: '自然', q: '下列哪個是導電的？', options: ['塑膠', '玻璃', '銅線', '木頭'], ans: 2, exp: '銅是金屬，能導電；塑膠、玻璃、木頭都是絕緣體、不導電。' },
+    { tag: '自然', q: '月亮本身會發光嗎？', options: ['會，自己發光', '不會，反射太陽光', '只有滿月會', '會發熱不發光'], ans: 1, exp: '月亮自己不發光，我們看到的月光是它反射太陽的光。' },
+    { tag: '社會', q: '台灣最高的山是哪一座？', options: ['阿里山', '玉山', '雪山', '合歡山'], ans: 1, exp: '玉山高約 3952 公尺，是台灣第一高峰。' },
+    { tag: '社會', q: '台灣位於哪一個大洲？', options: ['歐洲', '非洲', '亞洲', '美洲'], ans: 2, exp: '台灣在亞洲的東邊，屬於「亞洲」。' },
+    { tag: '社會', q: '總統是由誰選出來的？', options: ['立法院', '全體人民投票', '縣市長', '大法官'], ans: 1, exp: '台灣的總統是由全體人民直接投票選出來的。' },
+    { tag: '英文', q: '「星期三」的英文是？', options: ['Tuesday', 'Wednesday', 'Thursday', 'Sunday'], ans: 1, exp: '星期三是 Wednesday；Tuesday 二、Thursday 四、Sunday 日。' },
+    { tag: '英文', q: 'I ___ a student.（我是學生）空格填？', options: ['am', 'is', 'are', 'be'], ans: 0, exp: '主詞是 I 時，be 動詞用 am：I am a student.' },
+    { tag: '英文', q: '「快樂的」英文是？', options: ['angry', 'happy', 'sad', 'tired'], ans: 1, exp: 'happy 是快樂；angry 生氣、sad 難過、tired 累。' },
+    { tag: '英文', q: 'How ___ apples? 四個蘋果，問數量用哪個？', options: ['much', 'many', 'old', 'long'], ans: 1, exp: '蘋果可以一個一個數，是可數名詞，問數量用 how many。' },
   ],
 };
 
@@ -722,17 +728,23 @@ function gameAnswer(i){
   const btns = document.querySelectorAll('.opt');
   btns.forEach(b => b.disabled = true);
   const fb = document.getElementById('game-fb');
+  const correct = q.options[q.ans];
+  let head;
   if (i === q.ans){
     gameScore++;
     btns[i].classList.add('correct');
-    fb.className = 'game-fb ok'; fb.textContent = '答對了！太棒了 🎉';
+    fb.className = 'game-fb ok'; head = '答對了！太棒了 🎉';
   } else {
     btns[i].classList.add('wrong');
     btns[q.ans].classList.add('correct');
-    fb.className = 'game-fb no'; fb.textContent = '再想想～正確答案已標綠色 💡';
+    fb.className = 'game-fb no'; head = '再想想～正確答案是「' + correct + '」';
   }
-  setTimeout(() => { gameIdx++; gameRenderQ(); }, 1200);
+  const isLast = gameIdx >= gameQs.length - 1;
+  fb.innerHTML = head +
+    (q.exp ? '<div class="game-exp">💡 為什麼：' + q.exp + '</div>' : '') +
+    '<button class="btn-primary game-next" onclick="gameNext()">' + (isLast ? '看結果 🏁' : '下一題 ▶') + '</button>';
 }
+function gameNext(){ gameIdx++; gameRenderQ(); }
 function gameResult(){
   const total = gameQs.length;
   const ratio = gameScore / total;
