@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>之盈的學習樂園</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23f6c445'/><circle cx='32' cy='36' r='18' fill='%23fff2c4'/><path d='M14 26 h36 l-4 -12 h-28 z' fill='%238a5a2b'/><text x='32' y='42' text-anchor='middle' font-size='16'>🐶</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23f6c445'/><ellipse cx='16' cy='40' rx='6' ry='11' fill='%23f0b53a'/><ellipse cx='48' cy='40' rx='6' ry='11' fill='%23f0b53a'/><ellipse cx='32' cy='39' rx='19' ry='17' fill='%23ffe08a'/><ellipse cx='32' cy='23' rx='17' ry='7' fill='%238a5a2b'/><circle cx='25' cy='39' r='2.6' fill='%234a3013'/><circle cx='39' cy='39' r='2.6' fill='%234a3013'/><ellipse cx='32' cy='46' rx='2.6' ry='2' fill='%237a4a24'/></svg>">
 <style>
   :root {
     --primary: #f6b73c;        /* 布丁狗焦糖黃 */
@@ -50,7 +50,7 @@
     overflow: hidden;
   }
   .hero::after {
-    content: '🐶 ✨ 🎹 ✨ 🐶';
+    content: '✨ 🎹 ✨ 🎵 ✨';
     position: absolute; top: .7rem; left: 0; right: 0;
     text-align: center; font-size: .9rem; opacity: .4; letter-spacing: 1rem;
     pointer-events: none;
@@ -65,7 +65,9 @@
     font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800;
     color: #6b4415; text-shadow: 0 1px 6px rgba(255,255,255,.5); margin-bottom: .3rem;
   }
-  .hero .puppy { font-size: 2.6rem; line-height: 1; margin-bottom: .3rem; }
+  .hero .puppy { line-height: 1; margin-bottom: .3rem; display: flex; align-items: flex-end; justify-content: center; gap: .3rem; }
+  .puppy-svg { width: 96px; height: auto; filter: drop-shadow(0 3px 5px rgba(120,80,20,.25)); }
+  .puppy-piano { font-size: 2rem; }
   .hero .encourage {
     font-size: .95rem; font-weight: 700; color: #7a5320;
     background: rgba(255,255,255,.5); display: inline-block;
@@ -333,8 +335,28 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-badge">🐶 之盈專屬・升小五加油</div>
-    <div class="puppy">🐶🎹</div>
+    <div class="hero-badge">🎀 之盈專屬・升小五加油</div>
+    <div class="puppy">
+      <svg class="puppy-svg" viewBox="0 0 150 138" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="布丁狗">
+        <ellipse cx="33" cy="84" rx="17" ry="31" fill="#f0b53a"/>
+        <ellipse cx="117" cy="84" rx="17" ry="31" fill="#f0b53a"/>
+        <ellipse cx="75" cy="80" rx="52" ry="45" fill="#ffe08a"/>
+        <ellipse cx="75" cy="106" rx="30" ry="16" fill="#fff0bb"/>
+        <ellipse cx="75" cy="36" rx="43" ry="16" fill="#8a5a2b"/>
+        <ellipse cx="75" cy="31" rx="28" ry="12" fill="#9c6a34"/>
+        <circle cx="75" cy="20" r="5.5" fill="#6f4520"/>
+        <circle cx="57" cy="78" r="5.5" fill="#4a3013"/>
+        <circle cx="93" cy="78" r="5.5" fill="#4a3013"/>
+        <circle cx="58.5" cy="76" r="1.8" fill="#fff"/>
+        <circle cx="94.5" cy="76" r="1.8" fill="#fff"/>
+        <ellipse cx="45" cy="92" rx="8" ry="5" fill="#ffb8a6" opacity="0.75"/>
+        <ellipse cx="105" cy="92" rx="8" ry="5" fill="#ffb8a6" opacity="0.75"/>
+        <ellipse cx="75" cy="90" rx="5.5" ry="4.5" fill="#7a4a24"/>
+        <path d="M75 94 q-9 9 -17 2.5" fill="none" stroke="#7a4a24" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M75 94 q9 9 17 2.5" fill="none" stroke="#7a4a24" stroke-width="2.6" stroke-linecap="round"/>
+      </svg>
+      <span class="puppy-piano">🎹</span>
+    </div>
     <h1>之盈的學習樂園</h1>
     <div class="encourage" id="encourage">今天也要拿第一！</div>
     <div class="countdown" id="countdown"></div>
@@ -769,7 +791,7 @@ function gameStart(){
 function gameHome(){
   document.getElementById('game-area').innerHTML =
     `<div class="game-start">
-       <div class="big">🐶🎮</div>
+       <div class="big">🎮⭐</div>
        <h3>準備好闖關了嗎？</h3>
        <p>每局隨機 ${GAME_ROUND} 題（題庫共 ${DATA.game.length} 題），來自小五課程和英文。<br>答對越多，星星越多！</p>
        <p style="font-weight:800;color:var(--caramel)">🌟 你已經累積 ${getTotalStars()} 顆星星！</p>
@@ -921,7 +943,7 @@ function gameResult(){
   updateStarTotal();
   document.getElementById('game-area').innerHTML =
     `<div class="game-result">
-       <div class="trophy">${stars===3?'🏆':'🐶'}</div>
+       <div class="trophy">${stars===3?'🏆':'🌟'}</div>
        <h3>闖關完成！</h3>
        <div class="stars">${starStr}</div>
        <div class="score">答對 ${gameScore} ／ ${total} 題<br>${msg}</div>
