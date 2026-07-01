@@ -178,6 +178,27 @@
   }
   .play-btn:hover { text-decoration: none; filter: brightness(1.05); }
 
+  /* ===== 作文輸入＋回饋 ===== */
+  .essay-tools { display: flex; gap: .5rem; margin-bottom: .5rem; }
+  .essay-btn {
+    background: #fff; border: 1.5px solid var(--primary-deep); color: var(--caramel);
+    border-radius: 30px; padding: .42rem .95rem; font-weight: 800; font-size: .88rem;
+    font-family: inherit; cursor: pointer;
+  }
+  .essay-btn.rec { background: #ffe0e0; border-color: #e88; color: #c44; }
+  .essay-input {
+    width: 100%; min-height: 160px; border: 1.5px solid var(--border); border-radius: 14px;
+    padding: .8rem .9rem; font-size: 1rem; font-family: inherit; line-height: 1.75;
+    outline: none; resize: vertical; background: #fff; color: var(--text);
+  }
+  .essay-input:focus { border-color: var(--primary-deep); }
+  .essay-fb {
+    margin-top: .9rem; background: var(--card); border: 1px solid var(--border);
+    border-left: 5px solid var(--primary); border-radius: 14px; padding: 1rem 1.1rem;
+    line-height: 1.8; white-space: pre-wrap; color: var(--text);
+  }
+  .essay-fb h4 { color: var(--caramel); margin: .6rem 0 .2rem; font-size: 1rem; }
+
   /* ===== 國語辭典 ===== */
   .dict-box { display: flex; gap: .5rem; margin-bottom: .8rem; }
   .dict-box input {
@@ -353,6 +374,16 @@
       <div id="tips-list"></div>
       <div class="sec-title">📖 範例欣賞</div>
       <div id="sample-list"></div>
+
+      <div class="sec-title">✍️ 我的作文（老師給回饋）</div>
+      <p class="lead">把作文打在下面，或按 🎤 用說的。寫好後按「請老師看看」，老師會告訴你哪裡很棒、哪裡可以更好～</p>
+      <div class="essay-tools">
+        <button id="micBtn" class="essay-btn" onclick="toggleMic()">🎤 用說的</button>
+        <button class="essay-btn" onclick="document.getElementById('essayInput').value='';document.getElementById('essay-feedback').innerHTML=''">🧹 清空</button>
+      </div>
+      <textarea id="essayInput" class="essay-input" placeholder="在這裡寫下你的作文…（例如：今天我去公園玩，看到很多花…）"></textarea>
+      <button class="btn-primary" style="width:100%;margin-top:.6rem" onclick="gradeEssay()">請老師看看 ✍️</button>
+      <div id="essay-feedback"></div>
     </section>
 
     <!-- ===== 國語辭典 ===== -->
@@ -829,6 +860,53 @@ function renderDictEntry(word, d){
   });
   html += `<div class="dict-def"><a href="https://www.moedict.tw/${encodeURIComponent(word)}" target="_blank" rel="noopener" style="font-size:.85rem">在萌典看更多 →</a></div></div>`;
   return html;
+}
+
+/* ================= 作文輸入＋老師回饋 ================= */
+let essayRecog = null;
+function toggleMic(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const btn = document.getElementById('micBtn');
+  if (!SR){
+    alert('這個裝置可以用鍵盤上的 🎤 麥克風講喔～點一下輸入框，鍵盤就會出現麥克風按鈕。');
+    return;
+  }
+  if (essayRecog){ essayRecog.stop(); return; }
+  essayRecog = new SR();
+  essayRecog.lang = 'zh-TW'; essayRecog.continuous = true; essayRecog.interimResults = false;
+  essayRecog.onresult = e => {
+    let t = '';
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      if (e.results[i].isFinal) t += e.results[i][0].transcript;
+    }
+    if (t){ const ta = document.getElementById('essayInput'); ta.value += t; }
+  };
+  const reset = () => { essayRecog = null; btn.classList.remove('rec'); btn.textContent = '🎤 用說的'; };
+  essayRecog.onend = reset; essayRecog.onerror = reset;
+  try { essayRecog.start(); btn.classList.add('rec'); btn.textContent = '🔴 停止錄音'; }
+  catch(e){ reset(); }
+}
+function fmtFeedback(s){
+  return String(s).replace(/[<>]/g, c => c === '<' ? '&lt;' : '&gt;')
+    .replace(/^#{1,4}\s*(.+)$/gm, '<h4>$1</h4>')
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+}
+async function gradeEssay(){
+  const text = (document.getElementById('essayInput').value || '').trim();
+  const box = document.getElementById('essay-feedback');
+  if (!text){ box.innerHTML = '<div class="essay-fb">先在上面寫幾句作文，老師才能給你回饋喔～ ✍️</div>'; return; }
+  box.innerHTML = '<div class="essay-fb">老師正在看你的作文… ✍️</div>';
+  const q = '你是溫柔又專業的國小作文老師，正在指導小五學生之盈。請針對她下面這篇作文給鼓勵式回饋，分成兩段：先寫「👍 寫得好的地方」列 2-3 點；再寫「💡 可以更好的地方」列 2-3 點具體又好懂的建議（例如用詞、修辭、句子順序、標點、內容更豐富）。語氣要正向、具體、簡短。作文如下：\n\n' + text;
+  try {
+    const r = await fetch(CECILE_API_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bot: 'cecile', q: q, history: [] }),
+    });
+    const d = await r.json();
+    box.innerHTML = '<div class="essay-fb">' + fmtFeedback(d && d.reply ? d.reply : '老師想一下下，等一下再按一次好嗎？') + '</div>';
+  } catch(e){
+    box.innerHTML = '<div class="essay-fb">網路好像不太順，等一下再按一次「請老師看看」好嗎？ 🎵</div>';
+  }
 }
 function gameResult(){
   const total = gameQs.length;
