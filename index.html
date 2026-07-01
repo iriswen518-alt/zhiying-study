@@ -471,12 +471,12 @@
 
 <!-- Cécile 聊聊 -->
 <button class="cecile-fab" id="cecileFab" onclick="toggleCecile()">
-  <span class="avatar">🎵</span>Cécile 聊聊
+  <span class="avatar">🎵</span>賽西爾 聊聊
 </button>
 <div class="cecile-pop" id="cecilePop">
   <div class="cp-head">
     <span class="avatar">🎵</span>
-    <span class="who">Cécile<small>之盈的學習小夥伴</small></span>
+    <span class="who">賽西爾<small>之盈的學習小夥伴</small></span>
     <button class="x" onclick="toggleCecile()" aria-label="關閉">×</button>
   </div>
   <div class="cp-msgs" id="cecileMsgs"></div>
@@ -1026,7 +1026,7 @@ function toggleCecile() {
   const open = pop.classList.toggle('show');
   if (open && !cecileStarted) {
     cecileStarted = true;
-    cecileAppend('ce', '哈囉之盈！我是 Cécile 🎵\n功課有問題，或想聊聊音樂、鋼琴練習，都可以問我喔～');
+    cecileAppend('ce', '哈囉之盈！我是 賽西爾 🎵\n功課有問題，或想聊聊音樂、鋼琴練習，都可以問我喔～');
   }
   if (open) setTimeout(function(){ const i=document.getElementById('cecileInput'); if(i) i.focus(); }, 100);
 }
