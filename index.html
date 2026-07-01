@@ -182,13 +182,13 @@
 
   /* ===== Cécile 聊聊 FAB ===== */
   .cecile-fab {
-    position: fixed; right: 16px; bottom: 68px; z-index: 50;
+    position: fixed; right: 16px; bottom: 90px; z-index: 50;
     display: flex; align-items: center; gap: .5rem;
-    background: linear-gradient(135deg, #ffd873, #f6b73c);
-    color: #6b4415; font-weight: 800; font-size: .9rem;
-    padding: .6rem .9rem .6rem .6rem; border-radius: 40px;
-    box-shadow: 0 6px 18px rgba(60,110,130,.35); text-decoration: none;
-    border: 2px solid rgba(255,255,255,.7);
+    background: linear-gradient(135deg, #ffc24d 0%, #f0a52a 55%, #e2911a 100%);
+    color: #5a3a10; font-weight: 800; font-size: .9rem;
+    padding: .55rem 1rem .55rem .55rem; border-radius: 40px;
+    box-shadow: 0 8px 22px rgba(200,140,30,.5); text-decoration: none;
+    border: 2px solid rgba(255,255,255,.85);
   }
   .cecile-fab:hover { text-decoration: none; transform: translateY(-2px); transition: .15s; }
   .cecile-fab .avatar {
@@ -201,7 +201,7 @@
 
   /* ===== Cécile 聊聊 彈窗 ===== */
   .cecile-pop {
-    position: fixed; right: 16px; bottom: 124px; z-index: 60; width: min(360px, calc(100vw - 32px));
+    position: fixed; right: 16px; bottom: 148px; z-index: 60; width: min(360px, calc(100vw - 32px));
     height: min(70vh, 520px); background: var(--card); border-radius: 18px; overflow: hidden;
     box-shadow: 0 12px 34px rgba(60,110,130,.34); border: 2px solid rgba(255,255,255,.8);
     display: none; flex-direction: column;
@@ -332,7 +332,7 @@
     <!-- ===== 笑話收集 ===== -->
     <section class="tab" id="jokes">
       <div class="sec-title">😄 今日笑話</div>
-      <p class="lead">點一下看答案。看完可以練習講給家人聽！</p>
+      <p class="lead">每天自動換一批新笑話！點一下看答案，看完可以練習講給家人聽～</p>
       <div id="jokes-list"></div>
       <div class="note">💛 講笑話小技巧：先停一下製造期待，再說出好笑的地方，眼睛看著對方笑一個。</div>
     </section>
@@ -537,6 +537,20 @@ const DATA = {
     ['小明考一百分回家，媽媽問怎麼辦到的？', '「我把不會的都寫對了！」（其實是全都會啦～）'],
     ['為什麼海邊最適合彈琴？', '因為那裡有很多「音（陰）涼」的地方！'],
     ['布丁狗最不喜歡上什麼課？', '「起床」課——因為牠超愛睡覺！'],
+    ['什麼餅乾最愛遲到？', '「等（丹）麥」餅乾！'],
+    ['為什麼鉛筆很勇敢？', '因為它「臨（鉛）危不亂」！'],
+    ['什麼動物最會考試？', '「刺（次）蝟」——每次都一百分！'],
+    ['為什麼書店老闆都很有錢？', '因為他們很會「賺（讚）」！'],
+    ['小考考不好怎麼辦？', '深呼吸，下次把錯的訂正、再多練一次就好，你一定會進步！'],
+    ['什麼水果整天笑嘻嘻？', '「開心」果！'],
+    ['為什麼太陽不去上學？', '因為它已經有很多「光（觀）念」了！'],
+    ['什麼字每個人都寫錯？', '「錯」這個字呀！'],
+    ['為什麼氣球不能吵架？', '因為一生氣就會「爆炸」！'],
+    ['老師：「地球為什麼是圓的？」小明：「這樣才不會有人坐在角落罰站！」', '哈哈，其實是因為重力把它拉成球形喔～'],
+    ['什麼海裡的動物最愛算數學？', '「章（算）魚」，牠有八隻腳可以數！'],
+    ['為什麼月亮要一直換衣服？', '因為它有時圓、有時彎，在換「月相」呀！'],
+    ['什麼筆不能寫字？', '「原子（原地）筆」——它在原地不動！'],
+    ['為什麼蜜蜂的頭髮總是黏黏的？', '因為牠們都用「蜂（蜂蜜）膠」！'],
   ],
   game: [
     { tag: '數學', q: '12 和 18 的最大公因數是多少？', options: ['3', '6', '9', '12'], ans: 1 },
@@ -616,12 +630,22 @@ function render() {
        <a class="play-btn" href="https://www.youtube.com/watch?v=${c[2]}" target="_blank" rel="noopener">▶️ 聽</a>
      </div>`).join('');
 
-  document.getElementById('jokes-list').innerHTML = DATA.jokes.map((j,i) =>
-    `<div class="joke" onclick="this.classList.toggle('reveal')">
-       <div class="q">Q${i+1}. ${j[0]}</div>
+  renderJokes();
+}
+function renderJokes(){
+  const pool = DATA.jokes;
+  const N = Math.min(6, pool.length);
+  const day = Math.floor(Date.now() / 86400000); // 每天換一批
+  const html = [];
+  for (let k = 0; k < N; k++){
+    const j = pool[(day * N + k) % pool.length];
+    html.push(`<div class="joke" onclick="this.classList.toggle('reveal')">
+       <div class="q">Q${k+1}. ${j[0]}</div>
        <div class="a">💡 ${j[1]}</div>
        <div class="tap">👉 點一下看答案</div>
-     </div>`).join('');
+     </div>`);
+  }
+  document.getElementById('jokes-list').innerHTML = html.join('');
 }
 function savePiece(i, checked) { localStorage.setItem('piece'+i, checked ? '1' : '0'); }
 function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
