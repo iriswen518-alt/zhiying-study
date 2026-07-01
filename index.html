@@ -1035,18 +1035,30 @@ let cecileRecog = null;
 function toggleCecileMic() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const btn = document.getElementById('cecileMic');
-  if (!SR) { alert('這個裝置可以用鍵盤上的 🎤 麥克風講喔～點一下輸入框，鍵盤就會出現麥克風。'); return; }
+  const input = document.getElementById('cecileInput');
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  // iPhone / iPad 的 Safari 不支援網頁語音辨識，改用鍵盤內建的 🎤 聽寫
+  if (isIOS || !SR) {
+    if (input) input.focus();
+    cecileAppend('ce', '在 iPad／iPhone 上，點一下下面的打字框，鍵盤右下角會有一個 🎤，按住它就能用說的囉～說完會自動變成文字。🎵');
+    return;
+  }
   if (cecileRecog) { cecileRecog.stop(); return; }
   cecileRecog = new SR();
   cecileRecog.lang = 'zh-TW'; cecileRecog.continuous = false; cecileRecog.interimResults = false;
   cecileRecog.onresult = function(e){
     let t = '';
     for (let k = e.resultIndex; k < e.results.length; k++){ if (e.results[k].isFinal) t += e.results[k][0].transcript; }
-    const input = document.getElementById('cecileInput');
     if (t && input){ input.value += t; input.focus(); }
   };
   const reset = function(){ cecileRecog = null; if (btn){ btn.classList.remove('rec'); btn.textContent = '🎤'; } };
-  cecileRecog.onend = reset; cecileRecog.onerror = reset;
+  cecileRecog.onend = reset;
+  cecileRecog.onerror = function(e){
+    if (e && e.error === 'not-allowed') cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。🎵');
+    else if (e && e.error === 'no-speech') cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🎵');
+    reset();
+  };
   try { cecileRecog.start(); btn.classList.add('rec'); btn.textContent = '🔴'; } catch(e){ reset(); }
 }
 function cecileAppend(who, text) {
