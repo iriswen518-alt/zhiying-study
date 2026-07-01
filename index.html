@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>之盈的學習樂園</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23f6c445'/><circle cx='32' cy='36' r='18' fill='%23fff2c4'/><path d='M14 26 h36 l-4 -12 h-28 z' fill='%238a5a2b'/><text x='32' y='42' text-anchor='middle' font-size='16'>🍮</text></svg>">
+<style>
+  :root {
+    --primary: #f6b73c;        /* 布丁狗焦糖黃 */
+    --primary-deep: #e59a1f;
+    --caramel: #8a5a2b;        /* 焦糖棕（帽子/字） */
+    --caramel-soft: #b98a52;
+    --active: #ffe08a;         /* 選中分頁高亮底 */
+    --active-text: #8a5a12;
+    --active-icon: #d99a12;
+    --accent: #a8d4c8;         /* Cécile 薄荷藍綠點綴 */
+    --bg: #fff9ec;             /* 奶油底 */
+    --card: #ffffff;
+    --text: #5a4326;
+    --muted: #a9946f;
+    --border: #f2e2bf;
+    --success: #6fbf9b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { height: 100%; }
+  body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Rounded Mplus 1c', 'Hiragino Maru Gothic ProN', 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+  }
+  #page-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+  a { color: var(--caramel); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(120deg, #ffe9a8 0%, #ffd873 45%, #f6b73c 100%);
+    padding: 1.1rem 1.3rem 1.4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '🍮 ✨ 🎹 ✨ 🍮';
+    position: absolute; top: .7rem; left: 0; right: 0;
+    text-align: center; font-size: .9rem; opacity: .4; letter-spacing: 1rem;
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block; background: rgba(255,255,255,.55);
+    border: 1px solid rgba(255,255,255,.8); border-radius: 50px;
+    padding: .35rem 1rem; font-size: .8rem; font-weight: 700;
+    color: var(--caramel); margin-bottom: .7rem; backdrop-filter: blur(6px);
+  }
+  .hero h1 {
+    font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800;
+    color: #6b4415; text-shadow: 0 1px 6px rgba(255,255,255,.5); margin-bottom: .3rem;
+  }
+  .hero .puppy { font-size: 2.6rem; line-height: 1; margin-bottom: .3rem; }
+  .hero .encourage {
+    font-size: .95rem; font-weight: 700; color: #7a5320;
+    background: rgba(255,255,255,.5); display: inline-block;
+    padding: .35rem .9rem; border-radius: 40px; margin-top: .5rem;
+  }
+
+  /* countdown */
+  .countdown { display: flex; justify-content: center; gap: .6rem; margin-top: .9rem; flex-wrap: wrap; }
+  .cd-box {
+    background: rgba(255,255,255,.6); border-radius: 14px; padding: .5rem .7rem; min-width: 62px;
+  }
+  .cd-num { font-size: 1.4rem; font-weight: 800; color: #6b4415; }
+  .cd-label { font-size: .68rem; color: #8a6a30; font-weight: 600; }
+
+  /* ===== NAV TABS (四字等寬均分) ===== */
+  .nav {
+    display: flex; gap: .4rem; padding: .7rem .8rem; background: #fff5db;
+    border-bottom: 1px solid var(--border); overflow-x: auto;
+    position: sticky; top: 0; z-index: 20; -webkit-overflow-scrolling: touch;
+  }
+  .nav button {
+    flex: 1 1 0; min-width: 0; white-space: nowrap;
+    padding: .6rem .4rem; border: 1px solid var(--border); border-radius: 12px;
+    background: #fff; color: var(--caramel); font-size: .92rem; font-weight: 700;
+    font-family: inherit; cursor: pointer; transition: .15s;
+  }
+  .nav button .ic { margin-right: .2rem; }
+  .nav button.active {
+    background: var(--active); color: var(--active-text);
+    border-color: var(--primary-deep); box-shadow: 0 2px 8px rgba(230,154,31,.25);
+  }
+  .nav button.active .ic { color: var(--active-icon); }
+
+  /* ===== CONTENT ===== */
+  .wrap { max-width: 860px; margin: 0 auto; padding: 1.1rem 1rem 5rem; }
+  .tab { display: none; }
+  .tab.active { display: block; animation: fade .25s; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .sec-title {
+    font-size: 1.15rem; font-weight: 800; color: var(--caramel);
+    margin: 1.2rem 0 .7rem; display: flex; align-items: center; gap: .4rem;
+  }
+  .sec-title:first-child { margin-top: 0; }
+  .lead { color: var(--muted); font-size: .9rem; margin-bottom: .9rem; }
+
+  /* chips row 四字等寬 */
+  .chip-row { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: .4rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) {
+    .chip-row { grid-auto-flow: row; grid-template-columns: repeat(2, 1fr); }
+  }
+  .chip {
+    text-align: center; padding: .55rem .3rem; border-radius: 12px;
+    background: #fff; border: 1px solid var(--border); color: var(--caramel);
+    font-weight: 700; font-size: .9rem; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .chip.on { background: var(--active); color: var(--active-text); border-color: var(--primary-deep); }
+
+  /* accordion 可折疊列表 */
+  .acc-sec { border: 1px solid var(--border); border-radius: 14px; background: var(--card); margin-bottom: .7rem; overflow: hidden; }
+  .acc-head {
+    display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+    padding: .85rem 1rem; cursor: pointer; user-select: none; font-weight: 700; color: var(--caramel);
+  }
+  .acc-head:hover { background: #fffaf0; }
+  .acc-head .left { display: flex; align-items: center; gap: .5rem; min-width: 0; }
+  .acc-head .arrow { transition: .2s; color: var(--caramel-soft); flex: none; }
+  .acc-sec.open .acc-head .arrow { transform: rotate(90deg); }
+  .acc-date { font-size: .7rem; color: #b6c4d6; background: #eef4fb; padding: .12rem .5rem; border-radius: 20px; font-weight: 600; flex: none; }
+  .acc-body { display: none; padding: 0 1rem 1rem; }
+  .acc-sec.open .acc-body { display: block; }
+  .acc-body ul { padding-left: 1.1rem; }
+  .acc-body li { margin: .35rem 0; line-height: 1.6; }
+  .acc-body p { margin: .5rem 0; line-height: 1.7; }
+
+  /* vocab / joke / piece rows */
+  .row-item {
+    display: flex; align-items: baseline; gap: .6rem; padding: .55rem .2rem;
+    border-bottom: 1px dashed var(--border);
+  }
+  .row-item:last-child { border-bottom: none; }
+  .row-item .en { font-weight: 800; color: var(--caramel); min-width: 92px; }
+  .row-item .zh { color: var(--text); }
+
+  .joke { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: .7rem; }
+  .joke .q { font-weight: 700; color: var(--caramel); }
+  .joke .a { margin-top: .5rem; color: var(--text); display: none; }
+  .joke.reveal .a { display: block; }
+  .joke .tap { font-size: .78rem; color: var(--muted); margin-top: .5rem; }
+
+  .tag { display: inline-block; background: #eaf6f1; color: #3f8a6d; font-size: .72rem; font-weight: 700; padding: .12rem .5rem; border-radius: 20px; margin-left: .3rem; }
+  .tag.cecile { background: #e9f0fb; color: #4a6fb0; }
+
+  .note { background: #fff6dc; border: 1px dashed var(--primary-deep); border-radius: 12px; padding: .7rem .9rem; font-size: .88rem; color: #7a5320; margin: .8rem 0; }
+
+  /* ===== Cécile 聊聊 FAB ===== */
+  .cecile-fab {
+    position: fixed; right: 16px; bottom: 18px; z-index: 50;
+    display: flex; align-items: center; gap: .5rem;
+    background: linear-gradient(135deg, #b6d8cf, #8fbfd8);
+    color: #244a55; font-weight: 800; font-size: .9rem;
+    padding: .6rem .9rem .6rem .6rem; border-radius: 40px;
+    box-shadow: 0 6px 18px rgba(60,110,130,.35); text-decoration: none;
+    border: 2px solid rgba(255,255,255,.7);
+  }
+  .cecile-fab:hover { text-decoration: none; transform: translateY(-2px); transition: .15s; }
+  .cecile-fab .avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff, #d7e8ec);
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    border: 2px solid #fff;
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: .78rem; padding: 1.5rem 1rem 1rem; }
+</style>
+</head>
+<body>
+<div id="page-scroll">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">🍮 之盈專屬・升小五加油</div>
+    <div class="puppy">🍮🎹</div>
+    <h1>之盈的學習樂園</h1>
+    <div class="encourage" id="encourage">今天也要拿第一！</div>
+    <div class="countdown" id="countdown"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <button class="active" data-tab="courses"><span class="ic">📚</span>小五課程</button>
+    <button data-tab="english"><span class="ic">🔤</span>英文學習</button>
+    <button data-tab="writing"><span class="ic">✏️</span>作文練習</button>
+    <button data-tab="piano"><span class="ic">🎹</span>鋼琴練習</button>
+    <button data-tab="jokes"><span class="ic">😄</span>笑話收集</button>
+  </nav>
+
+  <div class="wrap">
+
+    <!-- ===== 小五課程 ===== -->
+    <section class="tab active" id="courses">
+      <div class="sec-title">📚 五年級課程重點</div>
+      <p class="lead">五個主要科目，點一點就展開重點。連結點下去直接看到內容。</p>
+      <div id="courses-list"></div>
+    </section>
+
+    <!-- ===== 英文學習 ===== -->
+    <section class="tab" id="english">
+      <div class="sec-title">🔤 英文單字</div>
+      <p class="lead">補習常用單字，唸唸看、記起來。</p>
+      <div class="acc-sec open">
+        <div class="acc-head" onclick="toggleAcc(this)"><span class="left"><span>⭐</span>本週單字</span><span class="acc-date">07/01</span></div>
+        <div class="acc-body" id="vocab-list"></div>
+      </div>
+      <div class="sec-title">🗣️ 常用句型</div>
+      <div id="patterns-list"></div>
+      <div class="sec-title">📝 小測驗</div>
+      <div class="note">中英對照遮起來，先想中文再對答案。之後可以請 Cécile 聊聊出更多題目！</div>
+      <div id="quiz-list"></div>
+    </section>
+
+    <!-- ===== 作文練習 ===== -->
+    <section class="tab" id="writing">
+      <div class="sec-title">✏️ 作文題目</div>
+      <p class="lead">挑一個題目寫寫看，寫完可以請 Cécile 聊聊幫你看。</p>
+      <div id="prompts-list"></div>
+      <div class="sec-title">💡 寫作技巧</div>
+      <div id="tips-list"></div>
+      <div class="sec-title">📖 範例欣賞</div>
+      <div id="sample-list"></div>
+    </section>
+
+    <!-- ===== 鋼琴練習 ===== -->
+    <section class="tab" id="piano">
+      <div class="sec-title">🎹 練習曲目</div>
+      <p class="lead">正在練的曲子，練完打個勾（右上角記錄）。</p>
+      <div id="pieces-list"></div>
+      <div class="sec-title">🎼 Cécile Corbel 專區</div>
+      <p class="lead">之盈最愛的歌手，凱爾特豎琴，夢幻又溫柔。</p>
+      <div id="cecile-list"></div>
+    </section>
+
+    <!-- ===== 笑話收集 ===== -->
+    <section class="tab" id="jokes">
+      <div class="sec-title">😄 今日笑話</div>
+      <p class="lead">點一下看答案。看完可以練習講給家人聽！</p>
+      <div id="jokes-list"></div>
+      <div class="note">💛 講笑話小技巧：先停一下製造期待，再說出好笑的地方，眼睛看著對方笑一個。</div>
+    </section>
+
+    <footer>之盈的學習樂園 · 用 💛 做給你 · 建置 2026/07/01</footer>
+  </div>
+</div>
+
+<!-- Cécile 聊聊 FAB -->
+<a class="cecile-fab" href="https://claude.ai/new" target="_blank" rel="noopener">
+  <span class="avatar">🎵</span>Cécile 聊聊
+</a>
+
+<script>
+/* ================= 內容資料（範例，可自行增修） ================= */
+const DATA = {
+  courses: [
+    { subject: '國語', date: '07/01', points: [
+      '每課生字先查部首、筆順，讀音標注上去。',
+      '課文分段找「主旨句」，練習用一句話說出這段在講什麼。',
+      '成語、修辭（譬喻、擬人）每週整理 3 個，造句一次。',
+      '延伸閱讀：<a href="https://zh.wikipedia.org/zh-tw/修辭" target="_blank">修辭（維基百科）</a>'
+    ]},
+    { subject: '數學', date: '07/01', points: [
+      '五年級重點：分數加減、小數乘除、面積與體積、因數倍數。',
+      '算錯的題目抄到「錯題本」，隔天再算一次。',
+      '應用題先畫圖、圈關鍵字，再列式。',
+      '延伸：<a href="https://zh.wikipedia.org/zh-tw/最小公倍數" target="_blank">最小公倍數（維基百科）</a>'
+    ]},
+    { subject: '自然', date: '07/01', points: [
+      '重點單元：水的三態、天氣、動植物的構造與功能、電路。',
+      '看到現象先問「為什麼」，再查課本找原因。',
+      '實驗記錄：假設 → 做法 → 結果 → 我發現。'
+    ]},
+    { subject: '社會', date: '07/01', points: [
+      '重點：台灣地理、河川與地形、歷史時序、公民與生活。',
+      '用地圖、時間軸幫助記憶，比死背有效。',
+      '把課本重點畫成心智圖，考前看圖回想。'
+    ]},
+    { subject: '英語', date: '07/01', points: [
+      '每天唸 5 個單字出聲，配一個句子。',
+      '課文跟著音檔朗讀，模仿語調。',
+      '看英文卡通不看字幕，猜猜看在說什麼。'
+    ]},
+  ],
+  vocab: [
+    ['piano', 'n. 鋼琴'], ['practice', 'v. 練習'], ['favorite', 'adj. 最喜歡的'],
+    ['singer', 'n. 歌手'], ['joke', 'n. 笑話'], ['clever', 'adj. 聰明的'],
+    ['proud', 'adj. 驕傲的、自豪的'], ['grade', 'n. 年級；成績'],
+    ['dream', 'n./v. 夢想'], ['harp', 'n. 豎琴'],
+  ],
+  patterns: [
+    { subject: '句型', date: '07/01', points: [
+      'I like ___ the best.（我最喜歡～）→ I like piano the best.',
+      'She is good at ___.（她很擅長～）→ She is good at telling jokes.',
+      'I want to ___.（我想要～）→ I want to be number one!',
+      'This is my favorite ___.（這是我最愛的～）'
+    ]},
+  ],
+  quiz: [
+    { subject: '中翻英', date: '07/01', points: [
+      '「我最喜歡鋼琴。」→ I like piano the best.',
+      '「她很會講笑話。」→ She is good at telling jokes.',
+      '「我想考第一名。」→ I want to be number one.',
+    ]},
+  ],
+  prompts: [
+    { subject: '我的最愛', date: '07/01', points: [
+      '題目：〈我最喜歡的歌手〉',
+      '可以寫：Cécile Corbel 是誰、她的音樂給你的感覺、你為什麼喜歡她。',
+      '結構：開頭介紹 → 中間舉例（一首歌／一種感覺）→ 結尾說感想。'
+    ]},
+    { subject: '我的興趣', date: '07/01', points: [
+      '題目：〈練琴這件事〉',
+      '可以寫：練琴辛不辛苦、練會一首曲子的成就感、想彈給誰聽。',
+    ]},
+    { subject: '一件趣事', date: '07/01', points: [
+      '題目：〈我講的一個笑話〉',
+      '把一次講笑話逗大家笑的經過寫下來，注意「事情發生的順序」。',
+    ]},
+  ],
+  tips: [
+    { subject: '寫作技巧', date: '07/01', points: [
+      '開頭要吸引人：用問句、聲音或畫面開場，不要都用「今天」。',
+      '中間要具體：把「很好玩」換成「發生了什麼、看到什麼、聽到什麼」。',
+      '多用五感：看到、聽到、聞到、摸到、心裡的感覺。',
+      '結尾收心得：這件事讓我學到／感覺到什麼。',
+      '寫完大聲唸一遍，唸不順的地方就是要改的地方。'
+    ]},
+  ],
+  sample: [
+    { subject: '範例段落', date: '07/01', points: [
+      '〈我最喜歡的歌手〉開頭示範：',
+      '<p>「叮——」豎琴的聲音一響起，我整個人就安靜下來了。這是 Cécile Corbel 的音樂，也是我最喜歡的聲音。</p>',
+      '（看，開頭用「聲音」開場，比「我最喜歡的歌手是…」更吸引人。）'
+    ]},
+  ],
+  pieces: [
+    ['小星星變奏曲', '基礎', false],
+    ['給愛麗絲（前段）', '進階中', false],
+    ['卡農（簡化版）', '挑戰', false],
+  ],
+  cecile: [
+    ['Arrietty\'s Song', '《借物少女艾莉緹》主題曲，最經典的一首。'],
+    ['Sous l\'Océan', '海底世界，旋律輕快。'],
+    ['La Pluie', '雨，安靜療癒。'],
+  ],
+  jokes: [
+    ['為什麼布丁狗頭上要戴帽子？', '因為牠是「布丁」狗，帽子是牠的招牌呀！（其實那是牠的商標啦～）'],
+    ['什麼水果最愛考第一名？', '「柚」秀的柚子！（優秀）'],
+    ['鋼琴為什麼進不了門？', '因為它的「琴鍵」太多，卡住了！'],
+    ['老師問：「一年有幾個月？」小明說：「七個月。」為什麼？', '因為「一、二、三、四、五、六、七」…他只數到有大月的（開玩笑～答案是十二個月喔）。'],
+    ['什麼歌手唱歌不用嘴巴？', '豎琴呀！用「手」唱歌。（Cécile 的豎琴最厲害）'],
+  ],
+};
+
+/* ================= 渲染 ================= */
+function accBlock(item) {
+  const lis = item.points.map(p => `<li>${p}</li>`).join('');
+  return `<div class="acc-sec">
+    <div class="acc-head" onclick="toggleAcc(this)">
+      <span class="left"><span class="arrow">▸</span>${item.subject}</span>
+      <span class="acc-date">${item.date}</span>
+    </div>
+    <div class="acc-body"><ul>${lis}</ul></div>
+  </div>`;
+}
+function render() {
+  document.getElementById('courses-list').innerHTML = DATA.courses.map(accBlock).join('');
+  document.getElementById('patterns-list').innerHTML = DATA.patterns.map(accBlock).join('');
+  document.getElementById('quiz-list').innerHTML = DATA.quiz.map(accBlock).join('');
+  document.getElementById('prompts-list').innerHTML = DATA.prompts.map(accBlock).join('');
+  document.getElementById('tips-list').innerHTML = DATA.tips.map(accBlock).join('');
+  document.getElementById('sample-list').innerHTML = DATA.sample.map(accBlock).join('');
+
+  document.getElementById('vocab-list').innerHTML =
+    '<div>' + DATA.vocab.map(v => `<div class="row-item"><span class="en">${v[0]}</span><span class="zh">${v[1]}</span></div>`).join('') + '</div>';
+
+  document.getElementById('pieces-list').innerHTML = DATA.pieces.map((p,i) =>
+    `<div class="row-item"><label style="display:flex;gap:.5rem;align-items:center;cursor:pointer;width:100%">
+       <input type="checkbox" data-piece="${i}" onchange="savePiece(${i}, this.checked)">
+       <span class="en" style="min-width:auto">${p[0]}</span>
+       <span class="tag">${p[1]}</span></label></div>`).join('');
+  DATA.pieces.forEach((p,i) => { const c = localStorage.getItem('piece'+i); if (c==='1') { const el=document.querySelector('[data-piece="'+i+'"]'); if(el) el.checked=true; } });
+
+  document.getElementById('cecile-list').innerHTML = DATA.cecile.map(c =>
+    `<div class="row-item"><span class="en" style="min-width:130px">${c[0]}<span class="tag cecile">Cécile</span></span><span class="zh">${c[1]}</span></div>`).join('');
+
+  document.getElementById('jokes-list').innerHTML = DATA.jokes.map((j,i) =>
+    `<div class="joke" onclick="this.classList.toggle('reveal')">
+       <div class="q">Q${i+1}. ${j[0]}</div>
+       <div class="a">💡 ${j[1]}</div>
+       <div class="tap">👉 點一下看答案</div>
+     </div>`).join('');
+}
+function savePiece(i, checked) { localStorage.setItem('piece'+i, checked ? '1' : '0'); }
+function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
+
+/* nav */
+document.getElementById('nav').addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(btn.dataset.tab).classList.add('active');
+  document.getElementById('page-scroll').scrollTop = 0;
+});
+
+/* encourage 每日鼓勵 */
+const ENCOURAGE = ['今天也要拿第一！','你超棒的，加油！','錯了沒關係，再試一次！','練一點點，就進步一點點！','笑一個，讀書更有精神～','相信自己，你做得到！'];
+document.getElementById('encourage').textContent = ENCOURAGE[new Date().getDate() % ENCOURAGE.length];
+
+/* countdown 升小五開學（2026/09/01） */
+(function(){
+  const target = new Date(2026, 8, 1);
+  const now = new Date();
+  const days = Math.max(0, Math.ceil((target - now) / 86400000));
+  document.getElementById('countdown').innerHTML =
+    `<div class="cd-box"><div class="cd-num">${days}</div><div class="cd-label">天後升小五</div></div>`;
+})();
+
+render();
+</script>
+</body>
+</html>
