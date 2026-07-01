@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>之盈的學習樂園</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23f6c445'/><circle cx='32' cy='36' r='18' fill='%23fff2c4'/><path d='M14 26 h36 l-4 -12 h-28 z' fill='%238a5a2b'/><text x='32' y='42' text-anchor='middle' font-size='16'>🍮</text></svg>">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23f6c445'/><circle cx='32' cy='36' r='18' fill='%23fff2c4'/><path d='M14 26 h36 l-4 -12 h-28 z' fill='%238a5a2b'/><text x='32' y='42' text-anchor='middle' font-size='16'>🐶</text></svg>">
 <style>
   :root {
     --primary: #f6b73c;        /* 布丁狗焦糖黃 */
@@ -49,7 +50,7 @@
     overflow: hidden;
   }
   .hero::after {
-    content: '🍮 ✨ 🎹 ✨ 🍮';
+    content: '🐶 ✨ 🎹 ✨ 🐶';
     position: absolute; top: .7rem; left: 0; right: 0;
     text-align: center; font-size: .9rem; opacity: .4; letter-spacing: 1rem;
     pointer-events: none;
@@ -179,6 +180,44 @@
     border: 2px solid #fff;
   }
 
+  /* ===== 闖關遊戲 ===== */
+  .game-start { text-align: center; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem 1.2rem; }
+  .game-start .big { font-size: 2.6rem; }
+  .game-start h3 { color: var(--caramel); margin: .6rem 0; font-size: 1.2rem; }
+  .game-start p { color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
+  .btn-primary {
+    display: inline-block; background: linear-gradient(135deg, var(--primary), var(--primary-deep));
+    color: #fff; font-weight: 800; font-size: 1rem; font-family: inherit;
+    border: none; border-radius: 40px; padding: .75rem 1.8rem; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(230,154,31,.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); transition: .15s; }
+  .btn-ghost { background: #fff; color: var(--caramel); border: 1px solid var(--primary-deep); box-shadow: none; }
+
+  .game-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: .8rem; font-weight: 700; color: var(--caramel); font-size: .9rem; }
+  .game-prog { flex: 1; height: 10px; background: #f2e2bf; border-radius: 20px; margin: 0 .7rem; overflow: hidden; }
+  .game-prog > div { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-deep)); transition: width .3s; }
+  .game-q { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.2rem 1.1rem; }
+  .game-q .tagline { font-size: .74rem; font-weight: 700; color: #4a6fb0; background: #e9f0fb; display: inline-block; padding: .12rem .6rem; border-radius: 20px; margin-bottom: .6rem; }
+  .game-q .qtext { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 1rem; line-height: 1.5; }
+  .opt {
+    display: block; width: 100%; text-align: left; font-family: inherit;
+    background: #fffaf0; border: 1.5px solid var(--border); border-radius: 12px;
+    padding: .75rem .9rem; margin-bottom: .55rem; font-size: .98rem; font-weight: 600;
+    color: var(--text); cursor: pointer; transition: .12s;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--primary-deep); background: #fff6dc; }
+  .opt.correct { background: #e4f5ec; border-color: var(--success); color: #2f7d5b; }
+  .opt.wrong { background: #fde8e8; border-color: #e88; color: #b45; }
+  .game-fb { margin-top: .8rem; font-weight: 800; text-align: center; font-size: 1rem; min-height: 1.4rem; }
+  .game-fb.ok { color: var(--success); }
+  .game-fb.no { color: #d67; }
+  .game-result { text-align: center; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.8rem 1.2rem; }
+  .game-result .trophy { font-size: 3rem; }
+  .game-result h3 { color: var(--caramel); font-size: 1.4rem; margin: .5rem 0; }
+  .game-result .stars { font-size: 1.8rem; letter-spacing: .2rem; margin: .6rem 0; }
+  .game-result .score { font-size: 1.1rem; color: var(--text); font-weight: 700; margin-bottom: 1.2rem; }
+
   footer { text-align: center; color: var(--muted); font-size: .78rem; padding: 1.5rem 1rem 1rem; }
 </style>
 </head>
@@ -187,8 +226,8 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-badge">🍮 之盈專屬・升小五加油</div>
-    <div class="puppy">🍮🎹</div>
+    <div class="hero-badge">🐶 之盈專屬・升小五加油</div>
+    <div class="puppy">🐶🎹</div>
     <h1>之盈的學習樂園</h1>
     <div class="encourage" id="encourage">今天也要拿第一！</div>
     <div class="countdown" id="countdown"></div>
@@ -201,6 +240,7 @@
     <button data-tab="writing"><span class="ic">✏️</span>作文練習</button>
     <button data-tab="piano"><span class="ic">🎹</span>鋼琴練習</button>
     <button data-tab="jokes"><span class="ic">😄</span>笑話收集</button>
+    <button data-tab="game"><span class="ic">🎮</span>闖關遊戲</button>
   </nav>
 
   <div class="wrap">
@@ -256,6 +296,13 @@
       <div class="note">💛 講笑話小技巧：先停一下製造期待，再說出好笑的地方，眼睛看著對方笑一個。</div>
     </section>
 
+    <!-- ===== 闖關遊戲 ===== -->
+    <section class="tab" id="game">
+      <div class="sec-title">🎮 闖關遊戲</div>
+      <p class="lead">小五課程和英文題目大挑戰！答對就過關，看看能拿幾顆星。</p>
+      <div id="game-area"></div>
+    </section>
+
     <footer>之盈的學習樂園 · 用 💛 做給你 · 建置 2026/07/01</footer>
   </div>
 </div>
@@ -270,45 +317,61 @@
 const DATA = {
   courses: [
     { subject: '國語', date: '07/01', points: [
-      '每課生字先查部首、筆順，讀音標注上去。',
+      '每課生字先查部首、筆順，讀音（含破音字）標注上去。',
       '課文分段找「主旨句」，練習用一句話說出這段在講什麼。',
-      '成語、修辭（譬喻、擬人）每週整理 3 個，造句一次。',
-      '延伸閱讀：<a href="https://zh.wikipedia.org/zh-tw/修辭" target="_blank">修辭（維基百科）</a>'
+      '每週整理修辭 3 種：譬喻、擬人、排比，各造一句。',
+      '成語每週 5 個，先懂意思再造句，別死背。',
+      '延伸：<a href="https://zh.wikipedia.org/zh-tw/修辭" target="_blank">修辭</a>、<a href="https://zh.wikipedia.org/zh-tw/成語" target="_blank">成語</a>（維基百科）'
     ]},
     { subject: '數學', date: '07/01', points: [
-      '五年級重點：分數加減、小數乘除、面積與體積、因數倍數。',
-      '算錯的題目抄到「錯題本」，隔天再算一次。',
-      '應用題先畫圖、圈關鍵字，再列式。',
-      '延伸：<a href="https://zh.wikipedia.org/zh-tw/最小公倍數" target="_blank">最小公倍數（維基百科）</a>'
+      '五上重點：因數與倍數、最大公因數／最小公倍數、分數的加減。',
+      '五下重點：小數乘除、面積（平行四邊形、三角形、梯形）、體積、時間與速度。',
+      '算錯的題目抄到「錯題本」，隔天重算一次，錯兩次的畫星星。',
+      '應用題步驟：讀題 → 圈關鍵字 → 畫圖 → 列式 → 檢查單位。',
+      '延伸：<a href="https://zh.wikipedia.org/zh-tw/最小公倍數" target="_blank">最小公倍數</a>、<a href="https://zh.wikipedia.org/zh-tw/面積" target="_blank">面積</a>'
     ]},
     { subject: '自然', date: '07/01', points: [
-      '重點單元：水的三態、天氣、動植物的構造與功能、電路。',
-      '看到現象先問「為什麼」，再查課本找原因。',
-      '實驗記錄：假設 → 做法 → 結果 → 我發現。'
+      '重點單元：水的三態變化、天氣與氣象、動植物的構造與功能、簡單電路、力與運動。',
+      '看到現象先問「為什麼」，再回課本找原因。',
+      '實驗記錄四步：假設 → 做法 → 觀察結果 → 我的發現。',
+      '延伸：<a href="https://zh.wikipedia.org/zh-tw/物質三態" target="_blank">物質三態</a>、<a href="https://zh.wikipedia.org/zh-tw/電路" target="_blank">電路</a>'
     ]},
     { subject: '社會', date: '07/01', points: [
-      '重點：台灣地理、河川與地形、歷史時序、公民與生活。',
-      '用地圖、時間軸幫助記憶，比死背有效。',
-      '把課本重點畫成心智圖，考前看圖回想。'
+      '重點：台灣的位置與地形、河川與氣候、原住民與移民歷史、地方政府與公民參與。',
+      '用「地圖＋時間軸」記憶，比純文字有效。',
+      '每單元自己畫一張心智圖，考前看圖回想。',
+      '延伸：<a href="https://zh.wikipedia.org/zh-tw/臺灣地理" target="_blank">臺灣地理</a>'
     ]},
     { subject: '英語', date: '07/01', points: [
-      '每天唸 5 個單字出聲，配一個句子。',
-      '課文跟著音檔朗讀，模仿語調。',
-      '看英文卡通不看字幕，猜猜看在說什麼。'
+      '每天出聲唸 5 個單字，每個配一個句子。',
+      '課文跟音檔朗讀，模仿語調與重音。',
+      '看英文卡通先不看字幕，猜猜看在說什麼。',
+      '單字用「主題」記（學校、家庭、情緒、音樂），成串比零散好記。'
     ]},
   ],
   vocab: [
-    ['piano', 'n. 鋼琴'], ['practice', 'v. 練習'], ['favorite', 'adj. 最喜歡的'],
-    ['singer', 'n. 歌手'], ['joke', 'n. 笑話'], ['clever', 'adj. 聰明的'],
-    ['proud', 'adj. 驕傲的、自豪的'], ['grade', 'n. 年級；成績'],
-    ['dream', 'n./v. 夢想'], ['harp', 'n. 豎琴'],
+    ['piano', 'n. 鋼琴'], ['practice', 'v./n. 練習'], ['music', 'n. 音樂'],
+    ['song', 'n. 歌曲'], ['singer', 'n. 歌手'], ['harp', 'n. 豎琴'],
+    ['favorite', 'adj. 最喜歡的'], ['clever', 'adj. 聰明的'], ['proud', 'adj. 驕傲、自豪的'],
+    ['grade', 'n. 年級；成績'], ['subject', 'n. 科目'], ['homework', 'n. 功課'],
+    ['dream', 'n./v. 夢想'], ['joke', 'n. 笑話'], ['funny', 'adj. 好笑的'],
+    ['smile', 'v./n. 微笑'], ['happy', 'adj. 快樂的'], ['brave', 'adj. 勇敢的'],
+    ['careful', 'adj. 小心的'], ['together', 'adv. 一起'], ['important', 'adj. 重要的'],
+    ['remember', 'v. 記得'], ['understand', 'v. 了解'], ['answer', 'n./v. 回答'],
+    ['question', 'n. 問題'], ['number one', '第一名'], ['piece', 'n.（音樂）曲子'],
+    ['French', 'adj./n. 法文、法國的'], ['fairy', 'n. 仙子、精靈'], ['ocean', 'n. 海洋'],
   ],
   patterns: [
-    { subject: '句型', date: '07/01', points: [
+    { subject: '基礎句型', date: '07/01', points: [
       'I like ___ the best.（我最喜歡～）→ I like piano the best.',
       'She is good at ___.（她很擅長～）→ She is good at telling jokes.',
       'I want to ___.（我想要～）→ I want to be number one!',
-      'This is my favorite ___.（這是我最愛的～）'
+      'This is my favorite ___.（這是我最愛的～）→ This is my favorite song.'
+    ]},
+    { subject: '進階句型', date: '07/01', points: [
+      'Not only ___ but also ___.（不只～還～）',
+      'The more I practice, the better I play.（越練越好）',
+      'Would you like to ___?（你想要～嗎？）— 邀請別人的禮貌說法。'
     ]},
   ],
   quiz: [
@@ -316,6 +379,14 @@ const DATA = {
       '「我最喜歡鋼琴。」→ I like piano the best.',
       '「她很會講笑話。」→ She is good at telling jokes.',
       '「我想考第一名。」→ I want to be number one.',
+      '「這是我最愛的歌。」→ This is my favorite song.',
+      '「我每天練琴。」→ I practice the piano every day.'
+    ]},
+    { subject: '看字選意思', date: '07/01', points: [
+      'brave = ？（勇敢的）',
+      'careful = ？（小心的）',
+      'important = ？（重要的）',
+      'remember = ？（記得）'
     ]},
   ],
   prompts: [
@@ -326,45 +397,97 @@ const DATA = {
     ]},
     { subject: '我的興趣', date: '07/01', points: [
       '題目：〈練琴這件事〉',
-      '可以寫：練琴辛不辛苦、練會一首曲子的成就感、想彈給誰聽。',
+      '可以寫：練琴辛不辛苦、練會一首曲子的成就感、想彈給誰聽。'
     ]},
     { subject: '一件趣事', date: '07/01', points: [
       '題目：〈我講的一個笑話〉',
-      '把一次講笑話逗大家笑的經過寫下來，注意「事情發生的順序」。',
+      '把一次講笑話逗大家笑的經過寫下來，注意「事情發生的順序」。'
+    ]},
+    { subject: '我的目標', date: '07/01', points: [
+      '題目：〈我想考第一名〉',
+      '可以寫：為什麼想考第一、你打算怎麼努力、考到的話想怎麼慶祝。',
+      '提醒：重點不是「贏過別人」，而是「比昨天的自己更好」。'
+    ]},
+    { subject: '寫景寫物', date: '07/01', points: [
+      '題目：〈下雨的午後〉',
+      '練習用五感描寫：雨的聲音、味道、窗外的樣子、心裡的感覺。'
     ]},
   ],
   tips: [
-    { subject: '寫作技巧', date: '07/01', points: [
-      '開頭要吸引人：用問句、聲音或畫面開場，不要都用「今天」。',
-      '中間要具體：把「很好玩」換成「發生了什麼、看到什麼、聽到什麼」。',
-      '多用五感：看到、聽到、聞到、摸到、心裡的感覺。',
-      '結尾收心得：這件事讓我學到／感覺到什麼。',
+    { subject: '開頭技巧', date: '07/01', points: [
+      '用聲音開場：「叮——豎琴一響，我就安靜下來了。」',
+      '用問句開場：「你有沒有一首怎麼聽都聽不膩的歌？」',
+      '用畫面開場：「窗外的雨，一條一條斜斜地畫過玻璃。」',
+      '避免每篇都用「今天」「我要介紹」開頭。'
+    ]},
+    { subject: '中段技巧', date: '07/01', points: [
+      '把「很好玩／很棒」換成具體的：發生什麼、看到什麼、聽到什麼。',
+      '多用五感：看、聽、聞、摸、心裡的感覺。',
+      '一段講一個重點，太長就分段。'
+    ]},
+    { subject: '結尾技巧', date: '07/01', points: [
+      '收心得：這件事讓我學到／感覺到什麼。',
+      '呼應開頭：開頭提到的東西，結尾再回扣一次。',
       '寫完大聲唸一遍，唸不順的地方就是要改的地方。'
     ]},
   ],
   sample: [
-    { subject: '範例段落', date: '07/01', points: [
+    { subject: '好的開頭', date: '07/01', points: [
       '〈我最喜歡的歌手〉開頭示範：',
       '<p>「叮——」豎琴的聲音一響起，我整個人就安靜下來了。這是 Cécile Corbel 的音樂，也是我最喜歡的聲音。</p>',
-      '（看，開頭用「聲音」開場，比「我最喜歡的歌手是…」更吸引人。）'
+      '（用「聲音」開場，比「我最喜歡的歌手是…」更吸引人。）'
+    ]},
+    { subject: '五感描寫', date: '07/01', points: [
+      '〈下雨的午後〉片段示範：',
+      '<p>雨滴打在鐵皮屋頂上，叮叮咚咚像有人在彈琴。空氣裡有一股泥土的味道，涼涼的，我把手伸出窗外，接住了一小顆冰冰的雨。</p>',
+      '（聲音、氣味、觸覺都寫進去了。）'
     ]},
   ],
   pieces: [
     ['小星星變奏曲', '基礎', false],
+    ['歡樂頌', '基礎', false],
+    ['小步舞曲（巴哈）', '基礎', false],
     ['給愛麗絲（前段）', '進階中', false],
-    ['卡農（簡化版）', '挑戰', false],
+    ['卡農（簡化版）', '進階中', false],
+    ['夢中的婚禮', '挑戰', false],
   ],
   cecile: [
-    ['Arrietty\'s Song', '《借物少女艾莉緹》主題曲，最經典的一首。'],
-    ['Sous l\'Océan', '海底世界，旋律輕快。'],
-    ['La Pluie', '雨，安靜療癒。'],
+    ['Arrietty\'s Song', '《借物少女艾莉緹》主題曲，最經典的一首，中英法都好聽。'],
+    ['Sous l\'Océan', '同片配樂，海底世界，旋律輕快。'],
+    ['The Neglected Garden', '被遺忘的花園，安靜又神祕。'],
+    ['La Pluie', '「雨」，療癒安靜，適合練習時聽。'],
+    ['Time of the Fairies', '仙子的時光，來自《La Fée Clochette》。'],
+    ['Le Chemin', '「小路」，溫柔的旋律。'],
   ],
   jokes: [
-    ['為什麼布丁狗頭上要戴帽子？', '因為牠是「布丁」狗，帽子是牠的招牌呀！（其實那是牠的商標啦～）'],
+    ['為什麼布丁狗頭上要戴帽子？', '因為那頂咖啡色貝雷帽是牠的招牌呀！（牠是三麗鷗最愛睡覺的黃金獵犬）'],
     ['什麼水果最愛考第一名？', '「柚」秀的柚子！（優秀）'],
-    ['鋼琴為什麼進不了門？', '因為它的「琴鍵」太多，卡住了！'],
-    ['老師問：「一年有幾個月？」小明說：「七個月。」為什麼？', '因為「一、二、三、四、五、六、七」…他只數到有大月的（開玩笑～答案是十二個月喔）。'],
-    ['什麼歌手唱歌不用嘴巴？', '豎琴呀！用「手」唱歌。（Cécile 的豎琴最厲害）'],
+    ['鋼琴為什麼進不了門？', '因為它的「琴鍵（鍵）」太多，卡住了！'],
+    ['什麼歌手唱歌不用嘴巴？', '豎琴呀！它用「手」唱歌。（Cécile 的豎琴最厲害）'],
+    ['老師：「用『果然』造句。」小明：「我先吃水果，然後喝湯。」', '哈哈，是「果然（ㄖㄢˊ）」不是「水果、然後」啦！'],
+    ['為什麼數學課本總是很煩惱？', '因為它有太多「問題」了！'],
+    ['什麼英文字母最愛喝東西？', 'T（tea，茶）！'],
+    ['小明考一百分回家，媽媽問怎麼辦到的？', '「我把不會的都寫對了！」（其實是全都會啦～）'],
+    ['為什麼海邊最適合彈琴？', '因為那裡有很多「音（陰）涼」的地方！'],
+    ['布丁狗最不喜歡上什麼課？', '「起床」課——因為牠超愛睡覺！'],
+  ],
+  game: [
+    { tag: '數學', q: '12 和 18 的最大公因數是多少？', options: ['3', '6', '9', '12'], ans: 1 },
+    { tag: '數學', q: '4 和 6 的最小公倍數是多少？', options: ['10', '12', '18', '24'], ans: 1 },
+    { tag: '數學', q: '1/2 + 1/4 等於多少？', options: ['2/6', '1/6', '3/4', '2/4'], ans: 2 },
+    { tag: '數學', q: '一個長方形長 8 公分、寬 5 公分，面積是多少平方公分？', options: ['13', '26', '40', '45'], ans: 2 },
+    { tag: '數學', q: '0.6 × 0.2 等於多少？', options: ['0.12', '1.2', '0.8', '0.012'], ans: 0 },
+    { tag: '國語', q: '「果然」的「然」，正確注音是？', options: ['ㄖㄢˊ', 'ㄋㄢˊ', 'ㄌㄢˊ', 'ㄩㄢˊ'], ans: 0 },
+    { tag: '國語', q: '「他跑得像風一樣快」用了哪一種修辭？', options: ['擬人', '譬喻', '排比', '誇飾'], ans: 1 },
+    { tag: '國語', q: '「花兒對我微笑」用了哪一種修辭？', options: ['譬喻', '排比', '擬人', '反問'], ans: 2 },
+    { tag: '自然', q: '水變成水蒸氣，這個變化叫做什麼？', options: ['凝結', '蒸發', '結冰', '融化'], ans: 1 },
+    { tag: '自然', q: '水結成冰時，體積會怎麼變？', options: ['變大', '變小', '不變', '先變小再變大'], ans: 0 },
+    { tag: '社會', q: '台灣最長的河川是哪一條？', options: ['淡水河', '高屏溪', '濁水溪', '大甲溪'], ans: 2 },
+    { tag: '英文', q: 'piano 的中文意思是？', options: ['小提琴', '鋼琴', '吉他', '長笛'], ans: 1 },
+    { tag: '英文', q: '「第一名」的英文是？', options: ['number one', 'first day', 'top ten', 'big one'], ans: 0 },
+    { tag: '英文', q: 'She is good ___ telling jokes.（她很會講笑話）空格填？', options: ['at', 'in', 'on', 'to'], ans: 0 },
+    { tag: '英文', q: 'harp 是哪一種樂器？', options: ['鼓', '豎琴', '喇叭', '鋼琴'], ans: 1 },
+    { tag: '英文', q: '「勇敢的」英文是哪一個？', options: ['careful', 'clever', 'brave', 'proud'], ans: 2 },
   ],
 };
 
@@ -410,6 +533,78 @@ function render() {
 function savePiece(i, checked) { localStorage.setItem('piece'+i, checked ? '1' : '0'); }
 function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
 
+/* ================= 闖關遊戲 ================= */
+let gameQs = [], gameIdx = 0, gameScore = 0, gameLocked = false;
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor((i+1)*(( (gameIdx*7+i*13+3)%97)/97)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function gameStart(){
+  gameQs = DATA.game.slice(); gameIdx = 0; gameScore = 0; gameLocked = false;
+  gameRenderQ();
+}
+function gameHome(){
+  document.getElementById('game-area').innerHTML =
+    `<div class="game-start">
+       <div class="big">🐶🎮</div>
+       <h3>準備好闖關了嗎？</h3>
+       <p>總共 ${DATA.game.length} 題，來自小五課程和英文。<br>答對越多，星星越多！</p>
+       <button class="btn-primary" onclick="gameStart()">開始闖關 🚀</button>
+     </div>`;
+}
+function gameRenderQ(){
+  if (gameIdx >= gameQs.length) return gameResult();
+  gameLocked = false;
+  const q = gameQs[gameIdx];
+  const pct = Math.round((gameIdx / gameQs.length) * 100);
+  const opts = q.options.map((o,i) =>
+    `<button class="opt" data-i="${i}" onclick="gameAnswer(${i})">${o}</button>`).join('');
+  document.getElementById('game-area').innerHTML =
+    `<div class="game-bar">
+       <span>第 ${gameIdx+1}／${gameQs.length} 關</span>
+       <div class="game-prog"><div style="width:${pct}%"></div></div>
+       <span>⭐ ${gameScore}</span>
+     </div>
+     <div class="game-q">
+       <span class="tagline">${q.tag}</span>
+       <div class="qtext">${q.q}</div>
+       ${opts}
+       <div class="game-fb" id="game-fb"></div>
+     </div>`;
+}
+function gameAnswer(i){
+  if (gameLocked) return; gameLocked = true;
+  const q = gameQs[gameIdx];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  const fb = document.getElementById('game-fb');
+  if (i === q.ans){
+    gameScore++;
+    btns[i].classList.add('correct');
+    fb.className = 'game-fb ok'; fb.textContent = '答對了！太棒了 🎉';
+  } else {
+    btns[i].classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    fb.className = 'game-fb no'; fb.textContent = '再想想～正確答案已標綠色 💡';
+  }
+  setTimeout(() => { gameIdx++; gameRenderQ(); }, 1200);
+}
+function gameResult(){
+  const total = gameQs.length;
+  const ratio = gameScore / total;
+  const stars = ratio >= 0.9 ? 3 : ratio >= 0.6 ? 2 : ratio >= 0.3 ? 1 : 0;
+  const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  const msg = stars === 3 ? '滿分小天才，第一名就是你！' :
+              stars === 2 ? '很厲害！再挑戰一次拿三顆星吧！' :
+              stars === 1 ? '有進步，多練幾次會更棒！' : '沒關係，再試一次一定更好！';
+  document.getElementById('game-area').innerHTML =
+    `<div class="game-result">
+       <div class="trophy">${stars===3?'🏆':'🐶'}</div>
+       <h3>闖關完成！</h3>
+       <div class="stars">${starStr}</div>
+       <div class="score">答對 ${gameScore} ／ ${total} 題<br>${msg}</div>
+       <button class="btn-primary" onclick="gameStart()">再挑戰一次 🔁</button>
+       <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="gameHome()">回到首頁</button>
+     </div>`;
+}
+
 /* nav */
 document.getElementById('nav').addEventListener('click', e => {
   const btn = e.target.closest('button'); if (!btn) return;
@@ -434,6 +629,7 @@ document.getElementById('encourage').textContent = ENCOURAGE[new Date().getDate(
 })();
 
 render();
+gameHome();
 </script>
 </body>
 </html>
