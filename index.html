@@ -289,6 +289,8 @@
   .cp-in input:focus { border-color: #e59a1f; }
   .cp-in button { background: linear-gradient(135deg, #ffd873, #f6b73c); color: #6b4415; border: none; border-radius: 20px; padding: .5rem .9rem; font-weight: 800; font-size: .85rem; cursor: pointer; font-family: inherit; }
   .cp-in button:disabled { opacity: .5; cursor: not-allowed; }
+  .cp-in button.cp-mic { background: #fff6dc; border: 1.5px solid var(--primary-deep); color: #6b4415; border-radius: 50%; width: 40px; padding: 0; flex: none; font-size: 1.05rem; }
+  .cp-in button.cp-mic.rec { background: #ffe0e0; border-color: #e88; color: #c44; }
 
   /* ===== 闖關遊戲 ===== */
   .game-start { text-align: center; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem 1.2rem; }
@@ -479,7 +481,8 @@
   </div>
   <div class="cp-msgs" id="cecileMsgs"></div>
   <div class="cp-in">
-    <input id="cecileInput" type="text" placeholder="問我功課、或聊聊音樂～" onkeydown="if(event.key==='Enter')sendCecile()">
+    <button id="cecileMic" class="cp-mic" onclick="toggleCecileMic()" aria-label="用說的">🎤</button>
+    <input id="cecileInput" type="text" placeholder="打字，或按🎤用說的～" onkeydown="if(event.key==='Enter')sendCecile()">
     <button id="cecileSend" onclick="sendCecile()">送出</button>
   </div>
 </div>
@@ -1026,6 +1029,25 @@ function toggleCecile() {
     cecileAppend('ce', '哈囉之盈！我是 Cécile 🎵\n功課有問題，或想聊聊音樂、鋼琴練習，都可以問我喔～');
   }
   if (open) setTimeout(function(){ const i=document.getElementById('cecileInput'); if(i) i.focus(); }, 100);
+}
+/* Cécile 聊聊：麥克風語音輸入（Web Speech API zh-TW） */
+let cecileRecog = null;
+function toggleCecileMic() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const btn = document.getElementById('cecileMic');
+  if (!SR) { alert('這個裝置可以用鍵盤上的 🎤 麥克風講喔～點一下輸入框，鍵盤就會出現麥克風。'); return; }
+  if (cecileRecog) { cecileRecog.stop(); return; }
+  cecileRecog = new SR();
+  cecileRecog.lang = 'zh-TW'; cecileRecog.continuous = false; cecileRecog.interimResults = false;
+  cecileRecog.onresult = function(e){
+    let t = '';
+    for (let k = e.resultIndex; k < e.results.length; k++){ if (e.results[k].isFinal) t += e.results[k][0].transcript; }
+    const input = document.getElementById('cecileInput');
+    if (t && input){ input.value += t; input.focus(); }
+  };
+  const reset = function(){ cecileRecog = null; if (btn){ btn.classList.remove('rec'); btn.textContent = '🎤'; } };
+  cecileRecog.onend = reset; cecileRecog.onerror = reset;
+  try { cecileRecog.start(); btn.classList.add('rec'); btn.textContent = '🔴'; } catch(e){ reset(); }
 }
 function cecileAppend(who, text) {
   const box = document.getElementById('cecileMsgs');
