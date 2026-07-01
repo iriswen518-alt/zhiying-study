@@ -162,6 +162,13 @@
   .row-item:last-child { border-bottom: none; }
   .row-item .en { font-weight: 800; color: var(--caramel); min-width: 92px; }
   .row-item .zh { color: var(--text); }
+  .speak-btn {
+    flex: none; background: #fff6dc; border: 1px solid var(--primary-deep);
+    border-radius: 50%; width: 30px; height: 30px; cursor: pointer;
+    font-size: .95rem; line-height: 1; padding: 0; margin-right: .1rem;
+  }
+  .speak-btn:hover { background: var(--active); }
+  .speak-btn:active { transform: scale(.9); }
 
   .joke { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: .9rem 1rem; margin-bottom: .7rem; }
   .joke .q { font-weight: 700; color: var(--caramel); }
@@ -734,7 +741,7 @@ function render() {
   document.getElementById('sample-list').innerHTML = DATA.sample.map(accBlock).join('');
 
   document.getElementById('vocab-list').innerHTML =
-    '<div>' + DATA.vocab.map(v => `<div class="row-item"><span class="en">${v[0]}</span><span class="zh">${v[1]}</span></div>`).join('') + '</div>';
+    '<div>' + DATA.vocab.map(v => `<div class="row-item"><button class="speak-btn" onclick="speakWord('${v[0]}')" aria-label="唸唸看">🔊</button><span class="en">${v[0]}</span><span class="zh">${v[1]}</span></div>`).join('') + '</div>';
 
   document.getElementById('pieces-list').innerHTML = DATA.pieces.map((p,i) =>
     `<div class="row-item" style="justify-content:space-between;align-items:center">
@@ -768,6 +775,15 @@ function renderJokes(){
      </div>`);
   }
   document.getElementById('jokes-list').innerHTML = html.join('');
+}
+function speakWord(word){
+  try {
+    if (!('speechSynthesis' in window)) { alert('這個裝置不支援發音功能喔～'); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = 'en-US'; u.rate = 0.85;
+    window.speechSynthesis.speak(u);
+  } catch(e){}
 }
 function savePiece(i, checked) { localStorage.setItem('piece'+i, checked ? '1' : '0'); }
 function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
