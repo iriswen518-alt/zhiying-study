@@ -98,6 +98,7 @@
     transition: color .18s, background .18s;
   }
   .bottom-nav button .ic { font-size: 1.25rem; line-height: 1; filter: grayscale(.15); }
+  .bottom-nav button .ic svg { display: block; }
   /* 選中分頁黃色高亮（全域規則） */
   .bottom-nav button.active { color: var(--active-text); background: #fff8d6; }
   .bottom-nav button.active .ic { filter: none; }
@@ -157,6 +158,8 @@
     flex: none; background: #fff6dc; border: 1px solid var(--primary-deep);
     border-radius: 50%; width: 30px; height: 30px; cursor: pointer;
     font-size: .95rem; line-height: 1; padding: 0; margin-right: .1rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--caramel);
   }
   .speak-btn:hover { background: var(--active); }
   .speak-btn:active { transform: scale(.9); }
@@ -280,7 +283,7 @@
   .cp-in input:focus { border-color: #e59a1f; }
   .cp-in button { background: linear-gradient(135deg, #ffd873, #f6b73c); color: #6b4415; border: none; border-radius: 20px; padding: .5rem .9rem; font-weight: 800; font-size: .85rem; cursor: pointer; font-family: inherit; }
   .cp-in button:disabled { opacity: .5; cursor: not-allowed; }
-  .cp-in button.cp-mic { background: #fff6dc; border: 1.5px solid var(--primary-deep); color: #6b4415; border-radius: 50%; width: 40px; padding: 0; flex: none; font-size: 1.05rem; }
+  .cp-in button.cp-mic { background: #fff6dc; border: 1.5px solid var(--primary-deep); color: #6b4415; border-radius: 50%; width: 40px; padding: 0; flex: none; font-size: 1.05rem; display: inline-flex; align-items: center; justify-content: center; }
   .cp-in button.cp-mic.rec { background: #ffe0e0; border-color: #e88; color: #c44; }
 
   /* ===== 闖關遊戲 ===== */
@@ -377,13 +380,13 @@
       <div id="sample-list"></div>
 
       <div class="sec-title">✍️ 我的作文（老師給回饋）</div>
-      <p class="lead">把作文打在下面，或按 🎤 用說的。寫好後按「請老師看看」，老師會告訴你哪裡很棒、哪裡可以更好～</p>
+      <p class="lead">把作文打在下面，或按「語音輸入」用說的。寫好後按「老師批改」，老師會告訴你哪裡很棒、哪裡可以更好～</p>
       <div class="essay-tools">
-        <button id="micBtn" class="essay-btn" onclick="toggleMic()">🎤 用說的</button>
-        <button class="essay-btn" onclick="document.getElementById('essayInput').value='';document.getElementById('essay-feedback').innerHTML=''">🧹 清空</button>
+        <button id="micBtn" class="essay-btn" onclick="toggleMic()"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.12em"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> 語音輸入</button>
+        <button class="essay-btn" onclick="document.getElementById('essayInput').value='';document.getElementById('essay-feedback').innerHTML=''">全部清空</button>
       </div>
       <textarea id="essayInput" class="essay-input" placeholder="在這裡寫下你的作文…（例如：今天我去公園玩，看到很多花…）"></textarea>
-      <button class="btn-primary" style="width:100%;margin-top:.6rem" onclick="gradeEssay()">請老師看看 ✍️</button>
+      <button class="btn-primary" style="width:100%;margin-top:.6rem" onclick="gradeEssay()">老師批改</button>
       <div id="essay-feedback"></div>
     </section>
 
@@ -420,12 +423,12 @@
 
 <!-- 底部導覽列 -->
 <nav class="bottom-nav" id="nav">
-  <button class="active" data-tab="courses"><span class="ic">📚</span>小五課程</button>
-  <button data-tab="english"><span class="ic">🔤</span>英文學習</button>
-  <button data-tab="writing"><span class="ic">✏️</span>作文練習</button>
-  <button data-tab="dict"><span class="ic">📖</span>國語辭典</button>
-  <button data-tab="jokes"><span class="ic">😄</span>笑話收集</button>
-  <button data-tab="game"><span class="ic">🎮</span>闖關遊戲</button>
+  <button class="active" data-tab="courses"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>小五課程</button>
+  <button data-tab="english"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></span>英文學習</button>
+  <button data-tab="writing"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></span>作文練習</button>
+  <button data-tab="dict"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>國語辭典</button>
+  <button data-tab="jokes"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></span>笑話收集</button>
+  <button data-tab="game"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>闖關遊戲</button>
 </nav>
 
 <!-- Cécile 聊聊 -->
@@ -440,13 +443,20 @@
   </div>
   <div class="cp-msgs" id="cecileMsgs"></div>
   <div class="cp-in">
-    <button id="cecileMic" class="cp-mic" onclick="toggleCecileMic()" aria-label="用說的">🎤</button>
-    <input id="cecileInput" type="text" placeholder="打字，或按🎤用說的～" onkeydown="if(event.key==='Enter')sendCecile()">
+    <button id="cecileMic" class="cp-mic" onclick="toggleCecileMic()" aria-label="用說的"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+    <input id="cecileInput" type="text" placeholder="打字，或按左邊麥克風用說的～" onkeydown="if(event.key==='Enter')sendCecile()">
     <button id="cecileSend" onclick="sendCecile()">送出</button>
   </div>
 </div>
 
 <script>
+/* ================= 介面線條圖示（feather 風格 SVG） ================= */
+const SVG_ATTRS = 'viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+const ICON_MIC = `<svg ${SVG_ATTRS} style="vertical-align:-0.12em"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>`;
+const ICON_STOP = `<svg ${SVG_ATTRS} style="vertical-align:-0.12em"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>`;
+const ICON_VOL = `<svg ${SVG_ATTRS}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+const ICON_VOL_SM = `<svg viewBox="0 0 24 24" width="0.85em" height="0.85em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.08em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+
 /* ================= 內容資料（範例，可自行增修） ================= */
 const DATA = {
   courses: [
@@ -671,7 +681,7 @@ function accBlock(item) {
     <div class="acc-body"><ul>${lis}</ul></div>
   </div>`;
 }
-// 每句英文加 🔊 發音鈕（唸箭頭後或括號前的英文）
+// 每句英文加發音鈕（唸箭頭後或括號前的英文）
 function sayBlock(item) {
   const lis = item.points.map(p => {
     let en;
@@ -680,7 +690,7 @@ function sayBlock(item) {
     else en = p.split('（')[0];
     en = en.replace(/_+/g, ' ').replace(/[^\x00-\x7F]/g, ' ').replace(/[?？]/g, ' ').replace(/\s+/g, ' ').trim();
     const btn = /[a-zA-Z]/.test(en)
-      ? `<button class="speak-btn" onclick="speakSentence(this)" data-say="${en.replace(/"/g, '&quot;')}" aria-label="唸唸看">🔊</button> `
+      ? `<button class="speak-btn" onclick="speakSentence(this)" data-say="${en.replace(/"/g, '&quot;')}" aria-label="唸唸看">${ICON_VOL}</button> `
       : '';
     return `<li>${btn}${p}</li>`;
   }).join('');
@@ -701,7 +711,7 @@ function render() {
   document.getElementById('sample-list').innerHTML = DATA.sample.map(accBlock).join('');
 
   document.getElementById('vocab-list').innerHTML =
-    '<div>' + DATA.vocab.map(v => `<div class="row-item"><button class="speak-btn" onclick="speakWord('${v[0]}')" aria-label="唸唸看">🔊</button><span class="en">${v[0]}</span><span class="zh">${v[1]}</span></div>`).join('') + '</div>';
+    '<div>' + DATA.vocab.map(v => `<div class="row-item"><button class="speak-btn" onclick="speakWord('${v[0]}')" aria-label="唸唸看">${ICON_VOL}</button><span class="en">${v[0]}</span><span class="zh">${v[1]}</span></div>`).join('') + '</div>';
 
   renderJokes();
 }
@@ -765,8 +775,8 @@ function gameHome(){
        <h3>準備好闖關了嗎？</h3>
        <p>每局隨機 ${Math.min(GAME_ROUND, remain)} 題，答對的題目會學起來、之後就不再出現。<br>還沒學會 <b>${remain}</b> 題　已經學會 <b>${learned}</b> 題。</p>
        <p style="font-weight:800;color:var(--caramel)">🌟 你已經累積 ${getTotalStars()} 顆星星！</p>
-       <button class="btn-primary" onclick="gameStart()">開始闖關 🚀</button>
-       ${learned > 0 ? '<button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="resetMastered()">全部重新練習 🔁</button>' : ''}
+       <button class="btn-primary" onclick="gameStart()">開始闖關</button>
+       ${learned > 0 ? '<button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="resetMastered()">重新練習</button>' : ''}
      </div>`;
 }
 function gameAllDone(){
@@ -775,7 +785,7 @@ function gameAllDone(){
        <div class="trophy">🏆</div>
        <h3>太厲害了！全部題目都學會了！</h3>
        <div class="score">你把 ${DATA.game.length} 題全部答對過了，第一名就是你！<br>之後老師會再加新題目上來喔～</div>
-       <button class="btn-primary btn-ghost" onclick="resetMastered()">全部重新練習 🔁</button>
+       <button class="btn-primary btn-ghost" onclick="resetMastered()">重新練習</button>
      </div>`;
 }
 function gameRenderQ(){
@@ -819,7 +829,7 @@ function gameAnswer(i){
   const isLast = gameIdx >= gameQs.length - 1;
   fb.innerHTML = head +
     (q.exp ? '<div class="game-exp">💡 為什麼：' + q.exp + '</div>' : '') +
-    '<button class="btn-primary game-next" onclick="gameNext()">' + (isLast ? '看結果 🏁' : '下一題 ▶') + '</button>';
+    '<button class="btn-primary game-next" onclick="gameNext()">' + (isLast ? '查看結果' : '繼續作答') + '</button>';
 }
 function gameNext(){ gameIdx++; gameRenderQ(); }
 
@@ -852,7 +862,7 @@ function renderDictEntry(word, d){
   const title = cleanDict(d.t) || word;
   let html = `<div class="dict-entry"><div class="word">${title}</div>`;
   (d.h || []).forEach(h => {
-    if (h.b) html += `<div class="bopomofo">🔊 ${h.b}</div>`;
+    if (h.b) html += `<div class="bopomofo">${ICON_VOL_SM} ${h.b}</div>`;
     if (h.p) html += `<div class="pinyin">${h.p}</div>`;
     (h.d || []).forEach(de => {
       const pos = de.type ? `<span class="pos">${cleanDict(de.type)}</span>` : '';
@@ -884,9 +894,9 @@ function toggleMic(){
     }
     if (t){ const ta = document.getElementById('essayInput'); ta.value += t; }
   };
-  const reset = () => { essayRecog = null; btn.classList.remove('rec'); btn.textContent = '🎤 用說的'; };
+  const reset = () => { essayRecog = null; btn.classList.remove('rec'); btn.innerHTML = ICON_MIC + ' 語音輸入'; };
   essayRecog.onend = reset; essayRecog.onerror = reset;
-  try { essayRecog.start(); btn.classList.add('rec'); btn.textContent = '🔴 停止錄音'; }
+  try { essayRecog.start(); btn.classList.add('rec'); btn.innerHTML = ICON_STOP + ' 停止錄音'; }
   catch(e){ reset(); }
 }
 function fmtFeedback(s){
@@ -935,7 +945,7 @@ function gameResult(){
        <div class="score">答對 ${gameScore} ／ ${total} 題<br>${msg}</div>
        <div class="star-total" style="color:#7a5320;background:#fff6dc;border:1px dashed var(--primary-deep);margin-bottom:1.2rem">這次 +${gameScore} 顆星 🌟　累積 ${totalStars} 顆</div>
        <br>
-       <button class="btn-primary" onclick="gameStart()">再挑戰一次 🔁</button>
+       <button class="btn-primary" onclick="gameStart()">再次挑戰</button>
        <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="gameHome()">回到首頁</button>
      </div>`;
 }
@@ -998,14 +1008,14 @@ function toggleCecileMic() {
     for (let k = e.resultIndex; k < e.results.length; k++){ if (e.results[k].isFinal) t += e.results[k][0].transcript; }
     if (t && input){ input.value += t; input.focus(); }
   };
-  const reset = function(){ cecileRecog = null; if (btn){ btn.classList.remove('rec'); btn.textContent = '🎤'; } };
+  const reset = function(){ cecileRecog = null; if (btn){ btn.classList.remove('rec'); btn.innerHTML = ICON_MIC; } };
   cecileRecog.onend = reset;
   cecileRecog.onerror = function(e){
     if (e && e.error === 'not-allowed') cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。🐶');
     else if (e && e.error === 'no-speech') cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🐶');
     reset();
   };
-  try { cecileRecog.start(); btn.classList.add('rec'); btn.textContent = '🔴'; } catch(e){ reset(); }
+  try { cecileRecog.start(); btn.classList.add('rec'); btn.innerHTML = ICON_STOP; } catch(e){ reset(); }
 }
 function cecileAppend(who, text) {
   const box = document.getElementById('cecileMsgs');
