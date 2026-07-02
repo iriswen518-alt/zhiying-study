@@ -740,6 +740,18 @@ function speakWord(word){
   } catch(e){}
 }
 function speakSentence(el){ speakWord(el.getAttribute('data-say') || ''); }
+function speakZh(word){
+  try {
+    if (!('speechSynthesis' in window)) { alert('這個裝置不支援發音功能喔～'); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = 'zh-TW'; u.rate = 0.85;
+    const vs = window.speechSynthesis.getVoices() || [];
+    const zh = vs.find(v => /zh[-_]?(TW|Hant)/i.test(v.lang)) || vs.find(v => /^zh/i.test(v.lang));
+    if (zh) u.voice = zh;
+    window.speechSynthesis.speak(u);
+  } catch(e){}
+}
 function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
 
 /* ================= 闖關遊戲 ================= */
@@ -862,7 +874,7 @@ function renderDictEntry(word, d){
   const title = cleanDict(d.t) || word;
   let html = `<div class="dict-entry"><div class="word">${title}</div>`;
   (d.h || []).forEach(h => {
-    if (h.b) html += `<div class="bopomofo">${ICON_VOL_SM} ${h.b}</div>`;
+    if (h.b) html += `<div class="bopomofo"><button class="speak-btn" onclick="speakZh('${title.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')" aria-label="唸唸看">${ICON_VOL_SM}</button> ${h.b}</div>`;
     if (h.p) html += `<div class="pinyin">${h.p}</div>`;
     (h.d || []).forEach(de => {
       const pos = de.type ? `<span class="pos">${cleanDict(de.type)}</span>` : '';
