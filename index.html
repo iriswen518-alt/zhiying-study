@@ -285,7 +285,7 @@
   .cp-typing span:nth-child(3) { animation-delay: .4s; }
   @keyframes cpb { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
   .cp-in { display: flex; gap: .4rem; padding: .55rem; border-top: 1px solid var(--border); background: #fff; }
-  .cp-in input { flex: 1; border: 1.5px solid var(--border); border-radius: 20px; padding: .5rem .8rem; font-size: .9rem; font-family: inherit; outline: none; }
+  .cp-in input { flex: 1; border: 1.5px solid var(--border); border-radius: 20px; padding: .5rem .8rem; font-size: 16px; font-family: inherit; outline: none; }
   .cp-in input:focus { border-color: #e59a1f; }
   .cp-in button { background: linear-gradient(135deg, #ffd873, #f6b73c); color: #6b4415; border: none; border-radius: 20px; padding: .5rem .9rem; font-weight: 800; font-size: .85rem; cursor: pointer; font-family: inherit; }
   .cp-in button:disabled { opacity: .5; cursor: not-allowed; }
@@ -959,16 +959,21 @@ async function gradeEssay(){
   if (!text){ box.innerHTML = '<div class="essay-fb">先在上面寫幾句作文，老師才能給你回饋喔～ ✍️</div>'; return; }
   box.innerHTML = '<div class="essay-fb">老師正在看你的作文… ✍️</div>';
   const q = '你是溫柔又專業的國小作文老師，正在指導小五學生之盈。請針對她下面這篇作文給鼓勵式回饋，分成兩段：先寫「👍 寫得好的地方」列 2-3 點；再寫「💡 可以更好的地方」列 2-3 點具體又好懂的建議（例如用詞、修辭、句子順序、標點、內容更豐富）。語氣要正向、具體、簡短。作文如下：\n\n' + text;
-  try {
-    const r = await fetch(CECILE_API_URL, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bot: 'cecile', q: q, history: [] }),
-    });
-    const d = await r.json();
-    box.innerHTML = '<div class="essay-fb">' + fmtFeedback(d && d.reply ? d.reply : '老師想一下下，等一下再按一次好嗎？') + '</div>';
-  } catch(e){
-    box.innerHTML = '<div class="essay-fb">網路好像不太順，等一下再按一次「請老師看看」好嗎？ 🎵</div>';
+  let fb = '';
+  // 上游模型偶爾回暫時性錯誤，重試幾次再放棄
+  for (let attempt = 0; attempt < 3 && !fb; attempt++) {
+    if (attempt > 0) await new Promise(function(res){ setTimeout(res, 1200); });
+    try {
+      const r = await fetch(CECILE_API_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bot: 'cecile', q: q, history: [] }),
+      });
+      const d = await r.json();
+      if (d && d.reply) fb = d.reply;
+    } catch(e){ /* 重試或給溫柔提示 */ }
   }
+  if (fb) box.innerHTML = '<div class="essay-fb">' + fmtFeedback(fb) + '</div>';
+  else box.innerHTML = '<div class="essay-fb">網路好像不太順，等一下再按一次「請老師看看」好嗎？ 🎵</div>';
 }
 function gameResult(){
   const total = gameQs.length;
@@ -1089,17 +1094,21 @@ async function sendCecile() {
   cecileHistory.push({ role: 'user', text: text });
   cecileTyping(true);
   let reply = '';
-  try {
-    const ctrl = new AbortController();
-    const to = setTimeout(function(){ ctrl.abort(); }, 20000);
-    const r = await fetch(CECILE_API_URL, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bot: 'cecile', q: text, history: prior }), signal: ctrl.signal,
-    });
-    clearTimeout(to);
-    const data = await r.json();
-    if (data && data.reply) reply = data.reply;
-  } catch (e) { /* 網路問題，給溫柔提示 */ }
+  // 上游模型偶爾回「高需求」暫時性錯誤，重試幾次再放棄
+  for (let attempt = 0; attempt < 3 && !reply; attempt++) {
+    if (attempt > 0) await new Promise(function(res){ setTimeout(res, 1200); });
+    try {
+      const ctrl = new AbortController();
+      const to = setTimeout(function(){ ctrl.abort(); }, 20000);
+      const r = await fetch(CECILE_API_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bot: 'cecile', q: text, history: prior }), signal: ctrl.signal,
+      });
+      clearTimeout(to);
+      const data = await r.json();
+      if (data && data.reply) reply = data.reply;
+    } catch (e) { /* 網路問題，重試或給溫柔提示 */ }
+  }
   cecileTyping(false);
   if (!reply) reply = '嗚，我這邊網路好像不太順，等一下再問我一次好嗎？🎵';
   cecileAppend('ce', reply);
