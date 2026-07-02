@@ -49,12 +49,6 @@
     position: relative;
     overflow: hidden;
   }
-  .hero::after {
-    content: '✨ 🐾 ✨ ⭐ ✨';
-    position: absolute; top: .7rem; left: 0; right: 0;
-    text-align: center; font-size: .9rem; opacity: .4; letter-spacing: 1rem;
-    pointer-events: none;
-  }
   .hero-badge {
     display: inline-block; background: rgba(255,255,255,.55);
     border: 1px solid rgba(255,255,255,.8); border-radius: 50px;
@@ -65,8 +59,6 @@
     font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800;
     color: #6b4415; text-shadow: 0 1px 6px rgba(255,255,255,.5); margin-bottom: .3rem;
   }
-  .hero .puppy { line-height: 1; margin-bottom: .3rem; display: flex; align-items: flex-end; justify-content: center; gap: .3rem; }
-  .puppy-svg { width: 96px; height: auto; filter: drop-shadow(0 3px 5px rgba(120,80,20,.25)); }
   .hero .encourage {
     font-size: .95rem; font-weight: 700; color: #7a5320;
     background: rgba(255,255,255,.5); display: inline-block;
@@ -344,28 +336,6 @@
   <!-- HERO -->
   <div class="hero">
     <div class="hero-badge">🎀 之盈專屬・升小五加油</div>
-    <div class="puppy">
-      <svg class="puppy-svg" viewBox="0 0 150 138" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="布丁狗">
-        <ellipse cx="26" cy="55" rx="15" ry="24" fill="#e3a12f" transform="rotate(-26 26 55)"/>
-        <ellipse cx="124" cy="55" rx="15" ry="24" fill="#e3a12f" transform="rotate(26 124 55)"/>
-        <ellipse cx="33" cy="84" rx="17" ry="31" fill="#f0b53a"/>
-        <ellipse cx="117" cy="84" rx="17" ry="31" fill="#f0b53a"/>
-        <ellipse cx="75" cy="80" rx="52" ry="45" fill="#ffe08a"/>
-        <ellipse cx="75" cy="106" rx="30" ry="16" fill="#fff0bb"/>
-        <ellipse cx="75" cy="36" rx="43" ry="16" fill="#8a5a2b"/>
-        <ellipse cx="75" cy="31" rx="28" ry="12" fill="#9c6a34"/>
-        <circle cx="75" cy="20" r="5.5" fill="#6f4520"/>
-        <circle cx="57" cy="78" r="5.5" fill="#4a3013"/>
-        <circle cx="93" cy="78" r="5.5" fill="#4a3013"/>
-        <circle cx="58.5" cy="76" r="1.8" fill="#fff"/>
-        <circle cx="94.5" cy="76" r="1.8" fill="#fff"/>
-        <ellipse cx="45" cy="92" rx="8" ry="5" fill="#ffb8a6" opacity="0.75"/>
-        <ellipse cx="105" cy="92" rx="8" ry="5" fill="#ffb8a6" opacity="0.75"/>
-        <ellipse cx="75" cy="90" rx="5.5" ry="4.5" fill="#7a4a24"/>
-        <path d="M75 94 q-9 9 -17 2.5" fill="none" stroke="#7a4a24" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M75 94 q9 9 17 2.5" fill="none" stroke="#7a4a24" stroke-width="2.6" stroke-linecap="round"/>
-      </svg>
-    </div>
     <h1>之盈的學習樂園</h1>
     <div class="encourage" id="encourage">今天也要拿第一！</div>
     <div class="countdown" id="countdown"></div>
