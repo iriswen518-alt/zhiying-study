@@ -671,10 +671,31 @@ function accBlock(item) {
     <div class="acc-body"><ul>${lis}</ul></div>
   </div>`;
 }
+// 每句英文加 🔊 發音鈕（唸箭頭後或括號前的英文）
+function sayBlock(item) {
+  const lis = item.points.map(p => {
+    let en;
+    if (p.includes('→')) en = p.split('→').pop();
+    else if (p.includes('=')) en = p.split('=')[0];
+    else en = p.split('（')[0];
+    en = en.replace(/_+/g, ' ').replace(/[^\x00-\x7F]/g, ' ').replace(/[?？]/g, ' ').replace(/\s+/g, ' ').trim();
+    const btn = /[a-zA-Z]/.test(en)
+      ? `<button class="speak-btn" onclick="speakSentence(this)" data-say="${en.replace(/"/g, '&quot;')}" aria-label="唸唸看">🔊</button> `
+      : '';
+    return `<li>${btn}${p}</li>`;
+  }).join('');
+  return `<div class="acc-sec">
+    <div class="acc-head" onclick="toggleAcc(this)">
+      <span class="left"><span class="arrow">▸</span>${item.subject}</span>
+      <span class="acc-date">${item.date}</span>
+    </div>
+    <div class="acc-body"><ul>${lis}</ul></div>
+  </div>`;
+}
 function render() {
   document.getElementById('courses-list').innerHTML = DATA.courses.map(accBlock).join('');
-  document.getElementById('patterns-list').innerHTML = DATA.patterns.map(accBlock).join('');
-  document.getElementById('quiz-list').innerHTML = DATA.quiz.map(accBlock).join('');
+  document.getElementById('patterns-list').innerHTML = DATA.patterns.map(sayBlock).join('');
+  document.getElementById('quiz-list').innerHTML = DATA.quiz.map(sayBlock).join('');
   document.getElementById('prompts-list').innerHTML = DATA.prompts.map(accBlock).join('');
   document.getElementById('tips-list').innerHTML = DATA.tips.map(accBlock).join('');
   document.getElementById('sample-list').innerHTML = DATA.sample.map(accBlock).join('');
@@ -708,6 +729,7 @@ function speakWord(word){
     window.speechSynthesis.speak(u);
   } catch(e){}
 }
+function speakSentence(el){ speakWord(el.getAttribute('data-say') || ''); }
 function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
 
 /* ================= 闖關遊戲 ================= */
