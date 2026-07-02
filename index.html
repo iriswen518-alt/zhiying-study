@@ -50,7 +50,7 @@
     overflow: hidden;
   }
   .hero::after {
-    content: '✨ 🎹 ✨ 🎵 ✨';
+    content: '✨ 🐾 ✨ ⭐ ✨';
     position: absolute; top: .7rem; left: 0; right: 0;
     text-align: center; font-size: .9rem; opacity: .4; letter-spacing: 1rem;
     pointer-events: none;
@@ -67,7 +67,6 @@
   }
   .hero .puppy { line-height: 1; margin-bottom: .3rem; display: flex; align-items: flex-end; justify-content: center; gap: .3rem; }
   .puppy-svg { width: 96px; height: auto; filter: drop-shadow(0 3px 5px rgba(120,80,20,.25)); }
-  .puppy-piano { font-size: 2rem; }
   .hero .encourage {
     font-size: .95rem; font-weight: 700; color: #7a5320;
     background: rgba(255,255,255,.5); display: inline-block;
@@ -347,6 +346,8 @@
     <div class="hero-badge">🎀 之盈專屬・升小五加油</div>
     <div class="puppy">
       <svg class="puppy-svg" viewBox="0 0 150 138" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="布丁狗">
+        <ellipse cx="26" cy="55" rx="15" ry="24" fill="#e3a12f" transform="rotate(-26 26 55)"/>
+        <ellipse cx="124" cy="55" rx="15" ry="24" fill="#e3a12f" transform="rotate(26 124 55)"/>
         <ellipse cx="33" cy="84" rx="17" ry="31" fill="#f0b53a"/>
         <ellipse cx="117" cy="84" rx="17" ry="31" fill="#f0b53a"/>
         <ellipse cx="75" cy="80" rx="52" ry="45" fill="#ffe08a"/>
@@ -364,7 +365,6 @@
         <path d="M75 94 q-9 9 -17 2.5" fill="none" stroke="#7a4a24" stroke-width="2.6" stroke-linecap="round"/>
         <path d="M75 94 q9 9 17 2.5" fill="none" stroke="#7a4a24" stroke-width="2.6" stroke-linecap="round"/>
       </svg>
-      <span class="puppy-piano">🎹</span>
     </div>
     <h1>之盈的學習樂園</h1>
     <div class="encourage" id="encourage">今天也要拿第一！</div>
@@ -429,16 +429,6 @@
       <div id="dict-result"></div>
     </section>
 
-    <!-- ===== 鋼琴練習 ===== -->
-    <section class="tab" id="piano">
-      <div class="sec-title">🎹 練習曲目</div>
-      <p class="lead">正在練的曲子，練完打個勾（右上角記錄）。</p>
-      <div id="pieces-list"></div>
-      <div class="sec-title">🎼 Cécile Corbel 專區</div>
-      <p class="lead">之盈最愛的歌手，凱爾特豎琴，夢幻又溫柔。</p>
-      <div id="cecile-list"></div>
-    </section>
-
     <!-- ===== 笑話收集 ===== -->
     <section class="tab" id="jokes">
       <div class="sec-title">😄 今日笑話</div>
@@ -464,18 +454,17 @@
   <button data-tab="english"><span class="ic">🔤</span>英文學習</button>
   <button data-tab="writing"><span class="ic">✏️</span>作文練習</button>
   <button data-tab="dict"><span class="ic">📖</span>國語辭典</button>
-  <button data-tab="piano"><span class="ic">🎹</span>鋼琴練習</button>
   <button data-tab="jokes"><span class="ic">😄</span>笑話收集</button>
   <button data-tab="game"><span class="ic">🎮</span>闖關遊戲</button>
 </nav>
 
 <!-- Cécile 聊聊 -->
 <button class="cecile-fab" id="cecileFab" onclick="toggleCecile()">
-  <span class="avatar">🎵</span>賽西爾 聊聊
+  <span class="avatar">🐶</span>賽西爾 聊聊
 </button>
 <div class="cecile-pop" id="cecilePop">
   <div class="cp-head">
-    <span class="avatar">🎵</span>
+    <span class="avatar">🐶</span>
     <span class="who">賽西爾<small>之盈的學習小夥伴</small></span>
     <button class="x" onclick="toggleCecile()" aria-label="關閉">×</button>
   </div>
@@ -525,7 +514,7 @@ const DATA = {
     ]},
   ],
   vocab: [
-    ['piano', 'n. 鋼琴'], ['practice', 'v./n. 練習'], ['music', 'n. 音樂'],
+    ['practice', 'v./n. 練習'], ['music', 'n. 音樂'],
     ['song', 'n. 歌曲'], ['singer', 'n. 歌手'], ['harp', 'n. 豎琴'],
     ['favorite', 'adj. 最喜歡的'], ['clever', 'adj. 聰明的'], ['proud', 'adj. 驕傲、自豪的'],
     ['grade', 'n. 年級；成績'], ['subject', 'n. 科目'], ['homework', 'n. 功課'],
@@ -538,7 +527,7 @@ const DATA = {
   ],
   patterns: [
     { subject: '基礎句型', date: '07/01', points: [
-      'I like ___ the best.（我最喜歡～）→ I like piano the best.',
+      'I like ___ the best.（我最喜歡～）→ I like reading the best.',
       'She is good at ___.（她很擅長～）→ She is good at telling jokes.',
       'I want to ___.（我想要～）→ I want to be number one!',
       'This is my favorite ___.（這是我最愛的～）→ This is my favorite song.'
@@ -551,11 +540,11 @@ const DATA = {
   ],
   quiz: [
     { subject: '中翻英', date: '07/01', points: [
-      '「我最喜歡鋼琴。」→ I like piano the best.',
+      '「我最喜歡看書。」→ I like reading the best.',
       '「她很會講笑話。」→ She is good at telling jokes.',
       '「我想考第一名。」→ I want to be number one.',
       '「這是我最愛的歌。」→ This is my favorite song.',
-      '「我每天練琴。」→ I practice the piano every day.'
+      '「我每天讀書。」→ I read every day.'
     ]},
     { subject: '看字選意思', date: '07/01', points: [
       'brave = ？（勇敢的）',
@@ -618,30 +607,9 @@ const DATA = {
       '（聲音、氣味、觸覺都寫進去了。）'
     ]},
   ],
-  pieces: [
-    ['小星星變奏曲', '基礎', false, 'tGSDVrnjDqI'],
-    ['歡樂頌', '基礎', false, 'i4bfhW7uLmc'],
-    ['小步舞曲（巴哈）', '基礎', false, 'icZob9-1MDw'],
-    ['給愛麗絲（前段）', '進階中', false, 'bP70gBZc564'],
-    ['卡農（簡化版）', '進階中', false, '1elGqARTb1Q'],
-    ['夢中的婚禮', '挑戰', false, '0MQ_iML1sVM'],
-  ],
-  cecile: [
-    ['Arrietty\'s Song', '《借物少女艾莉緹》主題曲，最經典的一首。', 'tV6S7xwLF8o'],
-    ['La Chanson d\'Arrietty', '同一首的法文版，一樣好聽。', 'yG2aCjDasrk'],
-    ['Le Long de l\'Eau', '沿著水流，凱爾特豎琴的溫柔。', 'FnLeUBUXn_c'],
-    ['En La Mar', '來自 Songbook 第二輯，海洋的歌。', '19f9Ds45fSE'],
-    ['La Poussière de l\'Air', '空氣中的塵埃，夢幻安靜。', 'bPfG_fshR2Y'],
-    ['Entendez-Vous', '你聽見了嗎？優美的合唱。', '60HkSUVxHX0'],
-    ['La Fille Damnée', '被詛咒的女孩，Songbook 第二輯的名曲。', 'oPCXFC1pmnc'],
-    ['Trois bateaux', '三艘小船，輕快的凱爾特小調。', 'smVjsiMkFXY'],
-    ['Joli whistle', '可愛的哨笛，活潑俏皮。', 'I2QvVIxzoik'],
-    ['Un pull de laine', '一件羊毛衣，溫暖的法文歌。', 'n58f3CIIs44'],
-  ],
   jokes: [
     ['為什麼布丁狗頭上要戴帽子？', '因為那頂咖啡色貝雷帽是牠的招牌呀！（牠是三麗鷗最愛睡覺的黃金獵犬）'],
     ['什麼水果最愛考第一名？', '「柚」秀的柚子！（優秀）'],
-    ['鋼琴為什麼進不了門？', '因為它的「琴鍵（鍵）」太多，卡住了！'],
     ['什麼歌手唱歌不用嘴巴？', '豎琴呀！它用「手」唱歌。（Cécile 的豎琴最厲害）'],
     ['老師：「用『果然』造句。」小明：「我先吃水果，然後喝湯。」', '哈哈，是「果然（ㄖㄢˊ）」不是「水果、然後」啦！'],
     ['為什麼數學課本總是很煩惱？', '因為它有太多「問題」了！'],
@@ -677,7 +645,6 @@ const DATA = {
     ['什麼花不怕冷？', '「雪」花！'],
     ['為什麼書包不會迷路？', '因為它每天都「背（背路）」得很熟！'],
     ['什麼時候 4 減 1 會等於 5？', '把時鐘的「四」點的一劃拿掉…開玩笑的，答案是 3 喔！'],
-    ['為什麼鋼琴很好客？', '因為它總是熱情地「彈（歡）迎」大家！'],
     ['什麼蛋不能吃？', '「臉」蛋！'],
     ['為什麼星星會眨眼睛？', '因為它們在跟認真讀書的小朋友打招呼呀！'],
     ['什麼帽子最愛第一名？', '「冠」軍的桂冠！'],
@@ -696,10 +663,9 @@ const DATA = {
     { tag: '自然', q: '水變成水蒸氣，這個變化叫做什麼？', options: ['凝結', '蒸發', '結冰', '融化'], ans: 1, exp: '液體的水變成氣體的水蒸氣，叫「蒸發」；反過來氣變液才是凝結。' },
     { tag: '自然', q: '水結成冰時，體積會怎麼變？', options: ['變大', '變小', '不變', '先變小再變大'], ans: 0, exp: '水結冰時體積會「變大」，這也是為什麼水管在冬天會被冰撐破。' },
     { tag: '社會', q: '台灣最長的河川是哪一條？', options: ['淡水河', '高屏溪', '濁水溪', '大甲溪'], ans: 2, exp: '濁水溪全長約 187 公里，是台灣最長的河川。' },
-    { tag: '英文', q: 'piano 的中文意思是？', options: ['小提琴', '鋼琴', '吉他', '長笛'], ans: 1, exp: 'piano 就是「鋼琴」；小提琴是 violin，吉他是 guitar。' },
     { tag: '英文', q: '「第一名」的英文是？', options: ['number one', 'first day', 'top ten', 'big one'], ans: 0, exp: '「第一名」是 number one；first day 是第一天，意思不一樣。' },
     { tag: '英文', q: 'She is good ___ telling jokes.（她很會講笑話）空格填？', options: ['at', 'in', 'on', 'to'], ans: 0, exp: '固定用法 be good at＋事情，表示「很擅長某件事」。' },
-    { tag: '英文', q: 'harp 是哪一種樂器？', options: ['鼓', '豎琴', '喇叭', '鋼琴'], ans: 1, exp: 'harp 是「豎琴」，就是 Cécile Corbel 彈的那種樂器喔！' },
+    { tag: '英文', q: 'harp 是哪一種樂器？', options: ['鼓', '豎琴', '喇叭', '吉他'], ans: 1, exp: 'harp 是「豎琴」，聲音很夢幻溫柔喔！' },
     { tag: '英文', q: '「勇敢的」英文是哪一個？', options: ['careful', 'clever', 'brave', 'proud'], ans: 2, exp: 'brave 是勇敢；careful 小心、clever 聰明、proud 驕傲。' },
     { tag: '數學', q: '24 和 36 的最大公因數是多少？', options: ['6', '8', '12', '18'], ans: 2, exp: '24＝2×2×2×3，36＝2×2×3×3，共同的是 2×2×3＝12。' },
     { tag: '數學', q: '3/5 － 1/5 等於多少？', options: ['2/5', '2/10', '4/5', '1/5'], ans: 0, exp: '分母相同時，分子相減：3－1＝2，分母 5 不變，得 2/5。' },
@@ -746,22 +712,6 @@ function render() {
   document.getElementById('vocab-list').innerHTML =
     '<div>' + DATA.vocab.map(v => `<div class="row-item"><button class="speak-btn" onclick="speakWord('${v[0]}')" aria-label="唸唸看">🔊</button><span class="en">${v[0]}</span><span class="zh">${v[1]}</span></div>`).join('') + '</div>';
 
-  document.getElementById('pieces-list').innerHTML = DATA.pieces.map((p,i) =>
-    `<div class="row-item" style="justify-content:space-between;align-items:center">
-       <label style="display:flex;gap:.5rem;align-items:center;cursor:pointer;flex:1;min-width:0">
-         <input type="checkbox" data-piece="${i}" onchange="savePiece(${i}, this.checked)">
-         <span class="en" style="min-width:auto">${p[0]}</span>
-         <span class="tag">${p[1]}</span></label>
-       <a class="play-btn" href="https://www.youtube.com/watch?v=${p[3]}" target="_blank" rel="noopener">▶️ 聽</a>
-     </div>`).join('');
-  DATA.pieces.forEach((p,i) => { const c = localStorage.getItem('piece'+i); if (c==='1') { const el=document.querySelector('[data-piece="'+i+'"]'); if(el) el.checked=true; } });
-
-  document.getElementById('cecile-list').innerHTML = DATA.cecile.map(c =>
-    `<div class="row-item" style="justify-content:space-between;align-items:center">
-       <div style="flex:1;min-width:0"><span class="en" style="min-width:auto">${c[0]}<span class="tag cecile">Cécile</span></span><span class="zh"> ${c[1]}</span></div>
-       <a class="play-btn" href="https://www.youtube.com/watch?v=${c[2]}" target="_blank" rel="noopener">▶️ 聽</a>
-     </div>`).join('');
-
   renderJokes();
 }
 function renderJokes(){
@@ -788,7 +738,6 @@ function speakWord(word){
     window.speechSynthesis.speak(u);
   } catch(e){}
 }
-function savePiece(i, checked) { localStorage.setItem('piece'+i, checked ? '1' : '0'); }
 function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
 
 /* ================= 闖關遊戲 ================= */
@@ -883,7 +832,7 @@ function gameAnswer(i){
 function gameNext(){ gameIdx++; gameRenderQ(); }
 
 /* ================= 國語辭典（教育部萌典 API，免金鑰、跨域） ================= */
-const DICT_HOT = ['蘋果', '聰明', '勇敢', '一絲不苟', '畫蛇添足', '鋼琴', '夢想'];
+const DICT_HOT = ['蘋果', '聰明', '勇敢', '一絲不苟', '畫蛇添足', '認真', '夢想'];
 function cleanDict(s){ return (s || '').replace(/[`~]/g, ''); }
 function renderDictHot(){
   document.getElementById('dict-hot').innerHTML =
@@ -973,7 +922,7 @@ async function gradeEssay(){
     } catch(e){ /* 重試或給溫柔提示 */ }
   }
   if (fb) box.innerHTML = '<div class="essay-fb">' + fmtFeedback(fb) + '</div>';
-  else box.innerHTML = '<div class="essay-fb">網路好像不太順，等一下再按一次「請老師看看」好嗎？ 🎵</div>';
+  else box.innerHTML = '<div class="essay-fb">網路好像不太順，等一下再按一次「請老師看看」好嗎？ 🐶</div>';
 }
 function gameResult(){
   const total = gameQs.length;
@@ -1031,7 +980,7 @@ function toggleCecile() {
   const open = pop.classList.toggle('show');
   if (open && !cecileStarted) {
     cecileStarted = true;
-    cecileAppend('ce', '哈囉之盈！我是 賽西爾 🎵\n功課有問題，或想聊聊音樂、鋼琴練習，都可以問我喔～');
+    cecileAppend('ce', '哈囉之盈！我是 賽西爾 🐶\n功課有問題，或想聊聊學校的事、看書心得，都可以問我喔～');
   }
   if (open) setTimeout(function(){ const i=document.getElementById('cecileInput'); if(i) i.focus(); }, 100);
 }
@@ -1046,7 +995,7 @@ function toggleCecileMic() {
   // iPhone / iPad 的 Safari 不支援網頁語音辨識，改用鍵盤內建的 🎤 聽寫
   if (isIOS || !SR) {
     if (input) input.focus();
-    cecileAppend('ce', '在 iPad／iPhone 上，點一下下面的打字框，鍵盤右下角會有一個 🎤，按住它就能用說的囉～說完會自動變成文字。🎵');
+    cecileAppend('ce', '在 iPad／iPhone 上，點一下下面的打字框，鍵盤右下角會有一個 🎤，按住它就能用說的囉～說完會自動變成文字。🐶');
     return;
   }
   if (cecileRecog) { cecileRecog.stop(); return; }
@@ -1060,8 +1009,8 @@ function toggleCecileMic() {
   const reset = function(){ cecileRecog = null; if (btn){ btn.classList.remove('rec'); btn.textContent = '🎤'; } };
   cecileRecog.onend = reset;
   cecileRecog.onerror = function(e){
-    if (e && e.error === 'not-allowed') cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。🎵');
-    else if (e && e.error === 'no-speech') cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🎵');
+    if (e && e.error === 'not-allowed') cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。🐶');
+    else if (e && e.error === 'no-speech') cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🐶');
     reset();
   };
   try { cecileRecog.start(); btn.classList.add('rec'); btn.textContent = '🔴'; } catch(e){ reset(); }
@@ -1110,7 +1059,7 @@ async function sendCecile() {
     } catch (e) { /* 網路問題，重試或給溫柔提示 */ }
   }
   cecileTyping(false);
-  if (!reply) reply = '嗚，我這邊網路好像不太順，等一下再問我一次好嗎？🎵';
+  if (!reply) reply = '嗚，我這邊網路好像不太順，等一下再問我一次好嗎？🐶';
   cecileAppend('ce', reply);
   cecileHistory.push({ role: 'assistant', text: reply });
   if (btn) btn.disabled = false;
