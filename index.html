@@ -391,7 +391,7 @@
   .listen-hint .word-reveal { font-weight: 800; color: var(--caramel); font-size: 1.05rem; }
 
   /* ===== 翻牌記憶關 ===== */
-  .mt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+  .mt-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .55rem; max-width: 420px; margin: 0 auto; }
   .mt-card {
     min-height: 58px; border-radius: 12px; border: 1.5px solid var(--primary-deep);
     background: linear-gradient(135deg, #ffd873, #f6b73c); color: #6b4415;
@@ -1151,18 +1151,19 @@ function lvListenAnswer(i){
 
 /* ---- 玩法四：翻牌記憶（英文↔中文配對） ---- */
 let lvM = null;
+const MATCH_PAIRS = 4; // 4 對 8 張，難度友善
 function lvMatchStart(lv){
-  const pairs = shuffle(DATA.vocab).slice(0, 6);
+  const pairs = shuffle(DATA.vocab).slice(0, MATCH_PAIRS);
   const cards = [];
   pairs.forEach((v, i) => { cards.push({ k: i, t: v[0] }); cards.push({ k: i, t: cleanZh(v[1]) }); });
   lvM = { lv, cards: shuffle(cards), first: null, busy: false, matched: 0, tries: 0 };
   const html = lvM.cards.map((c, i) => `<button class="mt-card" data-k="${c.k}" data-i="${i}" onclick="mtFlip(this)">?</button>`).join('');
   document.getElementById('game-area').innerHTML =
-    lvBar(lv, 0, 6) +
+    lvBar(lv, 0, MATCH_PAIRS) +
     `<div class="game-q">
        <span class="tagline">翻開卡片，幫英文和中文找到好朋友</span>
        <div class="mt-grid">${html}</div>
-       <div class="mt-stat" id="mt-stat">已配對 0／6 ・ 翻了 0 次</div>
+       <div class="mt-stat" id="mt-stat">已配對 0／${MATCH_PAIRS} ・ 翻了 0 次</div>
      </div>` + lvExit();
 }
 function mtFlip(btn){
@@ -1175,8 +1176,8 @@ function mtFlip(btn){
     a.classList.remove('up'); btn.classList.remove('up');
     a.classList.add('done'); btn.classList.add('done');
     s.matched++; mtStat();
-    if (s.matched === 6){
-      const stars = s.tries <= 8 ? 3 : s.tries <= 12 ? 2 : 1;
+    if (s.matched === MATCH_PAIRS){
+      const stars = s.tries <= MATCH_PAIRS + 2 ? 3 : s.tries <= MATCH_PAIRS + 5 ? 2 : 1;
       setTimeout(() => levelResult(s.lv, stars, `全部配對成功！總共翻了 ${s.tries} 次`), 700);
     }
   } else {
@@ -1185,15 +1186,15 @@ function mtFlip(btn){
       a.textContent = '?'; btn.textContent = '?';
       a.classList.remove('up'); btn.classList.remove('up');
       s.busy = false;
-    }, 850);
+    }, 1100);
   }
 }
 function mtStat(){
   const s = lvM;
   const st = document.getElementById('mt-stat');
-  if (st) st.textContent = `已配對 ${s.matched}／6 ・ 翻了 ${s.tries} 次`;
-  const p = document.getElementById('lv-prog'); if (p) p.style.width = Math.round(s.matched / 6 * 100) + '%';
-  const cnt = document.getElementById('lv-count'); if (cnt) cnt.textContent = `${s.matched}／6`;
+  if (st) st.textContent = `已配對 ${s.matched}／${MATCH_PAIRS} ・ 翻了 ${s.tries} 次`;
+  const p = document.getElementById('lv-prog'); if (p) p.style.width = Math.round(s.matched / MATCH_PAIRS * 100) + '%';
+  const cnt = document.getElementById('lv-count'); if (cnt) cnt.textContent = `${s.matched}／${MATCH_PAIRS}`;
 }
 function gameRenderQ(){
   if (gameIdx >= gameQs.length) return gameResult();
