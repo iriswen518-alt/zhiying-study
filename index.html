@@ -885,9 +885,14 @@ const LEVEL_TYPES = ['quiz', 'spell', 'listen', 'match'];
 const TYPE_NAME = { quiz: '知識問答', spell: '單字拼字', listen: '聽力猜字', match: '翻牌記憶' };
 const LOCK_SVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
 function levelType(lv){ return LEVEL_TYPES[(lv - 1) % 4]; }
-/* 種子亂數：同一關每次出一樣的題組，才能「這一關」被記住 */
-function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
-function seededShuffle(arr, seed){ const rnd=mulberry32(seed); const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+/* 出題原則：答對（學會）的題目不再重複，優先出還沒學會的；全學會了才拿舊題複習 */
+function pickFresh(pool, mastered, keyFn, n){
+  const fresh = shuffle(pool.filter(x => !mastered.has(keyFn(x))));
+  if (fresh.length >= n) return fresh.slice(0, n);
+  return fresh.concat(shuffle(pool.filter(x => mastered.has(keyFn(x))))).slice(0, n);
+}
+function getSetLS(key){ try { return new Set(JSON.parse(localStorage.getItem(key) || '[]')); } catch(e){ return new Set(); } }
+function addSetLS(key, val){ const s = getSetLS(key); s.add(val); localStorage.setItem(key, JSON.stringify([...s])); }
 function getLevelMap(){ try { return JSON.parse(localStorage.getItem('zyLevelStars') || '{}'); } catch(e){ return {}; } }
 function setLevelStars(lv, stars){ const m = getLevelMap(); if ((m[lv]||0) < stars){ m[lv] = stars; localStorage.setItem('zyLevelStars', JSON.stringify(m)); } }
 function levelUnlocked(lv){ return lv === 1 || (getLevelMap()[lv-1]||0) > 0; }
@@ -977,7 +982,7 @@ function levelResult(lv, stars, detail){
 /* ---- 玩法一：知識問答（5 題選擇，含連答 combo） ---- */
 let lvQ = null;
 function lvQuizStart(lv){
-  lvQ = { lv, qs: seededShuffle(DATA.game, lv * 37 + 5).slice(0, 5), idx: 0, score: 0, combo: 0, locked: false };
+  lvQ = { lv, qs: pickFresh(DATA.game, getMastered(), x => x.q, 5), idx: 0, score: 0, combo: 0, locked: false };
   lvQuizRender();
 }
 function lvQuizRender(){
@@ -1003,9 +1008,10 @@ function lvQuizAnswer(i){
   let head;
   if (i === q.ans){
     s.score++; s.combo++;
+    addMastered(q.q);
     btns[i].classList.add('correct');
     fb.className = 'game-fb ok';
-    head = s.combo >= 2 ? `答對了！🔥 連續答對 ${s.combo} 題！` : '答對了！太棒了 🎉';
+    head = (s.combo >= 2 ? `答對了！🔥 連續答對 ${s.combo} 題！` : '答對了！太棒了 🎉') + '（這題學會囉，之後不會再出現）';
   } else {
     s.combo = 0;
     btns[i].classList.add('wrong'); btns[q.ans].classList.add('correct');
@@ -1020,7 +1026,7 @@ function lvQuizAnswer(i){
 /* ---- 玩法二：單字拼字（看中文意思，點字母拼出英文） ---- */
 let lvS = null;
 function lvSpellStart(lv){
-  lvS = { lv, words: seededShuffle(SPELL_POOL, lv * 13 + 7).slice(0, 4), idx: 0, wrong: 0, cur: [], busy: false };
+  lvS = { lv, words: pickFresh(SPELL_POOL, getSetLS('spellMastered'), v => v[0], 4), idx: 0, wrong: 0, curWrong: 0, cur: [], busy: false };
   lvSpellRender();
 }
 function lvSpellRender(){
@@ -1029,9 +1035,10 @@ function lvSpellRender(){
     const stars = s.wrong === 0 ? 3 : s.wrong <= 2 ? 2 : 1;
     return levelResult(s.lv, stars, `拼對 ${s.words.length} 個單字，拼錯 ${s.wrong} 次`);
   }
-  s.cur = []; s.busy = false;
+  s.cur = []; s.busy = false; s.curWrong = 0;
   const word = s.words[s.idx][0], zh = s.words[s.idx][1];
-  const letters = seededShuffle(word.split(''), s.lv * 97 + s.idx * 11 + word.length);
+  let letters = shuffle(word.split(''));
+  if (letters.join('') === word) letters = shuffle(word.split(''));
   const slots = word.split('').map(() => '<div class="spell-slot"></div>').join('');
   const tiles = letters.map(ch => `<button class="spell-tile" data-ch="${ch}" onclick="spellTap(this)">${ch}</button>`).join('');
   document.getElementById('game-area').innerHTML =
@@ -1058,12 +1065,14 @@ function spellTap(btn){
     const fb = document.getElementById('game-fb');
     s.busy = true;
     if (guess.toLowerCase() === word.toLowerCase()){
+      if (s.curWrong === 0) addSetLS('spellMastered', word);
       box.classList.add('good');
-      fb.className = 'game-fb ok'; fb.textContent = '拼對了！🎉 ' + word;
+      fb.className = 'game-fb ok';
+      fb.textContent = '拼對了！🎉 ' + word + (s.curWrong === 0 ? '（一次就拼對，這個字學會囉！）' : '');
       speakWord(word);
       setTimeout(() => { s.idx++; lvSpellRender(); }, 1200);
     } else {
-      s.wrong++;
+      s.wrong++; s.curWrong++;
       box.classList.add('shake');
       fb.className = 'game-fb no'; fb.textContent = '差一點點，再拼一次！';
       setTimeout(() => {
@@ -1084,11 +1093,12 @@ function spellBack(){
 /* ---- 玩法三：聽力猜字（聽發音選出正確中文意思） ---- */
 let lvL = null;
 function lvListenStart(lv){
-  const pool = seededShuffle(DATA.vocab, lv * 29 + 11);
-  const qs = pool.slice(0, 5).map((v, i) => {
-    const wrong = pool.slice(5).filter(w => w[0] !== v[0]).slice(i * 3, i * 3 + 3).map(w => cleanZh(w[1]));
-    const options = seededShuffle([cleanZh(v[1]), ...wrong], lv * 61 + i * 7);
-    return { word: v[0], zh: cleanZh(v[1]), options, ans: options.indexOf(cleanZh(v[1])) };
+  const chosen = pickFresh(DATA.vocab, getSetLS('listenMastered'), v => v[0], 5);
+  const qs = chosen.map(v => {
+    const zh = cleanZh(v[1]);
+    const wrong = shuffle(DATA.vocab.filter(w => w[0] !== v[0] && cleanZh(w[1]) !== zh)).slice(0, 3).map(w => cleanZh(w[1]));
+    const options = shuffle([zh, ...wrong]);
+    return { word: v[0], zh, options, ans: options.indexOf(zh) };
   });
   lvL = { lv, qs, idx: 0, score: 0, combo: 0, locked: false };
   lvListenRender();
@@ -1125,9 +1135,10 @@ function lvListenAnswer(i){
   let head;
   if (i === q.ans){
     s.score++; s.combo++;
+    addSetLS('listenMastered', q.word);
     btns[i].classList.add('correct');
     fb.className = 'game-fb ok';
-    head = s.combo >= 2 ? `答對了！🔥 連續答對 ${s.combo} 題！` : '答對了！耳朵真靈 🎉';
+    head = (s.combo >= 2 ? `答對了！🔥 連續答對 ${s.combo} 題！` : '答對了！耳朵真靈 🎉') + '（這個字學會囉）';
   } else {
     s.combo = 0;
     btns[i].classList.add('wrong'); btns[q.ans].classList.add('correct');
@@ -1141,10 +1152,10 @@ function lvListenAnswer(i){
 /* ---- 玩法四：翻牌記憶（英文↔中文配對） ---- */
 let lvM = null;
 function lvMatchStart(lv){
-  const pairs = seededShuffle(DATA.vocab, lv * 53 + 17).slice(0, 6);
+  const pairs = shuffle(DATA.vocab).slice(0, 6);
   const cards = [];
   pairs.forEach((v, i) => { cards.push({ k: i, t: v[0] }); cards.push({ k: i, t: cleanZh(v[1]) }); });
-  lvM = { lv, cards: seededShuffle(cards, lv * 53 + 18), first: null, busy: false, matched: 0, tries: 0 };
+  lvM = { lv, cards: shuffle(cards), first: null, busy: false, matched: 0, tries: 0 };
   const html = lvM.cards.map((c, i) => `<button class="mt-card" data-k="${c.k}" data-i="${i}" onclick="mtFlip(this)">?</button>`).join('');
   document.getElementById('game-area').innerHTML =
     lvBar(lv, 0, 6) +
