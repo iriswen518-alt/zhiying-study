@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>之盈的學習樂園</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23f6c445'/><ellipse cx='16' cy='40' rx='6' ry='11' fill='%23f0b53a'/><ellipse cx='48' cy='40' rx='6' ry='11' fill='%23f0b53a'/><ellipse cx='32' cy='39' rx='19' ry='17' fill='%23ffe08a'/><ellipse cx='32' cy='23' rx='17' ry='7' fill='%238a5a2b'/><circle cx='25' cy='39' r='2.6' fill='%234a3013'/><circle cx='39' cy='39' r='2.6' fill='%234a3013'/><ellipse cx='32' cy='46' rx='2.6' ry='2' fill='%237a4a24'/></svg>">
@@ -25,6 +25,11 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* 遊戲連點答題不要觸發 iOS 雙擊放大 */
+  button, input, textarea, .acc-head, .joke, .lv-node {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
   html { height: 100%; }
   body {
     height: 100%;
@@ -191,7 +196,7 @@
   .essay-btn.rec { background: #ffe0e0; border-color: #e88; color: #c44; }
   .essay-input {
     width: 100%; min-height: 160px; border: 1.5px solid var(--border); border-radius: 14px;
-    padding: .8rem .9rem; font-size: 1rem; font-family: inherit; line-height: 1.75;
+    padding: .8rem .9rem; font-size: 16px; font-family: inherit; line-height: 1.75;
     outline: none; resize: vertical; background: #fff; color: var(--text);
   }
   .essay-input:focus { border-color: var(--primary-deep); }
@@ -206,7 +211,7 @@
   .dict-box { display: flex; gap: .5rem; margin-bottom: .8rem; }
   .dict-box input {
     flex: 1; min-width: 0; border: 1.5px solid var(--border); border-radius: 12px;
-    padding: .65rem .9rem; font-size: 1rem; font-family: inherit; outline: none; background: #fff;
+    padding: .65rem .9rem; font-size: 16px; font-family: inherit; outline: none; background: #fff;
   }
   .dict-box input:focus { border-color: var(--primary-deep); }
   .dict-box button {
