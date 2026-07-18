@@ -492,7 +492,7 @@
     <!-- ===== 闖關遊戲 ===== -->
     <section class="tab" id="game">
       <div class="sec-title">🎮 闖關遊戲</div>
-      <p class="lead">冒險地圖一關一關往前走，有問答、拼字、聽力、翻牌四種玩法！收集星星和徽章，每滿 100 顆星星還能跟媽媽換一杯珍珠鮮奶茶～</p>
+      <p class="lead">冒險地圖一關一關往前走，有問答、拼字、聽力、翻牌、作文五種玩法！收集星星和徽章，每滿 100 顆星星還能跟媽媽換一杯珍珠鮮奶茶～</p>
       <div id="game-area"></div>
     </section>
 
@@ -885,11 +885,11 @@ function gameAllDone(){
 }
 
 /* ================= 冒險地圖（16 關、四種玩法、過關解鎖下一關） ================= */
-const MAP_LEVELS = 16;
-const LEVEL_TYPES = ['quiz', 'spell', 'listen', 'match'];
-const TYPE_NAME = { quiz: '知識問答', spell: '單字拼字', listen: '聽力猜字', match: '翻牌記憶' };
+const MAP_LEVELS = 20;
+const LEVEL_TYPES = ['quiz', 'spell', 'listen', 'match', 'essay'];
+const TYPE_NAME = { quiz: '知識問答', spell: '單字拼字', listen: '聽力猜字', match: '翻牌記憶', essay: '作文挑戰' };
 const LOCK_SVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
-function levelType(lv){ return LEVEL_TYPES[(lv - 1) % 4]; }
+function levelType(lv){ return LEVEL_TYPES[(lv - 1) % LEVEL_TYPES.length]; }
 /* 出題原則：答對（學會）的題目不再重複，優先出還沒學會的；全學會了才拿舊題複習 */
 function pickFresh(pool, mastered, keyFn, n){
   const fresh = shuffle(pool.filter(x => !mastered.has(keyFn(x))));
@@ -916,6 +916,7 @@ function computeBadges(){
     { name: '拼字高手', on: has3('spell') },
     { name: '聽力天才', on: has3('listen') },
     { name: '記憶大師', on: has3('match') },
+    { name: '作文高手', on: has3('essay') },
     { name: '星星富翁', on: getTotalStars() >= 100 },
   ];
 }
@@ -955,7 +956,8 @@ function startLevel(lv){
   if (t === 'quiz') lvQuizStart(lv);
   else if (t === 'spell') lvSpellStart(lv);
   else if (t === 'listen') lvListenStart(lv);
-  else lvMatchStart(lv);
+  else if (t === 'match') lvMatchStart(lv);
+  else lvEssayStart(lv);
 }
 function lvBar(lv, done, total){
   const pct = Math.round(done / total * 100);
@@ -1200,6 +1202,75 @@ function mtStat(){
   if (st) st.textContent = `已配對 ${s.matched}／${MATCH_PAIRS} ・ 翻了 ${s.tries} 次`;
   const p = document.getElementById('lv-prog'); if (p) p.style.width = Math.round(s.matched / MATCH_PAIRS * 100) + '%';
   const cnt = document.getElementById('lv-count'); if (cnt) cnt.textContent = `${s.matched}／${MATCH_PAIRS}`;
+}
+
+/* ---- 玩法五：作文挑戰（小作文題目，AI 老師批改給星） ---- */
+const ESSAY_PROMPTS = [
+  '用「因為……所以……」寫一句話，說說你今天的心情。',
+  '用三句話描寫你最喜歡的食物，要寫到味道和口感。',
+  '用「像……一樣」寫兩個比喻句。',
+  '用三句話介紹布丁狗，讓沒看過的人也認識牠。',
+  '用看到的、聽到的、聞到的，寫下雨天的樣子，至少三句。',
+  '寫一段話謝謝媽媽，至少三句。',
+  '用「先……再……最後……」寫你怎麼準備考試。',
+  '描寫你的教室，至少三句話。',
+  '用三句話介紹你最喜歡的一首歌，說說聽的時候的感覺。',
+  '用「雖然……但是……」造兩個句子。',
+];
+let lvE = null;
+function lvEssayStart(lv){
+  const p = pickFresh(ESSAY_PROMPTS, getSetLS('essayMastered'), x => x, 1)[0];
+  lvE = { lv, prompt: p, busy: false };
+  document.getElementById('game-area').innerHTML =
+    lvBar(lv, 0, 1) +
+    `<div class="game-q">
+       <span class="tagline">作文挑戰</span>
+       <div class="qtext">${p}</div>
+       <textarea id="lv-essay" class="essay-input" style="min-height:130px" placeholder="在這裡寫下你的答案…（也可以點一下這裡，用鍵盤上的麥克風說出來）"></textarea>
+       <button class="btn-primary game-next" onclick="lvEssaySubmit()">完成挑戰</button>
+       <div class="game-fb" id="game-fb"></div>
+     </div>` + lvExit();
+}
+async function lvEssaySubmit(){
+  const s = lvE; if (s.busy) return;
+  const text = (document.getElementById('lv-essay').value || '').trim();
+  const fb = document.getElementById('game-fb');
+  if (text.length < 20){
+    fb.className = 'game-fb no';
+    fb.textContent = '再多寫一點點，至少兩三句話，老師才好批改喔～';
+    return;
+  }
+  s.busy = true;
+  fb.className = 'game-fb';
+  fb.textContent = '老師批改中… ✍️';
+  const q = '你是溫柔的國小作文老師，之盈（升小五）正在玩闖關遊戲的作文挑戰。題目：「' + s.prompt +
+    '」。她寫的內容：「' + text + '」。請批改：第一行只寫「星星：1」或「星星：2」或「星星：3」' +
+    '（3＝句子完整、有具體描寫或符合題目要求；2＝通順但可以更具體；1＝有完成但太簡短或偏題）。' +
+    '接著用2-3句話給回饋：先稱讚一個具體優點，再給一個好懂的建議。語氣正向簡短。';
+  let reply = '';
+  for (let a = 0; a < 3 && !reply; a++){
+    if (a > 0) await new Promise(r => setTimeout(r, 1200));
+    try {
+      const r = await fetch(CECILE_API_URL, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bot: 'cecile', q: q, history: [] }),
+      });
+      const d = await r.json();
+      if (d && d.reply) reply = d.reply;
+    } catch(e){}
+  }
+  s.busy = false;
+  if (!reply){
+    fb.className = 'game-fb no';
+    fb.textContent = '網路好像不太順，等一下再按一次「完成挑戰」好嗎？（寫的內容都還在）';
+    return;
+  }
+  const m = reply.match(/星星[：:]\s*([123])/);
+  const stars = m ? +m[1] : 2;
+  addSetLS('essayMastered', s.prompt);
+  const feedback = reply.replace(/^[^\n]*星星[：:][^\n]*\n?/, '').trim();
+  levelResult(s.lv, stars, '作文挑戰完成！' +
+    (feedback ? '<div class="game-exp" style="text-align:left;margin-top:.6rem">' + fmtFeedback(feedback) + '</div>' : ''));
 }
 function gameRenderQ(){
   if (gameIdx >= gameQs.length) return gameResult();
