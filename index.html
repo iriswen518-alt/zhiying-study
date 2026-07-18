@@ -487,7 +487,7 @@
     <!-- ===== 闖關遊戲 ===== -->
     <section class="tab" id="game">
       <div class="sec-title">🎮 闖關遊戲</div>
-      <p class="lead">冒險地圖一關一關往前走，有問答、拼字、聽力、翻牌四種玩法！收集星星和徽章，每滿 100 顆星星還能跟媽媽換一顆珍珠～</p>
+      <p class="lead">冒險地圖一關一關往前走，有問答、拼字、聽力、翻牌四種玩法！收集星星和徽章，每滿 100 顆星星還能跟媽媽換一杯珍珠鮮奶茶～</p>
       <div id="game-area"></div>
     </section>
 
@@ -833,11 +833,11 @@ let gameQs = [], gameIdx = 0, gameScore = 0, gameLocked = false;
 /* 累積星星（存 localStorage，永遠累加不歸零） */
 function getTotalStars(){ return parseInt(localStorage.getItem('totalStars') || '0', 10) || 0; }
 function addStars(n){ const t = getTotalStars() + n; localStorage.setItem('totalStars', t); return t; }
-/* 星星銀行：每滿 100 顆星星可以跟媽媽換一顆珍珠 */
-function starPearls(){ return Math.floor(getTotalStars() / 100); }
+/* 星星銀行：每滿 100 顆星星可以跟媽媽換一杯珍珠鮮奶茶 */
+function starCups(){ return Math.floor(getTotalStars() / 100); }
 function updateStarTotal(){
   const el = document.getElementById('starTotal');
-  if (el) el.innerHTML = '🌟 累積星星 <b>' + getTotalStars() + '</b> 顆 ・ 可跟媽媽換 <b>' + starPearls() + '</b> 顆珍珠';
+  if (el) el.innerHTML = '🌟 累積星星 <b>' + getTotalStars() + '</b> 顆 ・ 可跟媽媽換 <b>' + starCups() + '</b> 杯珍珠鮮奶茶';
 }
 const GAME_ROUND = 10; // 每局隨機抽幾題
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -926,15 +926,15 @@ function mapHome(){
       <div class="lv-type">${TYPE_NAME[levelType(lv)]}</div></div>`;
   }
   const stars = getTotalStars();
-  const pearls = starPearls();
+  const cups = starCups();
   const toNext = 100 - (stars % 100);
   document.getElementById('game-area').innerHTML = `
     <div class="map-wrap">
       <div class="map-head">冒險地圖 <small>已通過 ${passed}／${MAP_LEVELS} 關</small></div>
       <div class="map-grid">${nodes}</div>
     </div>
-    <div class="note" style="text-align:center">🌟 <b>星星銀行</b>：每滿 <b>100</b> 顆星星，可以跟媽媽換 <b>一顆珍珠</b>！<br>
-      目前 <b>${stars}</b> 顆${pearls > 0 ? '，已經可以換 <b>' + pearls + '</b> 顆珍珠，再收集 <b>' + toNext + '</b> 顆又能多換一顆～' : '，再收集 <b>' + toNext + '</b> 顆就能換一顆珍珠囉～'}</div>
+    <div class="note" style="text-align:center">🌟 <b>星星銀行</b>：每滿 <b>100</b> 顆星星，可以跟媽媽換 <b>一杯珍珠鮮奶茶</b>！<br>
+      目前 <b>${stars}</b> 顆${cups > 0 ? '，已經可以換 <b>' + cups + '</b> 杯珍珠鮮奶茶，再收集 <b>' + toNext + '</b> 顆又能多換一杯～' : '，再收集 <b>' + toNext + '</b> 顆就能換一杯珍珠鮮奶茶囉～'}</div>
     <div class="sec-title">成就徽章</div>
     <div class="badge-row">${computeBadges().map(b => `<span class="badge${b.on ? '' : ' off'}">${b.name}</span>`).join('')}</div>
     <div class="lv-exit"><button class="btn-primary btn-ghost" onclick="practiceHome()">自由練習</button></div>`;
