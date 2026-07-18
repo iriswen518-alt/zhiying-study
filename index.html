@@ -330,6 +330,80 @@
   .game-result .stars { font-size: 1.8rem; letter-spacing: .2rem; margin: .6rem 0; }
   .game-result .score { font-size: 1.1rem; color: var(--text); font-weight: 700; margin-bottom: 1.2rem; }
 
+  /* ===== 冒險地圖 ===== */
+  .map-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.1rem 1rem 1.2rem; }
+  .map-head { display: flex; align-items: center; justify-content: space-between; font-weight: 800; color: var(--caramel); margin-bottom: .9rem; }
+  .map-head small { font-size: .78rem; color: var(--muted); font-weight: 700; }
+  .map-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .9rem .4rem; }
+  .lv-node { text-align: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .lv-circle {
+    width: 52px; height: 52px; border-radius: 50%; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1.1rem; color: #6b4415;
+    background: linear-gradient(135deg, #ffd873, #f6b73c);
+    border: 2px solid var(--primary-deep); box-shadow: 0 3px 8px rgba(230,154,31,.28);
+  }
+  .lv-node.locked { pointer-events: none; }
+  .lv-node.locked .lv-circle { background: #f2eee3; color: #c9bfa8; border-color: #e4dcc8; box-shadow: none; }
+  .lv-node.current .lv-circle { animation: lvpulse 1.4s infinite; border-color: #d67f00; }
+  @keyframes lvpulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+  .lv-stars { font-size: .7rem; color: #f0a52a; margin-top: 2px; letter-spacing: .05em; min-height: .9rem; }
+  .lv-type { font-size: .66rem; color: var(--muted); font-weight: 700; }
+  .lv-node.locked .lv-type { color: #cfc6b0; }
+
+  .badge-row { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .badge {
+    font-size: .8rem; font-weight: 800; padding: .32rem .75rem; border-radius: 20px;
+    background: var(--active); color: var(--active-text); border: 1px solid var(--primary-deep);
+  }
+  .badge.off { background: #f4f0e6; color: #bfb298; border-color: #e4dcc8; }
+
+  /* ===== 單字拼字關 ===== */
+  .spell-word { text-align: center; font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: .3rem; }
+  .spell-slots { display: flex; gap: .35rem; justify-content: center; margin: .9rem 0 1rem; flex-wrap: wrap; }
+  .spell-slot {
+    width: 32px; height: 42px; display: flex; align-items: center; justify-content: center;
+    border-bottom: 3px solid var(--primary-deep); font-size: 1.25rem; font-weight: 800; color: var(--caramel);
+  }
+  .spell-slots.shake { animation: spshake .5s; }
+  .spell-slots.good .spell-slot { color: #2f7d5b; border-color: var(--success); }
+  @keyframes spshake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-7px)} 40%,80%{transform:translateX(7px)} }
+  .spell-tiles { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; margin-bottom: .9rem; }
+  .spell-tile {
+    width: 42px; height: 46px; border-radius: 10px; background: #fff6dc;
+    border: 1.5px solid var(--primary-deep); color: var(--caramel);
+    font-size: 1.15rem; font-weight: 800; font-family: inherit; cursor: pointer;
+  }
+  .spell-tile:disabled { opacity: .22; }
+  .spell-tools { display: flex; gap: .5rem; justify-content: center; }
+
+  /* ===== 聽力猜字關 ===== */
+  .listen-play {
+    display: flex; align-items: center; justify-content: center; margin: .4rem auto 1rem;
+    width: 72px; height: 72px; border-radius: 50%; cursor: pointer;
+    background: linear-gradient(135deg, #ffd873, #f6b73c); color: #6b4415;
+    border: 2px solid var(--primary-deep); font-size: 1.7rem;
+    box-shadow: 0 4px 12px rgba(230,154,31,.35);
+  }
+  .listen-play:active { transform: scale(.94); }
+  .listen-hint { text-align: center; margin-bottom: .8rem; }
+  .listen-hint button { background: none; border: none; color: var(--muted); font-size: .8rem; font-weight: 700; font-family: inherit; cursor: pointer; text-decoration: underline; }
+  .listen-hint .word-reveal { font-weight: 800; color: var(--caramel); font-size: 1.05rem; }
+
+  /* ===== 翻牌記憶關 ===== */
+  .mt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+  .mt-card {
+    min-height: 58px; border-radius: 12px; border: 1.5px solid var(--primary-deep);
+    background: linear-gradient(135deg, #ffd873, #f6b73c); color: #6b4415;
+    font-size: .88rem; font-weight: 800; font-family: inherit; cursor: pointer;
+    padding: .3rem .25rem; word-break: break-word; transition: .15s;
+  }
+  .mt-card.up { background: #fff; color: var(--text); }
+  .mt-card.done { background: #e4f5ec; border-color: var(--success); color: #2f7d5b; pointer-events: none; }
+  .mt-stat { text-align: center; color: var(--muted); font-size: .85rem; font-weight: 700; margin: .7rem 0 0; }
+
+  .lv-exit { text-align: center; margin-top: .8rem; }
+
   footer { text-align: center; color: var(--muted); font-size: .78rem; padding: 1.5rem 1rem 1rem; }
 </style>
 </head>
@@ -413,7 +487,7 @@
     <!-- ===== 闖關遊戲 ===== -->
     <section class="tab" id="game">
       <div class="sec-title">🎮 闖關遊戲</div>
-      <p class="lead">小五課程和英文題目大挑戰！答對就過關，看看能拿幾顆星。</p>
+      <p class="lead">冒險地圖一關一關往前走，有問答、拼字、聽力、翻牌四種玩法！收集星星和徽章，滿 100 顆星星還能跟媽媽換 100 元～</p>
       <div id="game-area"></div>
     </section>
 
@@ -759,16 +833,18 @@ let gameQs = [], gameIdx = 0, gameScore = 0, gameLocked = false;
 /* 累積星星（存 localStorage，永遠累加不歸零） */
 function getTotalStars(){ return parseInt(localStorage.getItem('totalStars') || '0', 10) || 0; }
 function addStars(n){ const t = getTotalStars() + n; localStorage.setItem('totalStars', t); return t; }
+/* 星星銀行：每滿 100 顆星星可以跟媽媽換 100 元 */
+function starMoney(){ return Math.floor(getTotalStars() / 100) * 100; }
 function updateStarTotal(){
   const el = document.getElementById('starTotal');
-  if (el) el.innerHTML = '🌟 累積星星 <b>' + getTotalStars() + '</b> 顆';
+  if (el) el.innerHTML = '🌟 累積星星 <b>' + getTotalStars() + '</b> 顆 ・ 可跟媽媽換 <b>' + starMoney() + '</b> 元';
 }
 const GAME_ROUND = 10; // 每局隨機抽幾題
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 /* 已答對（學會）的題目就隱藏，之後不再出現 */
 function getMastered(){ try { return new Set(JSON.parse(localStorage.getItem('gameMastered') || '[]')); } catch(e){ return new Set(); } }
 function addMastered(qtext){ const s = getMastered(); s.add(qtext); localStorage.setItem('gameMastered', JSON.stringify([...s])); }
-function resetMastered(){ localStorage.removeItem('gameMastered'); gameHome(); }
+function resetMastered(){ localStorage.removeItem('gameMastered'); practiceHome(); }
 function remainingQs(){ const m = getMastered(); return DATA.game.filter(x => !m.has(x.q)); }
 function gameStart(){
   const pool = remainingQs();
@@ -777,18 +853,19 @@ function gameStart(){
   gameIdx = 0; gameScore = 0; gameLocked = false;
   gameRenderQ();
 }
-function gameHome(){
+function practiceHome(){
   const remain = remainingQs().length;
   const learned = DATA.game.length - remain;
   if (remain === 0){ return gameAllDone(); }
   document.getElementById('game-area').innerHTML =
     `<div class="game-start">
        <div class="big">🎮⭐</div>
-       <h3>準備好闖關了嗎？</h3>
+       <h3>自由練習模式</h3>
        <p>每局隨機 ${Math.min(GAME_ROUND, remain)} 題，答對的題目會學起來、之後就不再出現。<br>還沒學會 <b>${remain}</b> 題　已經學會 <b>${learned}</b> 題。</p>
        <p style="font-weight:800;color:var(--caramel)">🌟 你已經累積 ${getTotalStars()} 顆星星！</p>
-       <button class="btn-primary" onclick="gameStart()">開始闖關</button>
+       <button class="btn-primary" onclick="gameStart()">開始練習</button>
        ${learned > 0 ? '<button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="resetMastered()">重新練習</button>' : ''}
+       <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="mapHome()">回到地圖</button>
      </div>`;
 }
 function gameAllDone(){
@@ -798,7 +875,314 @@ function gameAllDone(){
        <h3>太厲害了！全部題目都學會了！</h3>
        <div class="score">你把 ${DATA.game.length} 題全部答對過了，第一名就是你！<br>之後老師會再加新題目上來喔～</div>
        <button class="btn-primary btn-ghost" onclick="resetMastered()">重新練習</button>
+       <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="mapHome()">回到地圖</button>
      </div>`;
+}
+
+/* ================= 冒險地圖（16 關、四種玩法、過關解鎖下一關） ================= */
+const MAP_LEVELS = 16;
+const LEVEL_TYPES = ['quiz', 'spell', 'listen', 'match'];
+const TYPE_NAME = { quiz: '知識問答', spell: '單字拼字', listen: '聽力猜字', match: '翻牌記憶' };
+const LOCK_SVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+function levelType(lv){ return LEVEL_TYPES[(lv - 1) % 4]; }
+/* 種子亂數：同一關每次出一樣的題組，才能「這一關」被記住 */
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function seededShuffle(arr, seed){ const rnd=mulberry32(seed); const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function getLevelMap(){ try { return JSON.parse(localStorage.getItem('zyLevelStars') || '{}'); } catch(e){ return {}; } }
+function setLevelStars(lv, stars){ const m = getLevelMap(); if ((m[lv]||0) < stars){ m[lv] = stars; localStorage.setItem('zyLevelStars', JSON.stringify(m)); } }
+function levelUnlocked(lv){ return lv === 1 || (getLevelMap()[lv-1]||0) > 0; }
+function cleanZh(s){ return String(s).replace(/^[a-z./]+\s*/i, ''); }
+const SPELL_POOL = DATA.vocab.filter(v => /^[a-z]{3,9}$/i.test(v[0]));
+
+function computeBadges(){
+  const m = getLevelMap();
+  const passed = Object.keys(m).filter(k => m[k] > 0).length;
+  const has3 = t => Object.keys(m).some(k => m[k] >= 3 && levelType(+k) === t);
+  return [
+    { name: '初次過關', on: passed >= 1 },
+    { name: '過關達人', on: passed >= 8 },
+    { name: '全圖通關', on: passed >= MAP_LEVELS },
+    { name: '問答王者', on: has3('quiz') },
+    { name: '拼字高手', on: has3('spell') },
+    { name: '聽力天才', on: has3('listen') },
+    { name: '記憶大師', on: has3('match') },
+    { name: '星星富翁', on: getTotalStars() >= 100 },
+  ];
+}
+function mapHome(){
+  const m = getLevelMap();
+  const passed = Object.keys(m).filter(k => m[k] > 0).length;
+  let nodes = '', currentMarked = false;
+  for (let lv = 1; lv <= MAP_LEVELS; lv++){
+    const s = m[lv] || 0;
+    const unlocked = levelUnlocked(lv);
+    const isCurrent = unlocked && s === 0 && !currentMarked;
+    if (isCurrent) currentMarked = true;
+    const cls = 'lv-node' + (unlocked ? '' : ' locked') + (isCurrent ? ' current' : '');
+    const starStr = s > 0 ? '★'.repeat(s) + '☆'.repeat(3 - s) : '';
+    nodes += `<div class="${cls}" onclick="startLevel(${lv})">
+      <div class="lv-circle">${unlocked ? lv : LOCK_SVG}</div>
+      <div class="lv-stars">${starStr}</div>
+      <div class="lv-type">${TYPE_NAME[levelType(lv)]}</div></div>`;
+  }
+  const stars = getTotalStars();
+  const money = starMoney();
+  const toNext = 100 - (stars % 100);
+  document.getElementById('game-area').innerHTML = `
+    <div class="map-wrap">
+      <div class="map-head">冒險地圖 <small>已通過 ${passed}／${MAP_LEVELS} 關</small></div>
+      <div class="map-grid">${nodes}</div>
+    </div>
+    <div class="note" style="text-align:center">🌟 <b>星星銀行</b>：每滿 <b>100</b> 顆星星，可以跟媽媽換 <b>100</b> 元零用錢！<br>
+      目前 <b>${stars}</b> 顆${money > 0 ? '，已經可以換 <b>' + money + '</b> 元，再收集 <b>' + toNext + '</b> 顆又能多換 100 元～' : '，再收集 <b>' + toNext + '</b> 顆就能換 100 元囉～'}</div>
+    <div class="sec-title">成就徽章</div>
+    <div class="badge-row">${computeBadges().map(b => `<span class="badge${b.on ? '' : ' off'}">${b.name}</span>`).join('')}</div>
+    <div class="lv-exit"><button class="btn-primary btn-ghost" onclick="practiceHome()">自由練習</button></div>`;
+}
+function startLevel(lv){
+  if (!levelUnlocked(lv)) return;
+  const t = levelType(lv);
+  if (t === 'quiz') lvQuizStart(lv);
+  else if (t === 'spell') lvSpellStart(lv);
+  else if (t === 'listen') lvListenStart(lv);
+  else lvMatchStart(lv);
+}
+function lvBar(lv, done, total){
+  const pct = Math.round(done / total * 100);
+  return `<div class="game-bar"><span>第 ${lv} 關・${TYPE_NAME[levelType(lv)]}</span>
+    <div class="game-prog"><div id="lv-prog" style="width:${pct}%"></div></div><span id="lv-count">${done}／${total}</span></div>`;
+}
+function lvExit(){ return '<div class="lv-exit"><button class="essay-btn" onclick="mapHome()">回到地圖</button></div>'; }
+function levelResult(lv, stars, detail){
+  if (stars > 0){ setLevelStars(lv, stars); addStars(stars); updateStarTotal(); }
+  const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  const msg = stars === 3 ? '三顆星滿分！超級厲害！' :
+              stars === 2 ? '好棒！再挑戰一次拿三顆星！' :
+              stars === 1 ? '過關了！多練幾次會更棒！' : '差一點點，再試一次一定可以！';
+  const nextBtn = (stars > 0 && lv < MAP_LEVELS)
+    ? `<button class="btn-primary" onclick="startLevel(${lv + 1})">前往下關</button>` : '';
+  document.getElementById('game-area').innerHTML =
+    `<div class="game-result">
+       <div class="trophy">${stars === 3 ? '🏆' : stars > 0 ? '🌟' : '💪'}</div>
+       <h3>${stars > 0 ? '闖關成功！' : '再接再厲！'}</h3>
+       <div class="stars">${starStr}</div>
+       <div class="score">${detail}<br>${msg}</div>
+       ${stars > 0 ? `<div class="star-total" style="color:#7a5320;background:#fff6dc;border:1px dashed var(--primary-deep);margin-bottom:1.2rem">這關 +${stars} 顆星 🌟　累積 ${getTotalStars()} 顆</div><br>` : ''}
+       ${nextBtn}
+       <button class="btn-primary${stars > 0 ? ' btn-ghost' : ''}" style="margin-top:.6rem" onclick="startLevel(${lv})">再玩一次</button>
+       <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="mapHome()">回到地圖</button>
+     </div>`;
+}
+
+/* ---- 玩法一：知識問答（5 題選擇，含連答 combo） ---- */
+let lvQ = null;
+function lvQuizStart(lv){
+  lvQ = { lv, qs: seededShuffle(DATA.game, lv * 37 + 5).slice(0, 5), idx: 0, score: 0, combo: 0, locked: false };
+  lvQuizRender();
+}
+function lvQuizRender(){
+  const s = lvQ;
+  if (s.idx >= s.qs.length){
+    const stars = s.score >= 5 ? 3 : s.score >= 4 ? 2 : s.score >= 3 ? 1 : 0;
+    return levelResult(s.lv, stars, `答對 ${s.score}／${s.qs.length} 題`);
+  }
+  s.locked = false;
+  const q = s.qs[s.idx];
+  const opts = q.options.map((o, i) => `<button class="opt" onclick="lvQuizAnswer(${i})">${o}</button>`).join('');
+  document.getElementById('game-area').innerHTML =
+    lvBar(s.lv, s.idx, s.qs.length) +
+    `<div class="game-q"><span class="tagline">${q.tag}</span><div class="qtext">${q.q}</div>${opts}
+     <div class="game-fb" id="game-fb"></div></div>` + lvExit();
+}
+function lvQuizAnswer(i){
+  const s = lvQ; if (s.locked) return; s.locked = true;
+  const q = s.qs[s.idx];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  const fb = document.getElementById('game-fb');
+  let head;
+  if (i === q.ans){
+    s.score++; s.combo++;
+    btns[i].classList.add('correct');
+    fb.className = 'game-fb ok';
+    head = s.combo >= 2 ? `答對了！🔥 連續答對 ${s.combo} 題！` : '答對了！太棒了 🎉';
+  } else {
+    s.combo = 0;
+    btns[i].classList.add('wrong'); btns[q.ans].classList.add('correct');
+    fb.className = 'game-fb no';
+    head = '再想想～正確答案是「' + q.options[q.ans] + '」';
+  }
+  const isLast = s.idx >= s.qs.length - 1;
+  fb.innerHTML = head + (q.exp ? '<div class="game-exp">💡 為什麼：' + q.exp + '</div>' : '') +
+    '<button class="btn-primary game-next" onclick="lvQ.idx++;lvQuizRender()">' + (isLast ? '查看結果' : '繼續作答') + '</button>';
+}
+
+/* ---- 玩法二：單字拼字（看中文意思，點字母拼出英文） ---- */
+let lvS = null;
+function lvSpellStart(lv){
+  lvS = { lv, words: seededShuffle(SPELL_POOL, lv * 13 + 7).slice(0, 4), idx: 0, wrong: 0, cur: [], busy: false };
+  lvSpellRender();
+}
+function lvSpellRender(){
+  const s = lvS;
+  if (s.idx >= s.words.length){
+    const stars = s.wrong === 0 ? 3 : s.wrong <= 2 ? 2 : 1;
+    return levelResult(s.lv, stars, `拼對 ${s.words.length} 個單字，拼錯 ${s.wrong} 次`);
+  }
+  s.cur = []; s.busy = false;
+  const word = s.words[s.idx][0], zh = s.words[s.idx][1];
+  const letters = seededShuffle(word.split(''), s.lv * 97 + s.idx * 11 + word.length);
+  const slots = word.split('').map(() => '<div class="spell-slot"></div>').join('');
+  const tiles = letters.map(ch => `<button class="spell-tile" data-ch="${ch}" onclick="spellTap(this)">${ch}</button>`).join('');
+  document.getElementById('game-area').innerHTML =
+    lvBar(s.lv, s.idx, s.words.length) +
+    `<div class="game-q">
+       <span class="tagline">拼出這個英文單字</span>
+       <div class="spell-word"><button class="speak-btn" onclick="speakWord('${word}')" aria-label="唸唸看">${ICON_VOL}</button> ${cleanZh(zh)}</div>
+       <div class="spell-slots" id="spell-slots">${slots}</div>
+       <div class="spell-tiles">${tiles}</div>
+       <div class="spell-tools"><button class="essay-btn" onclick="spellBack()">退後一格</button></div>
+       <div class="game-fb" id="game-fb"></div>
+     </div>` + lvExit();
+}
+function spellTap(btn){
+  const s = lvS; if (s.busy) return;
+  btn.disabled = true;
+  s.cur.push(btn);
+  const slots = document.querySelectorAll('.spell-slot');
+  slots[s.cur.length - 1].textContent = btn.dataset.ch;
+  const word = s.words[s.idx][0];
+  if (s.cur.length === word.length){
+    const guess = s.cur.map(b => b.dataset.ch).join('');
+    const box = document.getElementById('spell-slots');
+    const fb = document.getElementById('game-fb');
+    s.busy = true;
+    if (guess.toLowerCase() === word.toLowerCase()){
+      box.classList.add('good');
+      fb.className = 'game-fb ok'; fb.textContent = '拼對了！🎉 ' + word;
+      speakWord(word);
+      setTimeout(() => { s.idx++; lvSpellRender(); }, 1200);
+    } else {
+      s.wrong++;
+      box.classList.add('shake');
+      fb.className = 'game-fb no'; fb.textContent = '差一點點，再拼一次！';
+      setTimeout(() => {
+        box.classList.remove('shake');
+        slots.forEach(sl => sl.textContent = '');
+        s.cur.forEach(b => b.disabled = false);
+        s.cur = []; s.busy = false; fb.textContent = '';
+      }, 800);
+    }
+  }
+}
+function spellBack(){
+  const s = lvS; if (s.busy || !s.cur.length) return;
+  const btn = s.cur.pop(); btn.disabled = false;
+  document.querySelectorAll('.spell-slot')[s.cur.length].textContent = '';
+}
+
+/* ---- 玩法三：聽力猜字（聽發音選出正確中文意思） ---- */
+let lvL = null;
+function lvListenStart(lv){
+  const pool = seededShuffle(DATA.vocab, lv * 29 + 11);
+  const qs = pool.slice(0, 5).map((v, i) => {
+    const wrong = pool.slice(5).filter(w => w[0] !== v[0]).slice(i * 3, i * 3 + 3).map(w => cleanZh(w[1]));
+    const options = seededShuffle([cleanZh(v[1]), ...wrong], lv * 61 + i * 7);
+    return { word: v[0], zh: cleanZh(v[1]), options, ans: options.indexOf(cleanZh(v[1])) };
+  });
+  lvL = { lv, qs, idx: 0, score: 0, combo: 0, locked: false };
+  lvListenRender();
+}
+function lvListenRender(){
+  const s = lvL;
+  if (s.idx >= s.qs.length){
+    const stars = s.score >= 5 ? 3 : s.score >= 4 ? 2 : s.score >= 3 ? 1 : 0;
+    return levelResult(s.lv, stars, `答對 ${s.score}／${s.qs.length} 題`);
+  }
+  s.locked = false;
+  const q = s.qs[s.idx];
+  const opts = q.options.map((o, i) => `<button class="opt" onclick="lvListenAnswer(${i})">${o}</button>`).join('');
+  document.getElementById('game-area').innerHTML =
+    lvBar(s.lv, s.idx, s.qs.length) +
+    `<div class="game-q">
+       <span class="tagline">點喇叭聽單字，選出正確的意思</span>
+       <button class="listen-play" onclick="speakWord('${q.word}')" aria-label="播放單字">${ICON_VOL}</button>
+       <div class="listen-hint" id="listen-hint"><button onclick="listenPeek()">聽不清楚？偷看一下</button></div>
+       ${opts}
+       <div class="game-fb" id="game-fb"></div>
+     </div>` + lvExit();
+}
+function listenPeek(){
+  const q = lvL.qs[lvL.idx];
+  document.getElementById('listen-hint').innerHTML = '<span class="word-reveal">' + q.word + '</span>';
+}
+function lvListenAnswer(i){
+  const s = lvL; if (s.locked) return; s.locked = true;
+  const q = s.qs[s.idx];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  const fb = document.getElementById('game-fb');
+  let head;
+  if (i === q.ans){
+    s.score++; s.combo++;
+    btns[i].classList.add('correct');
+    fb.className = 'game-fb ok';
+    head = s.combo >= 2 ? `答對了！🔥 連續答對 ${s.combo} 題！` : '答對了！耳朵真靈 🎉';
+  } else {
+    s.combo = 0;
+    btns[i].classList.add('wrong'); btns[q.ans].classList.add('correct');
+    fb.className = 'game-fb no';
+    head = '是「' + q.word + '」，意思是「' + q.zh + '」';
+  }
+  const isLast = s.idx >= s.qs.length - 1;
+  fb.innerHTML = head + '<button class="btn-primary game-next" onclick="lvL.idx++;lvListenRender()">' + (isLast ? '查看結果' : '繼續作答') + '</button>';
+}
+
+/* ---- 玩法四：翻牌記憶（英文↔中文配對） ---- */
+let lvM = null;
+function lvMatchStart(lv){
+  const pairs = seededShuffle(DATA.vocab, lv * 53 + 17).slice(0, 6);
+  const cards = [];
+  pairs.forEach((v, i) => { cards.push({ k: i, t: v[0] }); cards.push({ k: i, t: cleanZh(v[1]) }); });
+  lvM = { lv, cards: seededShuffle(cards, lv * 53 + 18), first: null, busy: false, matched: 0, tries: 0 };
+  const html = lvM.cards.map((c, i) => `<button class="mt-card" data-k="${c.k}" data-i="${i}" onclick="mtFlip(this)">?</button>`).join('');
+  document.getElementById('game-area').innerHTML =
+    lvBar(lv, 0, 6) +
+    `<div class="game-q">
+       <span class="tagline">翻開卡片，幫英文和中文找到好朋友</span>
+       <div class="mt-grid">${html}</div>
+       <div class="mt-stat" id="mt-stat">已配對 0／6 ・ 翻了 0 次</div>
+     </div>` + lvExit();
+}
+function mtFlip(btn){
+  const s = lvM; if (s.busy || btn.classList.contains('up') || btn.classList.contains('done')) return;
+  const c = s.cards[+btn.dataset.i];
+  btn.textContent = c.t; btn.classList.add('up');
+  if (!s.first){ s.first = btn; return; }
+  const a = s.first; s.first = null; s.tries++;
+  if (a.dataset.k === btn.dataset.k){
+    a.classList.remove('up'); btn.classList.remove('up');
+    a.classList.add('done'); btn.classList.add('done');
+    s.matched++; mtStat();
+    if (s.matched === 6){
+      const stars = s.tries <= 8 ? 3 : s.tries <= 12 ? 2 : 1;
+      setTimeout(() => levelResult(s.lv, stars, `全部配對成功！總共翻了 ${s.tries} 次`), 700);
+    }
+  } else {
+    s.busy = true; mtStat();
+    setTimeout(() => {
+      a.textContent = '?'; btn.textContent = '?';
+      a.classList.remove('up'); btn.classList.remove('up');
+      s.busy = false;
+    }, 850);
+  }
+}
+function mtStat(){
+  const s = lvM;
+  const st = document.getElementById('mt-stat');
+  if (st) st.textContent = `已配對 ${s.matched}／6 ・ 翻了 ${s.tries} 次`;
+  const p = document.getElementById('lv-prog'); if (p) p.style.width = Math.round(s.matched / 6 * 100) + '%';
+  const cnt = document.getElementById('lv-count'); if (cnt) cnt.textContent = `${s.matched}／6`;
 }
 function gameRenderQ(){
   if (gameIdx >= gameQs.length) return gameResult();
@@ -907,7 +1291,15 @@ function toggleMic(){
     if (t){ const ta = document.getElementById('essayInput'); ta.value += t; }
   };
   const reset = () => { essayRecog = null; btn.classList.remove('rec'); btn.innerHTML = ICON_MIC + ' 語音輸入'; };
-  essayRecog.onend = reset; essayRecog.onerror = reset;
+  essayRecog.onend = reset;
+  essayRecog.onerror = e => {
+    const err = e && e.error;
+    reset();
+    if (err === 'not-allowed' || err === 'service-not-allowed')
+      alert('要用語音輸入，請先允許瀏覽器使用麥克風（按網址列的鎖頭圖示 → 麥克風 → 允許），再試一次。');
+    else if (err && err !== 'aborted' && err !== 'no-speech')
+      alert('語音輸入怪怪的，可以點一下輸入框，改用鍵盤上的麥克風聽寫喔。');
+  };
   try { essayRecog.start(); btn.classList.add('rec'); btn.innerHTML = ICON_STOP + ' 停止錄音'; }
   catch(e){ reset(); }
 }
@@ -958,7 +1350,7 @@ function gameResult(){
        <div class="star-total" style="color:#7a5320;background:#fff6dc;border:1px dashed var(--primary-deep);margin-bottom:1.2rem">這次 +${gameScore} 顆星 🌟　累積 ${totalStars} 顆</div>
        <br>
        <button class="btn-primary" onclick="gameStart()">再次挑戰</button>
-       <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="gameHome()">回到首頁</button>
+       <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="mapHome()">回到地圖</button>
      </div>`;
 }
 
@@ -1020,14 +1412,31 @@ function toggleCecileMic() {
     for (let k = e.resultIndex; k < e.results.length; k++){ if (e.results[k].isFinal) t += e.results[k][0].transcript; }
     if (t && input){ input.value += t; input.focus(); }
   };
-  const reset = function(){ cecileRecog = null; if (btn){ btn.classList.remove('rec'); btn.innerHTML = ICON_MIC; } };
+  const reset = function(){
+    cecileRecog = null;
+    if (btn){ btn.classList.remove('rec'); btn.innerHTML = ICON_MIC; }
+    if (input) input.placeholder = '打字，或按左邊麥克風用說的～';
+  };
   cecileRecog.onend = reset;
   cecileRecog.onerror = function(e){
-    if (e && e.error === 'not-allowed') cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。🐶');
-    else if (e && e.error === 'no-speech') cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🐶');
+    const err = e && e.error;
+    if (err === 'not-allowed' || err === 'service-not-allowed')
+      cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。如果還是不行，改點打字框、用鍵盤上的麥克風聽寫也可以。🐶');
+    else if (err === 'no-speech')
+      cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🐶');
+    else if (err === 'audio-capture')
+      cecileAppend('ce', '找不到麥克風耶～看看電腦有沒有麥克風，或改用打字跟我聊吧！🐶');
+    else if (err === 'network')
+      cecileAppend('ce', '語音辨識需要網路幫忙，現在網路好像不太順，先用打字跟我聊吧！🐶');
+    else if (err !== 'aborted')
+      cecileAppend('ce', '麥克風好像怪怪的，先改用打字，或點打字框用鍵盤上的麥克風聽寫喔！🐶');
     reset();
   };
-  try { cecileRecog.start(); btn.classList.add('rec'); btn.innerHTML = ICON_STOP; } catch(e){ reset(); }
+  try {
+    cecileRecog.start();
+    btn.classList.add('rec'); btn.innerHTML = ICON_STOP;
+    if (input) input.placeholder = '我在聽，請說話…說完會自動變文字';
+  } catch(e){ reset(); }
 }
 function cecileAppend(who, text) {
   const box = document.getElementById('cecileMsgs');
@@ -1081,7 +1490,7 @@ async function sendCecile() {
 }
 
 render();
-gameHome();
+mapHome();
 updateStarTotal();
 renderDictHot();
 </script>
