@@ -443,6 +443,9 @@
       </div>
       <div class="sec-title">🗣️ 常用句型</div>
       <div id="patterns-list"></div>
+      <div class="sec-title">🎙️ 英文跟讀</div>
+      <p class="lead">先按「播放」聽一次（聽不清楚按「慢速」），再按「跟讀」開口唸一遍，拉布布幫你打分數！</p>
+      <div id="shadow-list"></div>
       <div class="sec-title">📝 小測驗</div>
       <div class="note">中英對照遮起來，先想中文再對答案。之後可以請拉布布聊聊出更多題目！</div>
       <div id="quiz-list"></div>
@@ -927,6 +930,7 @@ function render() {
   document.getElementById('courses-list').innerHTML = DATA.courses.map(accBlock).join('');
   document.getElementById('patterns-list').innerHTML = DATA.patterns.map(sayBlock).join('');
   document.getElementById('quiz-list').innerHTML = DATA.quiz.map(sayBlock).join('');
+  renderShadow();
   document.getElementById('prompts-list').innerHTML = DATA.prompts.map(accBlock).join('');
   document.getElementById('tips-list').innerHTML = DATA.tips.map(accBlock).join('');
   document.getElementById('sample-list').innerHTML = DATA.sample.map(accBlock).join('');
@@ -961,6 +965,79 @@ function speakWord(word){
   } catch(e){}
 }
 function speakSentence(el){ speakWord(el.getAttribute('data-say') || ''); }
+function speakEn(text, rate){
+  try {
+    if (!('speechSynthesis' in window)) { alert('這個裝置不支援發音功能喔～'); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = rate || 0.95;
+    window.speechSynthesis.speak(u);
+  } catch(e){}
+}
+
+/* ================= 英文跟讀（播放/慢速/跟讀打分，句子與「句子重組」同一批） ================= */
+function normWords(s){
+  return String(s).toLowerCase().replace(/[^a-z0-9' ]+/g, ' ').split(/\s+/).filter(Boolean);
+}
+/* 最長共同子序列比對：目標句每個字有沒有被唸到（借鏡媽媽的英語口說站） */
+function lcsMatch(a, b){
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = m - 1; i >= 0; i--) for (let j = n - 1; j >= 0; j--)
+    dp[i][j] = a[i] === b[j] ? dp[i+1][j+1] + 1 : Math.max(dp[i+1][j], dp[i][j+1]);
+  const hit = new Array(m).fill(false);
+  let i = 0, j = 0;
+  while (i < m && j < n){
+    if (a[i] === b[j]){ hit[i] = true; i++; j++; }
+    else if (dp[i+1][j] >= dp[i][j+1]) i++; else j++;
+  }
+  return hit;
+}
+function renderShadow(){
+  const box = document.getElementById('shadow-list');
+  if (!box) return;
+  box.innerHTML = SENTENCES.map((it, i) =>
+    `<div style="padding:.7rem .2rem;border-bottom:1px dashed #eadcbc">
+       <div style="font-weight:800;font-size:1.02rem">${it.en}</div>
+       <div style="font-size:.85rem;color:#8a7a55;margin:.15rem 0 .45rem">${it.zh}</div>
+       <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+         <button class="essay-btn" onclick="speakEn('${it.en.replace(/'/g, "\\'")}', 0.95)">${ICON_VOL} 播放</button>
+         <button class="essay-btn" onclick="speakEn('${it.en.replace(/'/g, "\\'")}', 0.6)">${ICON_VOL} 慢速</button>
+         <button class="essay-btn" id="shadow-rec-${i}" style="border-color:var(--primary-deep);font-weight:800" onclick="shadowRec(${i})">${ICON_MIC} 跟讀</button>
+       </div>
+       <div id="shadow-res-${i}" style="display:none;margin-top:.5rem;font-size:.95rem;line-height:1.7"></div>
+     </div>`).join('');
+}
+function shadowRec(i){
+  const it = SENTENCES[i];
+  const btn = document.getElementById('shadow-rec-' + i);
+  const res = document.getElementById('shadow-res-' + i);
+  const showMsg = function(m, color){ res.style.display = 'block'; res.innerHTML = '<span style="color:' + (color || '#8a5a2b') + '">' + m + '</span>'; };
+  try { window.speechSynthesis.cancel(); } catch(e){}
+  sttToggle('shadow' + i, {
+    rec: function(on){ btn.innerHTML = on ? (ICON_STOP + ' 唸完了') : (ICON_MIC + ' 跟讀'); if (on) showMsg('我在聽，開口唸這句吧～唸完按「唸完了」'); },
+    busy: function(on){ if (on) showMsg('拉布布聽好了，打分中…'); },
+    text: function(heard){
+      const tw = normWords(it.en), hw = normWords(heard);
+      const hit = lcsMatch(tw, hw);
+      const pct = tw.length ? Math.round(hit.filter(Boolean).length / tw.length * 100) : 0;
+      const verdict = pct >= 80 ? '唸得超棒！🎉' : pct >= 50 ? '不錯喔，再練一次會更棒！' : '再按「慢速」聽一次，跟著唸唸看～';
+      const vcolor = pct >= 80 ? '#0e7d5b' : pct >= 50 ? '#c79a00' : '#c94f4f';
+      let wi = 0;
+      const colored = it.en.split(/\s+/).map(function(w){
+        const toks = normWords(w);
+        let ok = true;
+        for (let k = 0; k < toks.length; k++){ if (!hit[wi + k]) ok = false; }
+        wi += toks.length;
+        return '<span style="color:' + (toks.length && ok ? '#0e7d5b' : '#c94f4f') + ';font-weight:700">' + w + '</span>';
+      }).join(' ');
+      res.style.display = 'block';
+      res.innerHTML = '<b style="color:' + vcolor + '">' + pct + ' 分　' + verdict + '</b><br>' + colored +
+        '<div style="font-size:.85rem;color:#8a7a55;margin-top:.2rem">你唸的：' + String(heard).replace(/[<>]/g, '') + '</div>';
+    },
+    msg: function(m){ showMsg(m, '#c94f4f'); },
+  }, 'en');
+}
 function speakZh(word){
   try {
     if (!('speechSynthesis' in window)) { alert('這個裝置不支援發音功能喔～'); return; }
@@ -1719,7 +1796,7 @@ function sttMime(){
   for (let i = 0; i < list.length; i++){ if (MediaRecorder.isTypeSupported(list[i])) return list[i]; }
   return '';
 }
-async function sttToggle(owner, ui){
+async function sttToggle(owner, ui, lang){
   if (sttRec){ if (sttOwner === owner) sttRec.stop(); return; }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){
     ui.msg('這個瀏覽器不支援錄音耶～點一下輸入框，改用鍵盤上的麥克風聽寫也可以喔！');
@@ -1758,7 +1835,7 @@ async function sttToggle(owner, ui){
       try {
         const r = await fetch(CECILE_API_URL, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ stt: 1, mime: blob.type, audio: b64 }),
+          body: JSON.stringify({ stt: 1, mime: blob.type, audio: b64, lang: lang || undefined }),
         });
         const d = await r.json();
         if (d && d.reply) text = d.reply.trim();
