@@ -444,14 +444,14 @@
       <div class="sec-title">🗣️ 常用句型</div>
       <div id="patterns-list"></div>
       <div class="sec-title">📝 小測驗</div>
-      <div class="note">中英對照遮起來，先想中文再對答案。之後可以請 Cécile 聊聊出更多題目！</div>
+      <div class="note">中英對照遮起來，先想中文再對答案。之後可以請拉布布聊聊出更多題目！</div>
       <div id="quiz-list"></div>
     </section>
 
     <!-- ===== 作文練習 ===== -->
     <section class="tab" id="writing">
       <div class="sec-title">✏️ 作文題目</div>
-      <p class="lead">挑一個題目寫寫看，寫完可以請 Cécile 聊聊幫你看。</p>
+      <p class="lead">挑一個題目寫寫看，寫完可以請拉布布聊聊幫你看。</p>
       <div id="prompts-list"></div>
       <div class="sec-title">💡 寫作技巧</div>
       <div id="tips-list"></div>
@@ -510,14 +510,14 @@
   <button data-tab="game"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>闖關遊戲</button>
 </nav>
 
-<!-- Cécile 聊聊 -->
+<!-- 拉布布聊聊 -->
 <button class="cecile-fab" id="cecileFab" onclick="toggleCecile()">
-  <span class="avatar">🐶</span>賽西爾 聊聊
+  <span class="avatar">🐰</span>拉布布 聊聊
 </button>
 <div class="cecile-pop" id="cecilePop">
   <div class="cp-head">
-    <span class="avatar">🐶</span>
-    <span class="who">賽西爾<small>之盈的學習小夥伴</small></span>
+    <span class="avatar">🐰</span>
+    <span class="who">拉布布<small>之盈的學習小夥伴</small></span>
     <button class="x" onclick="toggleCecile()" aria-label="關閉">×</button>
   </div>
   <div class="cp-msgs" id="cecileMsgs"></div>
@@ -1467,7 +1467,7 @@ async function gradeEssay(){
     } catch(e){ /* 重試或給溫柔提示 */ }
   }
   if (fb) box.innerHTML = '<div class="essay-fb">' + fmtFeedback(fb) + '</div>';
-  else box.innerHTML = '<div class="essay-fb">網路好像不太順，等一下再按一次「請老師看看」好嗎？ 🐶</div>';
+  else box.innerHTML = '<div class="essay-fb">網路好像不太順，等一下再按一次「請老師看看」好嗎？ 🐰</div>';
 }
 function gameResult(){
   const total = gameQs.length;
@@ -1525,7 +1525,7 @@ function toggleCecile() {
   const open = pop.classList.toggle('show');
   if (open && !cecileStarted) {
     cecileStarted = true;
-    cecileAppend('ce', '哈囉之盈！我是 賽西爾 🐶\n功課有問題，或想聊聊學校的事、看書心得，都可以問我喔～');
+    cecileAppend('ce', '哈囉之盈！我是拉布布 🐰\n功課有問題，或想聊聊學校的事、看書心得，都可以問我喔～');
   }
   if (open) setTimeout(function(){ const i=document.getElementById('cecileInput'); if(i) i.focus(); }, 100);
 }
@@ -1540,7 +1540,7 @@ function toggleCecileMic() {
   // iPhone / iPad 的 Safari 不支援網頁語音辨識，改用鍵盤內建的 🎤 聽寫
   if (isIOS || !SR) {
     if (input) input.focus();
-    cecileAppend('ce', '在 iPad／iPhone 上，點一下下面的打字框，鍵盤右下角會有一個 🎤，按住它就能用說的囉～說完會自動變成文字。🐶');
+    cecileAppend('ce', '在 iPad／iPhone 上，點一下下面的打字框，鍵盤右下角會有一個 🎤，按住它就能用說的囉～說完會自動變成文字。🐰');
     return;
   }
   if (cecileRecog) { cecileRecog.stop(); return; }
@@ -1560,15 +1560,15 @@ function toggleCecileMic() {
   cecileRecog.onerror = function(e){
     const err = e && e.error;
     if (err === 'not-allowed' || err === 'service-not-allowed')
-      cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。如果還是不行，改點打字框、用鍵盤上的麥克風聽寫也可以。🐶');
+      cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。如果還是不行，改點打字框、用鍵盤上的麥克風聽寫也可以。🐰');
     else if (err === 'no-speech')
-      cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🐶');
+      cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🐰');
     else if (err === 'audio-capture')
-      cecileAppend('ce', '找不到麥克風耶～看看電腦有沒有麥克風，或改用打字跟我聊吧！🐶');
+      cecileAppend('ce', '找不到麥克風耶～看看電腦有沒有麥克風，或改用打字跟我聊吧！🐰');
     else if (err === 'network')
-      cecileAppend('ce', '語音辨識需要網路幫忙，現在網路好像不太順，先用打字跟我聊吧！🐶');
+      cecileAppend('ce', '語音辨識需要網路幫忙，現在網路好像不太順，先用打字跟我聊吧！🐰');
     else if (err !== 'aborted')
-      cecileAppend('ce', '麥克風好像怪怪的，先改用打字，或點打字框用鍵盤上的麥克風聽寫喔！🐶');
+      cecileAppend('ce', '麥克風好像怪怪的，先改用打字，或點打字框用鍵盤上的麥克風聽寫喔！🐰');
     reset();
   };
   try {
@@ -1621,7 +1621,7 @@ async function sendCecile() {
     } catch (e) { /* 網路問題，重試或給溫柔提示 */ }
   }
   cecileTyping(false);
-  if (!reply) reply = '嗚，我這邊網路好像不太順，等一下再問我一次好嗎？🐶';
+  if (!reply) reply = '嗚，我這邊網路好像不太順，等一下再問我一次好嗎？🐰';
   cecileAppend('ce', reply);
   cecileHistory.push({ role: 'assistant', text: reply });
   if (btn) btn.disabled = false;
