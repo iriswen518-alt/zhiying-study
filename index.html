@@ -1571,14 +1571,28 @@ function gameResult(){
 }
 
 /* nav */
-document.getElementById('nav').addEventListener('click', e => {
-  const btn = e.target.closest('button'); if (!btn) return;
+function activateTab(name) {
+  const btn = document.querySelector('#nav button[data-tab="' + name + '"]');
+  const pane = document.getElementById(name);
+  if (!btn || !pane) return false;
   document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(btn.dataset.tab).classList.add('active');
+  pane.classList.add('active');
   document.getElementById('page-scroll').scrollTop = 0;
+  return true;
+}
+document.getElementById('nav').addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  if (activateTab(btn.dataset.tab)) {
+    try { localStorage.setItem('zy_lastTab', btn.dataset.tab); } catch (_) {}
+  }
 });
+/* 聰明預設值：記住上次分頁，下次打開直接回到那頁 */
+try {
+  const zyLast = localStorage.getItem('zy_lastTab');
+  if (zyLast && zyLast !== 'courses') activateTab(zyLast);
+} catch (_) {}
 
 /* encourage 每日鼓勵 */
 const ENCOURAGE = ['今天也要拿第一！','你超棒的，加油！','錯了沒關係，再試一次！','練一點點，就進步一點點！','笑一個，讀書更有精神～','相信自己，你做得到！'];
