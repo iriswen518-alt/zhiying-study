@@ -1445,37 +1445,79 @@ function renderDictEntry(word, d){
   return html;
 }
 
-/* ================= 作文輸入＋老師回饋 ================= */
-let essayRecog = null;
-function toggleMic(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const btn = document.getElementById('micBtn');
-  if (!SR){
-    alert('這個裝置可以用鍵盤上的 🎤 麥克風講喔～點一下輸入框，鍵盤就會出現麥克風按鈕。');
+/* ================= 語音輸入（錄音→AI 轉文字；全裝置可用，含 iPhone/iPad） =================
+   按一下開始錄音、再按一下（或滿 30 秒）停止，音檔送 Worker 由 Gemini 轉成繁中文字。 */
+let sttRec = null, sttTimer = null, sttOwner = '';
+function sttMime(){
+  if (!window.MediaRecorder) return '';
+  const list = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm'];
+  for (let i = 0; i < list.length; i++){ if (MediaRecorder.isTypeSupported(list[i])) return list[i]; }
+  return '';
+}
+async function sttToggle(owner, ui){
+  if (sttRec){ if (sttOwner === owner) sttRec.stop(); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){
+    ui.msg('這個瀏覽器不支援錄音耶～點一下輸入框，改用鍵盤上的麥克風聽寫也可以喔！');
     return;
   }
-  if (essayRecog){ essayRecog.stop(); return; }
-  essayRecog = new SR();
-  essayRecog.lang = 'zh-TW'; essayRecog.continuous = true; essayRecog.interimResults = false;
-  essayRecog.onresult = e => {
-    let t = '';
-    for (let i = e.resultIndex; i < e.results.length; i++){
-      if (e.results[i].isFinal) t += e.results[i][0].transcript;
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch(e){
+    ui.msg('要用說的，得先讓我用麥克風喔～跳出詢問時請按「允許」；沒跳出的話，請到瀏覽器的網站設定把麥克風改成允許，再試一次。');
+    return;
+  }
+  const mime = sttMime();
+  const chunks = [];
+  let rec;
+  try { rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream); }
+  catch(e){ stream.getTracks().forEach(t => t.stop()); ui.msg('錄音器打不開耶，先用打字好嗎？'); return; }
+  sttRec = rec; sttOwner = owner;
+  rec.ondataavailable = function(e){ if (e.data && e.data.size) chunks.push(e.data); };
+  rec.onstop = async function(){
+    clearTimeout(sttTimer);
+    stream.getTracks().forEach(t => t.stop());
+    sttRec = null; sttOwner = '';
+    ui.rec(false);
+    const blob = new Blob(chunks, { type: (rec.mimeType || mime || 'audio/mp4') });
+    if (blob.size < 1500){ ui.msg('我好像沒聽到聲音耶～按一下麥克風開始說，說完再按一下停止。再試一次好嗎？'); return; }
+    ui.busy(true);
+    const b64 = await new Promise(function(res){
+      const fr = new FileReader();
+      fr.onload = function(){ res(String(fr.result).split(',')[1] || ''); };
+      fr.onerror = function(){ res(''); };
+      fr.readAsDataURL(blob);
+    });
+    let text = '';
+    for (let a = 0; a < 2 && !text && b64; a++){
+      if (a > 0) await new Promise(function(r){ setTimeout(r, 1000); });
+      try {
+        const r = await fetch(CECILE_API_URL, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stt: 1, mime: blob.type, audio: b64 }),
+        });
+        const d = await r.json();
+        if (d && d.reply) text = d.reply.trim();
+      } catch(e){}
     }
-    if (t){ const ta = document.getElementById('essayInput'); ta.value += t; }
+    ui.busy(false);
+    if (text) ui.text(text);
+    else ui.msg('嗚，我沒聽清楚或網路不太順～再說一次，或改用打字好嗎？');
   };
-  const reset = () => { essayRecog = null; btn.classList.remove('rec'); btn.innerHTML = ICON_MIC + ' 語音輸入'; };
-  essayRecog.onend = reset;
-  essayRecog.onerror = e => {
-    const err = e && e.error;
-    reset();
-    if (err === 'not-allowed' || err === 'service-not-allowed')
-      alert('要用語音輸入，請先允許瀏覽器使用麥克風（按網址列的鎖頭圖示 → 麥克風 → 允許），再試一次。');
-    else if (err && err !== 'aborted' && err !== 'no-speech')
-      alert('語音輸入怪怪的，可以點一下輸入框，改用鍵盤上的麥克風聽寫喔。');
-  };
-  try { essayRecog.start(); btn.classList.add('rec'); btn.innerHTML = ICON_STOP + ' 停止錄音'; }
-  catch(e){ reset(); }
+  rec.start(250);
+  ui.rec(true);
+  sttTimer = setTimeout(function(){ if (sttRec === rec) rec.stop(); }, 30000);
+}
+
+/* ================= 作文輸入＋老師回饋 ================= */
+function toggleMic(){
+  const btn = document.getElementById('micBtn');
+  const ta = document.getElementById('essayInput');
+  sttToggle('essay', {
+    rec: function(on){ if (btn){ btn.classList.toggle('rec', on); btn.innerHTML = on ? (ICON_STOP + ' 停止錄音') : (ICON_MIC + ' 語音輸入'); } },
+    busy: function(on){ if (btn) btn.innerHTML = on ? '轉文字中…' : (ICON_MIC + ' 語音輸入'); },
+    text: function(t){ if (ta) ta.value += t; },
+    msg: function(m){ alert(m); },
+  });
 }
 function fmtFeedback(s){
   return String(s).replace(/[<>]/g, c => c === '<' ? '&lt;' : '&gt;')
@@ -1564,53 +1606,19 @@ function toggleCecile() {
   }
   if (open) setTimeout(function(){ const i=document.getElementById('cecileInput'); if(i) i.focus(); }, 100);
 }
-/* Cécile 聊聊：麥克風語音輸入（Web Speech API zh-TW） */
-let cecileRecog = null;
+/* 拉布布聊聊：按麥克風直接錄音→AI 轉文字（iPhone/iPad 也能用） */
 function toggleCecileMic() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const btn = document.getElementById('cecileMic');
   const input = document.getElementById('cecileInput');
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  // iPhone / iPad 的 Safari 不支援網頁語音辨識，改用鍵盤內建的 🎤 聽寫
-  if (isIOS || !SR) {
-    if (input) input.focus();
-    cecileAppend('ce', '在 iPad／iPhone 上，點一下下面的打字框，鍵盤右下角會有一個 🎤，按住它就能用說的囉～說完會自動變成文字。🐰');
-    return;
-  }
-  if (cecileRecog) { cecileRecog.stop(); return; }
-  cecileRecog = new SR();
-  cecileRecog.lang = 'zh-TW'; cecileRecog.continuous = false; cecileRecog.interimResults = false;
-  cecileRecog.onresult = function(e){
-    let t = '';
-    for (let k = e.resultIndex; k < e.results.length; k++){ if (e.results[k].isFinal) t += e.results[k][0].transcript; }
-    if (t && input){ input.value += t; input.focus(); }
-  };
-  const reset = function(){
-    cecileRecog = null;
-    if (btn){ btn.classList.remove('rec'); btn.innerHTML = ICON_MIC; }
-    if (input) input.placeholder = '打字，或按左邊麥克風用說的～';
-  };
-  cecileRecog.onend = reset;
-  cecileRecog.onerror = function(e){
-    const err = e && e.error;
-    if (err === 'not-allowed' || err === 'service-not-allowed')
-      cecileAppend('ce', '要用說的，得先讓瀏覽器使用麥克風喔～請按網址列的鎖頭圖示，把「麥克風」設成允許，再試一次。如果還是不行，改點打字框、用鍵盤上的麥克風聽寫也可以。🐰');
-    else if (err === 'no-speech')
-      cecileAppend('ce', '我好像沒聽到聲音耶，靠近一點大聲說一次好嗎？🐰');
-    else if (err === 'audio-capture')
-      cecileAppend('ce', '找不到麥克風耶～看看電腦有沒有麥克風，或改用打字跟我聊吧！🐰');
-    else if (err === 'network')
-      cecileAppend('ce', '語音辨識需要網路幫忙，現在網路好像不太順，先用打字跟我聊吧！🐰');
-    else if (err !== 'aborted')
-      cecileAppend('ce', '麥克風好像怪怪的，先改用打字，或點打字框用鍵盤上的麥克風聽寫喔！🐰');
-    reset();
-  };
-  try {
-    cecileRecog.start();
-    btn.classList.add('rec'); btn.innerHTML = ICON_STOP;
-    if (input) input.placeholder = '我在聽，請說話…說完會自動變文字';
-  } catch(e){ reset(); }
+  sttToggle('cecile', {
+    rec: function(on){
+      if (btn){ btn.classList.toggle('rec', on); btn.innerHTML = on ? ICON_STOP : ICON_MIC; }
+      if (input) input.placeholder = on ? '我在聽，請說話…說完再按一下停止' : '打字，或按左邊麥克風用說的～';
+    },
+    busy: function(on){ if (input) input.placeholder = on ? '正在把你說的話變成文字…' : '打字，或按左邊麥克風用說的～'; },
+    text: function(t){ if (input){ input.value += t; input.focus(); } },
+    msg: function(m){ cecileAppend('ce', m + '🐰'); },
+  });
 }
 function cecileAppend(who, text) {
   const box = document.getElementById('cecileMsgs');
