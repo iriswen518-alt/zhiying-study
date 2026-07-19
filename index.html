@@ -510,13 +510,32 @@
   <button data-tab="game"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>闖關遊戲</button>
 </nav>
 
-<!-- 拉布布聊聊 -->
+<!-- 拉布布聊聊（頭像＝自繪鴨鴨裝拉布布 SVG） -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="labubu-icon">
+      <ellipse cx="21" cy="13" rx="7" ry="12" fill="#fff6ea" stroke="#e3cba1" stroke-width="2" transform="rotate(-10 21 13)"/>
+      <ellipse cx="43" cy="13" rx="7" ry="12" fill="#fff6ea" stroke="#e3cba1" stroke-width="2" transform="rotate(10 43 13)"/>
+      <ellipse cx="21" cy="14" rx="3" ry="7" fill="#f2c98d" transform="rotate(-10 21 14)"/>
+      <ellipse cx="43" cy="14" rx="3" ry="7" fill="#f2c98d" transform="rotate(10 43 14)"/>
+      <circle cx="32" cy="38" r="24" fill="#fff6ea" stroke="#e3cba1" stroke-width="2"/>
+      <ellipse cx="32" cy="42" rx="17" ry="14" fill="#f7dcae"/>
+      <ellipse cx="32" cy="27" rx="14" ry="6.5" fill="#f39c2d" stroke="#d9820f" stroke-width="1.5"/>
+      <circle cx="24.5" cy="40" r="4.6" fill="#4a2c14"/>
+      <circle cx="39.5" cy="40" r="4.6" fill="#4a2c14"/>
+      <circle cx="26" cy="38.6" r="1.5" fill="#fff"/>
+      <circle cx="41" cy="38.6" r="1.5" fill="#fff"/>
+      <path d="M22.5 46 Q32 53 41.5 46 L41.5 49 Q32 56 22.5 49 Z" fill="#5a3417"/>
+      <path d="M24 47.5 l2.6 2.2 2.7 -2 2.7 2 2.7 -2 2.7 2 2.6 -2.2" stroke="#fff" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+    </g>
+  </defs>
+</svg>
 <button class="cecile-fab" id="cecileFab" onclick="toggleCecile()">
-  <span class="avatar">🐰</span>拉布布 聊聊
+  <span class="avatar"><svg viewBox="0 0 64 64" width="88%" height="88%"><use href="#labubu-icon"/></svg></span>拉布布 聊聊
 </button>
 <div class="cecile-pop" id="cecilePop">
   <div class="cp-head">
-    <span class="avatar">🐰</span>
+    <span class="avatar"><svg viewBox="0 0 64 64" width="88%" height="88%"><use href="#labubu-icon"/></svg></span>
     <span class="who">拉布布<small>之盈的學習小夥伴</small></span>
     <button class="x" onclick="toggleCecile()" aria-label="關閉">×</button>
   </div>
