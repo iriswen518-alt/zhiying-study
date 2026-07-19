@@ -1542,9 +1542,9 @@ document.getElementById('nav').addEventListener('click', e => {
 const ENCOURAGE = ['今天也要拿第一！','你超棒的，加油！','錯了沒關係，再試一次！','練一點點，就進步一點點！','笑一個，讀書更有精神～','相信自己，你做得到！'];
 document.getElementById('encourage').textContent = ENCOURAGE[new Date().getDate() % ENCOURAGE.length];
 
-/* countdown 升小五開學（2026/09/01） */
+/* countdown 升小五開學（2026/08/31） */
 (function(){
-  const target = new Date(2026, 8, 1);
+  const target = new Date(2026, 7, 31);
   const now = new Date();
   const days = Math.max(0, Math.ceil((target - now) / 86400000));
   document.getElementById('countdown').innerHTML =
