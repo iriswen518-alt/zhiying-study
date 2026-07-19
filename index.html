@@ -616,6 +616,13 @@ const DATA = {
     ['water', 'n. 水'], ['bread', 'n. 麵包'], ['delicious', 'adj. 好吃的'],
     ['beautiful', 'adj. 美麗的'], ['strong', 'adj. 強壯的'], ['young', 'adj. 年輕的'],
     ['window', 'n. 窗戶'], ['picture', 'n. 圖畫、照片'], ['holiday', 'n. 假日'],
+    ['doctor', 'n. 醫生'], ['nurse', 'n. 護理師'], ['police', 'n. 警察'],
+    ['cousin', 'n. 表（堂）兄弟姊妹'], ['grandma', 'n. 奶奶、外婆'], ['grandpa', 'n. 爺爺、外公'],
+    ['yellow', 'n./adj. 黃色'], ['purple', 'n./adj. 紫色'], ['green', 'n./adj. 綠色'],
+    ['white', 'n./adj. 白色'], ['black', 'n./adj. 黑色'], ['sunny', 'adj. 晴朗的'],
+    ['rainy', 'adj. 下雨的'], ['windy', 'adj. 颳風的'], ['cloudy', 'adj. 多雲的'],
+    ['hungry', 'adj. 肚子餓的'], ['thirsty', 'adj. 口渴的'], ['tired', 'adj. 累的'],
+    ['excited', 'adj. 興奮的'], ['quiet', 'adj. 安靜的'],
   ],
   patterns: [
     { subject: '基礎句型', date: '07/01', points: [
@@ -835,6 +842,52 @@ const DATA = {
     { tag: '英文', q: '「老師」的英文是？', options: ['doctor', 'teacher', 'farmer', 'driver'], ans: 1, exp: 'teacher 是老師；doctor 醫生、farmer 農夫、driver 司機。' },
     { tag: '英文', q: 'She ___ my sister.（她是我姊姊）空格填？', options: ['am', 'is', 'are', 'be'], ans: 1, exp: '主詞是 She（第三人稱單數），be 動詞用 is。' },
     { tag: '英文', q: '「早餐」的英文是？', options: ['lunch', 'dinner', 'breakfast', 'snack'], ans: 2, exp: 'breakfast 是早餐；lunch 午餐、dinner 晚餐、snack 點心。' },
+    { tag: '數學', q: '2/5 + 2/5 等於多少？', options: ['4/5', '4/10', '2/5', '1'], ans: 0, exp: '分母相同，分子相加：2＋2＝4，分母 5 不變，得 4/5。' },
+    { tag: '數學', q: '48 和 60 的最大公因數是多少？', options: ['6', '8', '12', '24'], ans: 2, exp: '48＝2×2×2×2×3，60＝2×2×3×5，共同的是 2×2×3＝12。' },
+    { tag: '數學', q: '5 和 7 的最小公倍數是多少？', options: ['12', '25', '35', '70'], ans: 2, exp: '5 和 7 都是質數，最小公倍數就是 5×7＝35。' },
+    { tag: '數學', q: '0.25 × 8 等於多少？', options: ['2', '0.2', '20', '1.25'], ans: 0, exp: '0.25 是四分之一，8 個四分之一就是 2。' },
+    { tag: '數學', q: '9.6 ÷ 3 等於多少？', options: ['3.2', '32', '0.32', '3.6'], ans: 0, exp: '想成 96÷3＝32，再把小數點移回來，得 3.2。' },
+    { tag: '數學', q: '邊長 5 公分的正方形，面積是多少平方公分？', options: ['10', '20', '25', '30'], ans: 2, exp: '正方形面積＝邊長×邊長＝5×5＝25 平方公分；20 是周長喔。' },
+    { tag: '數學', q: '長方體長 3、寬 2、高 4 公分，體積是多少立方公分？', options: ['9', '24', '26', '12'], ans: 1, exp: '長方體體積＝長×寬×高＝3×2×4＝24 立方公分。' },
+    { tag: '數學', q: '0.7 和 0.65，哪一個比較大？', options: ['0.7', '0.65', '一樣大', '無法比較'], ans: 0, exp: '0.7＝0.70，70 比 65 大，所以 0.7 比較大；別被位數多騙了！' },
+    { tag: '數學', q: '3.14159 四捨五入到小數點後第二位是多少？', options: ['3.1', '3.14', '3.15', '3.142'], ans: 1, exp: '看第三位是 1，小於 5 要捨去，所以是 3.14。' },
+    { tag: '數學', q: '直角是幾度？', options: ['45 度', '60 度', '90 度', '180 度'], ans: 2, exp: '直角是 90 度，像課本的角角一樣；180 度是平角。' },
+    { tag: '數學', q: '一台車每小時走 60 公里，走 3 小時共走幾公里？', options: ['63', '120', '180', '20'], ans: 2, exp: '距離＝速度×時間＝60×3＝180 公里。' },
+    { tag: '數學', q: '2 公斤等於幾公克？', options: ['20', '200', '2000', '20000'], ans: 2, exp: '1 公斤＝1000 公克，2 公斤＝2000 公克。' },
+    { tag: '數學', q: '1/2、1/3、1/4 三個分數，哪個最大？', options: ['1/2', '1/3', '1/4', '一樣大'], ans: 0, exp: '分子相同時，分母越小、每一份越大，所以 1/2 最大。' },
+    { tag: '數學', q: '下列哪個數既是 2 的倍數、也是 3 的倍數？', options: ['8', '9', '12', '14'], ans: 2, exp: '12＝2×6 也＝3×4，兩個都是；8、14 只是 2 的倍數，9 只是 3 的倍數。' },
+    { tag: '國語', q: '「亡羊補牢」比喻什麼？', options: ['羊跑光了很可惜', '出了錯及時補救還不晚', '蓋房子要牢固', '養羊很辛苦'], ans: 1, exp: '羊丟了才修羊圈還來得及，比喻出錯後及時補救、還不算晚。' },
+    { tag: '國語', q: '「杯弓蛇影」比喻什麼？', options: ['疑神疑鬼自己嚇自己', '很會射箭', '杯子裡有蛇', '影子很可怕'], ans: 0, exp: '把杯中弓的倒影看成蛇，比喻疑神疑鬼、自己嚇自己。' },
+    { tag: '國語', q: '「雪中送炭」比喻什麼？', options: ['冬天送禮物', '在別人困難時幫助他', '雪地裡生火', '送東西要及時'], ans: 1, exp: '在下雪天送炭取暖，比喻在別人最困難的時候給予幫助。' },
+    { tag: '國語', q: '「什麼是幸福？幸福就是全家人在一起。」這是哪種修辭？', options: ['設問', '譬喻', '誇飾', '擬人'], ans: 0, exp: '自己提問、自己回答，這是「設問」，可以引起讀者注意。' },
+    { tag: '國語', q: '「川流不息」用來形容什麼？', options: ['河水很髒', '人車像河水一樣連續不斷', '游泳很快', '休息很重要'], ans: 1, exp: '「川」是河流，形容人潮、車流像河水一樣不停地流動。' },
+    { tag: '國語', q: '「便宜」的「便」，正確讀音是？', options: ['ㄅㄧㄢˋ', 'ㄆㄧㄢˊ', 'ㄅㄧㄢˇ', 'ㄆㄧㄢˋ'], ans: 1, exp: '「便」是破音字：便宜念 ㄆㄧㄢˊ，方便才念 ㄅㄧㄢˋ。' },
+    { tag: '國語', q: '「粗心大意」的相反詞是？', options: ['馬馬虎虎', '小心謹慎', '迷迷糊糊', '慌慌張張'], ans: 1, exp: '粗心的相反就是「小心謹慎」；馬馬虎虎和粗心是同一邊的。' },
+    { tag: '國語', q: '「拋磚引玉」是自謙的話，意思是？', options: ['丟磚頭很危險', '用自己粗淺的意見引出別人的高見', '玉比磚值錢', '蓋房子先用磚'], ans: 1, exp: '先丟出磚（自己的淺見），引出玉（別人更好的想法），是謙虛的說法。' },
+    { tag: '自然', q: '太陽每天從哪個方向升起？', options: ['東方', '西方', '南方', '北方'], ans: 0, exp: '太陽東升西落，這是因為地球由西向東自轉。' },
+    { tag: '自然', q: '人體主要用什麼器官呼吸？', options: ['心臟', '肺', '胃', '肝'], ans: 1, exp: '呼吸靠「肺」交換氧氣和二氧化碳；心臟是負責打血液的。' },
+    { tag: '自然', q: '下列哪一種動物是哺乳類？', options: ['鯊魚', '鯨魚', '青蛙', '烏龜'], ans: 1, exp: '鯨魚用肺呼吸、餵母奶，是哺乳類；鯊魚是魚類，別被騙了！' },
+    { tag: '自然', q: '天氣預報說「降雨機率 90%」，意思是？', options: ['會下 90 分鐘的雨', '下雨的機會很高', '雨量有 90 毫米', '一定不會下雨'], ans: 1, exp: '降雨機率越高，下雨的可能性越大；90% 表示很可能下雨，記得帶傘。' },
+    { tag: '自然', q: '指南針能指方向，是利用什麼原理？', options: ['電力', '地球的磁場', '風向', '太陽的位置'], ans: 1, exp: '指南針的磁針會順著地球磁場指向南北方。' },
+    { tag: '自然', q: '種子發芽需要哪些條件？', options: ['只要土壤', '水、空氣和適當的溫度', '只要陽光', '肥料越多越好'], ans: 1, exp: '種子發芽需要水、空氣和適當溫度；陽光是發芽後行光合作用才更重要。' },
+    { tag: '自然', q: '熱空氣會往哪個方向移動？', options: ['往上升', '往下沉', '不會動', '往北飄'], ans: 0, exp: '熱空氣比較輕會上升，冷空氣下沉，天燈就是靠這個原理飛起來的。' },
+    { tag: '自然', q: '蜻蜓的幼蟲「水蠆」住在哪裡？', options: ['土裡', '樹上', '水裡', '花朵裡'], ans: 2, exp: '水蠆住在水裡，長大羽化後才變成在空中飛的蜻蜓。' },
+    { tag: '社會', q: '台灣的直轄市（六都）一共有幾個？', options: ['4 個', '5 個', '6 個', '7 個'], ans: 2, exp: '六都＝台北、新北、桃園、台中、台南、高雄，一共 6 個。' },
+    { tag: '社會', q: '中秋節最主要的習俗是什麼？', options: ['吃湯圓', '賞月、吃月餅', '划龍舟', '掃墓'], ans: 1, exp: '中秋節賞月、吃月餅、烤肉團圓；吃湯圓是冬至或元宵。' },
+    { tag: '社會', q: '台灣最大的平原是哪一個？', options: ['宜蘭平原', '屏東平原', '嘉南平原', '台北盆地'], ans: 2, exp: '嘉南平原橫跨雲林、嘉義、台南，是台灣最大的平原，也是重要糧倉。' },
+    { tag: '社會', q: '喝完的寶特瓶應該怎麼處理？', options: ['丟一般垃圾', '資源回收', '埋進土裡', '丟水溝'], ans: 1, exp: '寶特瓶是塑膠類資源，要做資源回收，才能再利用、保護環境。' },
+    { tag: '社會', q: '發生火災要打哪個緊急電話？', options: ['110', '119', '165', '104'], ans: 1, exp: '火災、救護叫 119；報警找警察是 110；165 是反詐騙。' },
+    { tag: '社會', q: '台灣位於地球的哪個半球？', options: ['北半球', '南半球', '東西半球中間', '無法判斷'], ans: 0, exp: '台灣在赤道以北，屬於北半球，所以夏天是 6 到 8 月。' },
+    { tag: '英文', q: '「動物」的英文是？', options: ['animal', 'flower', 'fruit', 'insect'], ans: 0, exp: 'animal 是動物；flower 花、fruit 水果、insect 昆蟲。' },
+    { tag: '英文', q: 'I ___ breakfast at seven.（我七點吃早餐）空格填？', options: ['eat', 'eats', 'eating', 'ate'], ans: 0, exp: '主詞是 I，現在式動詞用原形 eat；eats 是 He/She 用的。' },
+    { tag: '英文', q: '「星期六」的英文是？', options: ['Sunday', 'Saturday', 'Thursday', 'Tuesday'], ans: 1, exp: 'Saturday 是星期六；Sunday 日、Thursday 四、Tuesday 二。' },
+    { tag: '英文', q: 'He can ___ very fast.（他跑得很快）空格填？', options: ['run', 'runs', 'running', 'ran'], ans: 0, exp: 'can 後面接原形動詞：He can run very fast.' },
+    { tag: '英文', q: '「夏天」的英文是？', options: ['spring', 'summer', 'autumn', 'winter'], ans: 1, exp: 'summer 是夏天；spring 春、autumn 秋、winter 冬。' },
+    { tag: '英文', q: 'They ___ playing basketball.（他們正在打籃球）空格填？', options: ['is', 'am', 'are', 'be'], ans: 2, exp: '主詞 They 是複數，be 動詞用 are。' },
+    { tag: '英文', q: '「醫生」的英文是？', options: ['teacher', 'doctor', 'nurse', 'cook'], ans: 1, exp: 'doctor 是醫生；teacher 老師、nurse 護理師、cook 廚師。' },
+    { tag: '英文', q: 'This is ___ apple.（這是一顆蘋果）空格填？', options: ['a', 'an', 'the', 'two'], ans: 1, exp: 'apple 開頭是母音，前面要用 an，不是 a。' },
+    { tag: '英文', q: '「美麗的」英文是？', options: ['ugly', 'beautiful', 'dirty', 'noisy'], ans: 1, exp: 'beautiful 是美麗的；ugly 醜的、dirty 髒的、noisy 吵的。' },
+    { tag: '英文', q: 'What ___ is it? It is red.（它是什麼顏色？紅色）空格填？', options: ['time', 'color', 'day', 'name'], ans: 1, exp: '問顏色用 What color；回答 red 就知道是在問顏色。' },
   ],
 };
 
@@ -971,9 +1024,9 @@ function gameAllDone(){
 }
 
 /* ================= 冒險地圖（16 關、四種玩法、過關解鎖下一關） ================= */
-const MAP_LEVELS = 20;
-const LEVEL_TYPES = ['quiz', 'spell', 'listen', 'match', 'essay'];
-const TYPE_NAME = { quiz: '知識問答', spell: '單字拼字', listen: '聽力猜字', match: '翻牌記憶', essay: '作文挑戰' };
+const MAP_LEVELS = 24;
+const LEVEL_TYPES = ['quiz', 'spell', 'listen', 'match', 'essay', 'math', 'pick', 'order'];
+const TYPE_NAME = { quiz: '知識問答', spell: '單字拼字', listen: '聽力猜字', match: '翻牌記憶', essay: '作文挑戰', math: '心算快手', pick: '單字選擇', order: '句子重組' };
 const LOCK_SVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
 function levelType(lv){ return LEVEL_TYPES[(lv - 1) % LEVEL_TYPES.length]; }
 /* 出題原則：答對（學會）的題目永遠不再出現；題目不夠就出少一點，全學會了顯示完成畫面 */
@@ -1016,6 +1069,9 @@ function computeBadges(){
     { name: '聽力天才', on: has3('listen') },
     { name: '記憶大師', on: has3('match') },
     { name: '作文高手', on: has3('essay') },
+    { name: '心算神手', on: has3('math') },
+    { name: '選字高手', on: has3('pick') },
+    { name: '排句達人', on: has3('order') },
     { name: '星星富翁', on: getTotalStars() >= 100 },
   ];
 }
@@ -1056,6 +1112,9 @@ function startLevel(lv){
   else if (t === 'spell') lvSpellStart(lv);
   else if (t === 'listen') lvListenStart(lv);
   else if (t === 'match') lvMatchStart(lv);
+  else if (t === 'math') lvMathStart(lv);
+  else if (t === 'pick') lvPickStart(lv);
+  else if (t === 'order') lvOrderStart(lv);
   else lvEssayStart(lv);
 }
 function lvBar(lv, done, total){
@@ -1308,6 +1367,179 @@ function mtStat(){
   const cnt = document.getElementById('lv-count'); if (cnt) cnt.textContent = `${s.matched}／${s.total}`;
 }
 
+/* ---- 玩法六：心算快手（電腦隨機出題，永遠有新題、不會抽乾） ---- */
+let lvR = null;
+function mathQGen(){
+  const kind = Math.floor(Math.random() * 4);
+  let a, b, q, ans;
+  if (kind === 0){ a = 11 + Math.floor(Math.random() * 89); b = 11 + Math.floor(Math.random() * 88); q = a + ' ＋ ' + b; ans = a + b; }
+  else if (kind === 1){ a = 20 + Math.floor(Math.random() * 80); b = 1 + Math.floor(Math.random() * (a - 1)); q = a + ' － ' + b; ans = a - b; }
+  else if (kind === 2){ a = 2 + Math.floor(Math.random() * 8); b = 2 + Math.floor(Math.random() * 8); q = a + ' × ' + b; ans = a * b; }
+  else { b = 2 + Math.floor(Math.random() * 8); ans = 2 + Math.floor(Math.random() * 9); a = b * ans; q = a + ' ÷ ' + b; }
+  const opts = new Set([ans]);
+  while (opts.size < 4){
+    const d = ans + Math.floor(Math.random() * 13) - 6;
+    if (d >= 0 && d !== ans) opts.add(d);
+  }
+  const options = shuffle([...opts]).map(String);
+  return { q, options, ans: options.indexOf(String(ans)) };
+}
+function lvMathStart(lv){
+  const qs = []; for (let i = 0; i < 8; i++) qs.push(mathQGen());
+  lvR = { lv, qs, idx: 0, score: 0, locked: false };
+  lvMathRender();
+}
+function lvMathRender(){
+  const s = lvR;
+  if (s.idx >= s.qs.length) return levelResult(s.lv, scoreStars(s.score, s.qs.length), `答對 ${s.score}／${s.qs.length} 題`);
+  s.locked = false;
+  const q = s.qs[s.idx];
+  const opts = q.options.map((o, i) => `<button class="opt" onclick="lvMathAnswer(${i})">${o}</button>`).join('');
+  document.getElementById('game-area').innerHTML =
+    lvBar(s.lv, s.idx, s.qs.length) +
+    `<div class="game-q"><span class="tagline">算算看</span><div class="qtext">${q.q} ＝ ？</div>${opts}
+     <div class="game-fb" id="game-fb"></div></div>` + lvExit();
+}
+function lvMathAnswer(i){
+  const s = lvR; if (s.locked) return; s.locked = true;
+  const q = s.qs[s.idx];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  const fb = document.getElementById('game-fb');
+  if (i === q.ans){ s.score++; btns[i].classList.add('correct'); fb.className = 'game-fb ok'; fb.innerHTML = '答對了！算得又快又準 🎉'; }
+  else { btns[i].classList.add('wrong'); btns[q.ans].classList.add('correct'); fb.className = 'game-fb no'; fb.innerHTML = '答案是 ' + q.options[q.ans] + ' 喔，下一題加油！'; }
+  const isLast = s.idx >= s.qs.length - 1;
+  fb.innerHTML += '<button class="btn-primary game-next" onclick="lvR.idx++;lvMathRender()">' + (isLast ? '查看結果' : '下一題') + '</button>';
+}
+
+/* ---- 玩法七：單字選擇（看中文意思，選出正確的英文字） ---- */
+let lvP = null;
+function lvPickStart(lv){
+  const chosen = pickFresh(DATA.vocab, getSetLS('pickMastered'), v => v[0], 5);
+  if (chosen.length === 0) return lvAllLearned(lv);
+  const qs = chosen.map(v => {
+    const wrong = shuffle(DATA.vocab.filter(w => w[0] !== v[0])).slice(0, 3).map(w => w[0]);
+    const options = shuffle([v[0]].concat(wrong));
+    return { word: v[0], zh: cleanZh(v[1]), options, ans: options.indexOf(v[0]) };
+  });
+  lvP = { lv, qs, idx: 0, score: 0, locked: false };
+  lvPickRender();
+}
+function lvPickRender(){
+  const s = lvP;
+  if (s.idx >= s.qs.length) return levelResult(s.lv, scoreStars(s.score, s.qs.length), `答對 ${s.score}／${s.qs.length} 題`);
+  s.locked = false;
+  const q = s.qs[s.idx];
+  const opts = q.options.map((o, i) => `<button class="opt" onclick="lvPickAnswer(${i})">${o}</button>`).join('');
+  document.getElementById('game-area').innerHTML =
+    lvBar(s.lv, s.idx, s.qs.length) +
+    `<div class="game-q"><span class="tagline">哪一個英文字是這個意思？</span><div class="qtext">${q.zh}</div>${opts}
+     <div class="game-fb" id="game-fb"></div></div>` + lvExit();
+}
+function lvPickAnswer(i){
+  const s = lvP; if (s.locked) return; s.locked = true;
+  const q = s.qs[s.idx];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  const fb = document.getElementById('game-fb');
+  if (i === q.ans){
+    s.score++;
+    addSetLS('pickMastered', q.word);
+    btns[i].classList.add('correct');
+    fb.className = 'game-fb ok'; fb.innerHTML = '答對了！🎉（這個字學會囉，之後不會再出現）';
+  } else {
+    btns[i].classList.add('wrong'); btns[q.ans].classList.add('correct');
+    fb.className = 'game-fb no'; fb.innerHTML = '是「' + q.word + '」喔，唸一次記起來！';
+  }
+  speakWord(q.word);
+  const isLast = s.idx >= s.qs.length - 1;
+  fb.innerHTML += '<button class="btn-primary game-next" onclick="lvP.idx++;lvPickRender()">' + (isLast ? '查看結果' : '下一題') + '</button>';
+}
+
+/* ---- 玩法八：句子重組（把打散的單字排回正確英文句子） ---- */
+const SENTENCES = [
+  { en: 'I like reading the best.', zh: '我最喜歡看書。' },
+  { en: 'She is good at telling jokes.', zh: '她很會講笑話。' },
+  { en: 'I want to be number one.', zh: '我想考第一名。' },
+  { en: 'This is my favorite song.', zh: '這是我最愛的歌。' },
+  { en: 'I read every day.', zh: '我每天讀書。' },
+  { en: 'I am a student.', zh: '我是學生。' },
+  { en: 'She goes to school every day.', zh: '她每天上學。' },
+  { en: 'There are two cats on the sofa.', zh: '沙發上有兩隻貓。' },
+  { en: 'I can play the piano.', zh: '我會彈鋼琴。' },
+  { en: 'Do you like tea?', zh: '你喜歡茶嗎？' },
+  { en: 'How old are you?', zh: '你幾歲？' },
+  { en: 'What time is it?', zh: '現在幾點？' },
+  { en: 'He can run very fast.', zh: '他跑得很快。' },
+  { en: 'They are playing basketball.', zh: '他們正在打籃球。' },
+  { en: 'I eat breakfast at seven.', zh: '我七點吃早餐。' },
+  { en: 'This is an apple.', zh: '這是一顆蘋果。' },
+  { en: 'My mother is beautiful.', zh: '我的媽媽很美麗。' },
+  { en: 'We are good friends.', zh: '我們是好朋友。' },
+];
+let lvO = null;
+function lvOrderStart(lv){
+  const picked = pickFresh(SENTENCES, getSetLS('orderMastered'), x => x.en, 3);
+  if (picked.length === 0) return lvAllLearned(lv);
+  lvO = { lv, items: picked, idx: 0, wrong: 0, cur: [], words: [], punct: '', locked: false };
+  lvOrderRender();
+}
+function lvOrderRender(){
+  const s = lvO;
+  if (s.idx >= s.items.length){
+    const stars = s.wrong === 0 ? 3 : s.wrong <= 2 ? 2 : 1;
+    return levelResult(s.lv, stars, `完成 ${s.items.length} 個句子，排錯 ${s.wrong} 次`);
+  }
+  s.cur = []; s.locked = false;
+  const it = s.items[s.idx];
+  s.punct = /[.?!]$/.test(it.en) ? it.en.slice(-1) : '';
+  s.words = it.en.replace(/[.?!]$/, '').split(' ');
+  let tiles = shuffle(s.words);
+  if (tiles.join(' ') === s.words.join(' ') && s.words.length > 1) tiles = shuffle(s.words);
+  const tileHtml = tiles.map(w => `<button class="spell-tile" style="width:auto;padding:0 .7rem" data-w="${w}" onclick="orderTap(this)">${w}</button>`).join('');
+  document.getElementById('game-area').innerHTML =
+    lvBar(s.lv, s.idx, s.items.length) +
+    `<div class="game-q">
+       <span class="tagline">把單字排成正確的英文句子</span>
+       <div class="qtext">${it.zh}</div>
+       <div id="order-line" style="min-height:2.4rem;background:#fff;border:1.5px dashed #e3cba1;border-radius:10px;padding:.55rem .7rem;margin:.6rem 0;font-size:1.02rem;text-align:left"></div>
+       <div class="spell-tiles">${tileHtml}</div>
+       <div class="spell-tools"><button class="essay-btn" onclick="orderBack()">退後一格</button></div>
+       <div class="game-fb" id="game-fb"></div>
+     </div>` + lvExit();
+}
+function orderTap(btn){
+  const s = lvO; if (s.locked) return;
+  btn.disabled = true; s.cur.push(btn);
+  document.getElementById('order-line').textContent = s.cur.map(b => b.dataset.w).join(' ');
+  if (s.cur.length !== s.words.length) return;
+  const guess = s.cur.map(b => b.dataset.w).join(' ');
+  const fb = document.getElementById('game-fb');
+  if (guess === s.words.join(' ')){
+    s.locked = true;
+    addSetLS('orderMastered', s.items[s.idx].en);
+    document.getElementById('order-line').textContent = guess + s.punct;
+    speakWord(guess);
+    fb.className = 'game-fb ok';
+    fb.innerHTML = '排對了！🎉（這句學會囉，之後不會再出現）' +
+      '<button class="btn-primary game-next" onclick="lvO.idx++;lvOrderRender()">' + (s.idx >= s.items.length - 1 ? '查看結果' : '下一句') + '</button>';
+  } else {
+    s.wrong++;
+    fb.className = 'game-fb no'; fb.textContent = '順序不太對，再試一次！';
+    setTimeout(function(){
+      s.cur.forEach(b => b.disabled = false);
+      s.cur = [];
+      const line = document.getElementById('order-line'); if (line) line.textContent = '';
+      if (fb) fb.textContent = '';
+    }, 900);
+  }
+}
+function orderBack(){
+  const s = lvO; if (s.locked || !s.cur.length) return;
+  const btn = s.cur.pop(); btn.disabled = false;
+  document.getElementById('order-line').textContent = s.cur.map(b => b.dataset.w).join(' ');
+}
+
 /* ---- 玩法五：作文挑戰（小作文題目，AI 老師批改給星） ---- */
 const ESSAY_PROMPTS = [
   '用「因為……所以……」寫一句話，說說你今天的心情。',
@@ -1326,6 +1558,14 @@ const ESSAY_PROMPTS = [
   '如果可以養一隻小動物，你想養什麼？用三句話說原因。',
   '用三句話寫出你放學回家後做的第一件事，照順序寫。',
   '寫一段話給一年後的自己，至少三句，說說你的願望。',
+  '用三句話描寫你的書包，裡面放了什麼、哪一樣最重要。',
+  '寫一段話介紹你最喜歡的季節，至少三句，說說為什麼。',
+  '用「如果……就……」造兩個句子。',
+  '用三句話寫你最想去的地方，說說想在那裡做什麼。',
+  '描寫媽媽煮菜的樣子，要寫到聲音和香味，至少三句。',
+  '用「不但……而且……」造兩個句子。',
+  '寫一段話介紹你自己，讓新同學認識你，至少三句。',
+  '用三句話寫今天天空的樣子，其中要用一個比喻。',
 ];
 let lvE = null;
 function lvEssayStart(lv){
