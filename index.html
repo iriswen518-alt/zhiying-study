@@ -894,7 +894,6 @@ function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const
 /* 已答對（學會）的題目就隱藏，之後不再出現 */
 function getMastered(){ try { return new Set(JSON.parse(localStorage.getItem('gameMastered') || '[]')); } catch(e){ return new Set(); } }
 function addMastered(qtext){ const s = getMastered(); s.add(qtext); localStorage.setItem('gameMastered', JSON.stringify([...s])); }
-function resetMastered(){ localStorage.removeItem('gameMastered'); practiceHome(); }
 function remainingQs(){ const m = getMastered(); return DATA.game.filter(x => !m.has(x.q)); }
 function gameStart(){
   const pool = remainingQs();
@@ -914,7 +913,6 @@ function practiceHome(){
        <p>每局隨機 ${Math.min(GAME_ROUND, remain)} 題，答對的題目會學起來、之後就不再出現。<br>還沒學會 <b>${remain}</b> 題　已經學會 <b>${learned}</b> 題。</p>
        <p style="font-weight:800;color:var(--caramel)">🌟 你已經累積 ${getTotalStars()} 顆星星！</p>
        <button class="btn-primary" onclick="gameStart()">開始練習</button>
-       ${learned > 0 ? '<button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="resetMastered()">重新練習</button>' : ''}
        <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="mapHome()">回到地圖</button>
      </div>`;
 }
@@ -924,8 +922,7 @@ function gameAllDone(){
        <div class="trophy">🏆</div>
        <h3>太厲害了！全部題目都學會了！</h3>
        <div class="score">你把 ${DATA.game.length} 題全部答對過了，第一名就是你！<br>之後老師會再加新題目上來喔～</div>
-       <button class="btn-primary btn-ghost" onclick="resetMastered()">重新練習</button>
-       <button class="btn-primary btn-ghost" style="margin-top:.6rem" onclick="mapHome()">回到地圖</button>
+       <button class="btn-primary btn-ghost" onclick="mapHome()">回到地圖</button>
      </div>`;
 }
 
@@ -935,11 +932,24 @@ const LEVEL_TYPES = ['quiz', 'spell', 'listen', 'match', 'essay'];
 const TYPE_NAME = { quiz: '知識問答', spell: '單字拼字', listen: '聽力猜字', match: '翻牌記憶', essay: '作文挑戰' };
 const LOCK_SVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
 function levelType(lv){ return LEVEL_TYPES[(lv - 1) % LEVEL_TYPES.length]; }
-/* 出題原則：答對（學會）的題目不再重複，優先出還沒學會的；全學會了才拿舊題複習 */
+/* 出題原則：答對（學會）的題目永遠不再出現；題目不夠就出少一點，全學會了顯示完成畫面 */
 function pickFresh(pool, mastered, keyFn, n){
-  const fresh = shuffle(pool.filter(x => !mastered.has(keyFn(x))));
-  if (fresh.length >= n) return fresh.slice(0, n);
-  return fresh.concat(shuffle(pool.filter(x => mastered.has(keyFn(x))))).slice(0, n);
+  return shuffle(pool.filter(x => !mastered.has(keyFn(x)))).slice(0, n);
+}
+/* 這種玩法的題目全學會時的畫面 */
+function lvAllLearned(lv){
+  document.getElementById('game-area').innerHTML =
+    `<div class="game-result">
+       <div class="trophy">🏆</div>
+       <h3>太厲害了！</h3>
+       <div class="score">「${TYPE_NAME[levelType(lv)]}」的題目你全部都答對過了，<br>不會再出現重複的題目，等老師加新題目上來喔～</div>
+       <button class="btn-primary btn-ghost" onclick="mapHome()">回到地圖</button>
+     </div>`;
+}
+/* 依這局題數算星星：全對3星、只錯一題2星、答對六成1星 */
+function scoreStars(score, n){
+  if (n <= 0) return 0;
+  return score >= n ? 3 : (n >= 3 && score >= n - 1) ? 2 : score >= Math.ceil(n * 0.6) ? 1 : 0;
 }
 function getSetLS(key){ try { return new Set(JSON.parse(localStorage.getItem(key) || '[]')); } catch(e){ return new Set(); } }
 function addSetLS(key, val){ const s = getSetLS(key); s.add(val); localStorage.setItem(key, JSON.stringify([...s])); }
@@ -1034,14 +1044,15 @@ function levelResult(lv, stars, detail){
 /* ---- 玩法一：知識問答（5 題選擇，含連答 combo） ---- */
 let lvQ = null;
 function lvQuizStart(lv){
-  lvQ = { lv, qs: pickFresh(DATA.game, getMastered(), x => x.q, 5), idx: 0, score: 0, combo: 0, locked: false };
+  const qs = pickFresh(DATA.game, getMastered(), x => x.q, 5);
+  if (qs.length === 0) return lvAllLearned(lv);
+  lvQ = { lv, qs, idx: 0, score: 0, combo: 0, locked: false };
   lvQuizRender();
 }
 function lvQuizRender(){
   const s = lvQ;
   if (s.idx >= s.qs.length){
-    const stars = s.score >= 5 ? 3 : s.score >= 4 ? 2 : s.score >= 3 ? 1 : 0;
-    return levelResult(s.lv, stars, `答對 ${s.score}／${s.qs.length} 題`);
+    return levelResult(s.lv, scoreStars(s.score, s.qs.length), `答對 ${s.score}／${s.qs.length} 題`);
   }
   s.locked = false;
   const q = s.qs[s.idx];
@@ -1078,7 +1089,9 @@ function lvQuizAnswer(i){
 /* ---- 玩法二：單字拼字（看中文意思，點字母拼出英文） ---- */
 let lvS = null;
 function lvSpellStart(lv){
-  lvS = { lv, words: pickFresh(SPELL_POOL, getSetLS('spellMastered'), v => v[0], 4), idx: 0, wrong: 0, curWrong: 0, cur: [], busy: false };
+  const words = pickFresh(SPELL_POOL, getSetLS('spellMastered'), v => v[0], 4);
+  if (words.length === 0) return lvAllLearned(lv);
+  lvS = { lv, words, idx: 0, wrong: 0, curWrong: 0, cur: [], busy: false };
   lvSpellRender();
 }
 function lvSpellRender(){
@@ -1117,10 +1130,10 @@ function spellTap(btn){
     const fb = document.getElementById('game-fb');
     s.busy = true;
     if (guess.toLowerCase() === word.toLowerCase()){
-      if (s.curWrong === 0) addSetLS('spellMastered', word);
+      addSetLS('spellMastered', word);
       box.classList.add('good');
       fb.className = 'game-fb ok';
-      fb.textContent = '拼對了！🎉 ' + word + (s.curWrong === 0 ? '（一次就拼對，這個字學會囉！）' : '');
+      fb.textContent = '拼對了！🎉 ' + word + '（這個字學會囉，之後不會再出現）';
       speakWord(word);
       setTimeout(() => { s.idx++; lvSpellRender(); }, 1200);
     } else {
@@ -1146,6 +1159,7 @@ function spellBack(){
 let lvL = null;
 function lvListenStart(lv){
   const chosen = pickFresh(DATA.vocab, getSetLS('listenMastered'), v => v[0], 5);
+  if (chosen.length === 0) return lvAllLearned(lv);
   const qs = chosen.map(v => {
     const zh = cleanZh(v[1]);
     const wrong = shuffle(DATA.vocab.filter(w => w[0] !== v[0] && cleanZh(w[1]) !== zh)).slice(0, 3).map(w => cleanZh(w[1]));
@@ -1158,8 +1172,7 @@ function lvListenStart(lv){
 function lvListenRender(){
   const s = lvL;
   if (s.idx >= s.qs.length){
-    const stars = s.score >= 5 ? 3 : s.score >= 4 ? 2 : s.score >= 3 ? 1 : 0;
-    return levelResult(s.lv, stars, `答對 ${s.score}／${s.qs.length} 題`);
+    return levelResult(s.lv, scoreStars(s.score, s.qs.length), `答對 ${s.score}／${s.qs.length} 題`);
   }
   s.locked = false;
   const q = s.qs[s.idx];
@@ -1205,17 +1218,18 @@ function lvListenAnswer(i){
 let lvM = null;
 const MATCH_PAIRS = 4; // 4 對 8 張，難度友善
 function lvMatchStart(lv){
-  const pairs = shuffle(DATA.vocab).slice(0, MATCH_PAIRS);
+  const pairs = pickFresh(DATA.vocab, getSetLS('matchMastered'), v => v[0], MATCH_PAIRS);
+  if (pairs.length < 2) return lvAllLearned(lv);
   const cards = [];
   pairs.forEach((v, i) => { cards.push({ k: i, t: v[0] }); cards.push({ k: i, t: cleanZh(v[1]) }); });
-  lvM = { lv, cards: shuffle(cards), first: null, busy: false, matched: 0, tries: 0 };
+  lvM = { lv, pairs, total: pairs.length, cards: shuffle(cards), first: null, busy: false, matched: 0, tries: 0 };
   const html = lvM.cards.map((c, i) => `<button class="mt-card" data-k="${c.k}" data-i="${i}" onclick="mtFlip(this)">?</button>`).join('');
   document.getElementById('game-area').innerHTML =
-    lvBar(lv, 0, MATCH_PAIRS) +
+    lvBar(lv, 0, lvM.total) +
     `<div class="game-q">
        <span class="tagline">翻開卡片，幫英文和中文找到好朋友</span>
        <div class="mt-grid">${html}</div>
-       <div class="mt-stat" id="mt-stat">已配對 0／${MATCH_PAIRS} ・ 翻了 0 次</div>
+       <div class="mt-stat" id="mt-stat">已配對 0／${lvM.total} ・ 翻了 0 次</div>
      </div>` + lvExit();
 }
 function mtFlip(btn){
@@ -1227,9 +1241,10 @@ function mtFlip(btn){
   if (a.dataset.k === btn.dataset.k){
     a.classList.remove('up'); btn.classList.remove('up');
     a.classList.add('done'); btn.classList.add('done');
+    addSetLS('matchMastered', s.pairs[+btn.dataset.k][0]);
     s.matched++; mtStat();
-    if (s.matched === MATCH_PAIRS){
-      const stars = s.tries <= MATCH_PAIRS + 2 ? 3 : s.tries <= MATCH_PAIRS + 5 ? 2 : 1;
+    if (s.matched === s.total){
+      const stars = s.tries <= s.total + 2 ? 3 : s.tries <= s.total + 5 ? 2 : 1;
       setTimeout(() => levelResult(s.lv, stars, `全部配對成功！總共翻了 ${s.tries} 次`), 700);
     }
   } else {
@@ -1244,9 +1259,9 @@ function mtFlip(btn){
 function mtStat(){
   const s = lvM;
   const st = document.getElementById('mt-stat');
-  if (st) st.textContent = `已配對 ${s.matched}／${MATCH_PAIRS} ・ 翻了 ${s.tries} 次`;
-  const p = document.getElementById('lv-prog'); if (p) p.style.width = Math.round(s.matched / MATCH_PAIRS * 100) + '%';
-  const cnt = document.getElementById('lv-count'); if (cnt) cnt.textContent = `${s.matched}／${MATCH_PAIRS}`;
+  if (st) st.textContent = `已配對 ${s.matched}／${s.total} ・ 翻了 ${s.tries} 次`;
+  const p = document.getElementById('lv-prog'); if (p) p.style.width = Math.round(s.matched / s.total * 100) + '%';
+  const cnt = document.getElementById('lv-count'); if (cnt) cnt.textContent = `${s.matched}／${s.total}`;
 }
 
 /* ---- 玩法五：作文挑戰（小作文題目，AI 老師批改給星） ---- */
@@ -1271,6 +1286,7 @@ const ESSAY_PROMPTS = [
 let lvE = null;
 function lvEssayStart(lv){
   const p = pickFresh(ESSAY_PROMPTS, getSetLS('essayMastered'), x => x, 1)[0];
+  if (!p) return lvAllLearned(lv);
   lvE = { lv, prompt: p, busy: false };
   document.getElementById('game-area').innerHTML =
     lvBar(lv, 0, 1) +
