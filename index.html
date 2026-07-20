@@ -131,6 +131,7 @@
     background: #fff; border: 1px solid var(--border); color: var(--caramel);
     font-weight: 700; font-size: .9rem; white-space: nowrap;
     overflow: hidden; text-overflow: ellipsis;
+    font-family: inherit; cursor: pointer;
   }
   .chip.on { background: var(--active); color: var(--active-text); border-color: var(--primary-deep); }
 
@@ -185,6 +186,33 @@
     text-decoration: none; white-space: nowrap; border: 1px solid var(--primary-deep);
   }
   .play-btn:hover { text-decoration: none; filter: brightness(1.05); }
+
+  /* ===== 奶茶兌換 ===== */
+  .mt-bank { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.1rem 1rem; display: flex; align-items: center; gap: 1rem; }
+  .mt-cup { flex: none; width: 84px; }
+  .mt-bank-info { flex: 1; min-width: 0; }
+  .mt-bank-info .big { font-size: 1.5rem; font-weight: 800; color: var(--caramel); }
+  .mt-bank-info .sub { font-size: .85rem; color: var(--muted); margin-top: .3rem; line-height: 1.6; }
+  .mt-input-row { display: flex; gap: .5rem; margin-top: .3rem; }
+  .mt-input-row input { flex: 1; min-width: 0; border: 1px solid var(--border); border-radius: 12px; padding: .6rem .8rem; font-size: 16px; font-family: inherit; color: var(--text); background: #fff; }
+  .mt-input-row input:focus { outline: none; border-color: var(--primary-deep); }
+  .mt-redeem-btn { flex: none; background: linear-gradient(135deg, #ffd873, #f6b73c); border: 1px solid var(--primary-deep); color: #6b4415; font-weight: 800; font-family: inherit; font-size: .95rem; border-radius: 12px; padding: .6rem 1.2rem; cursor: pointer; }
+  .mt-redeem-btn:active { transform: scale(.96); }
+  .mt-msg { font-size: .85rem; font-weight: 700; margin-top: .6rem; color: #c25e5e; min-height: 1.2rem; }
+  .mt-msg.ok { color: #3f8a6d; }
+  .mt-slot { text-align: center; background: var(--card); border: 2px dashed var(--primary-deep); border-radius: 18px; padding: 1.1rem 1rem; margin-top: .8rem; }
+  .mt-slot .fl { font-size: 1.3rem; font-weight: 800; color: var(--caramel); margin-top: .4rem; }
+  .coupon { background: var(--card); border: 2px dashed var(--primary-deep); border-radius: 16px; padding: .85rem 1rem; margin-bottom: .7rem; display: flex; align-items: center; gap: .8rem; }
+  .coupon .cp-ic { flex: none; width: 44px; }
+  .coupon .cp-body2 { flex: 1; min-width: 0; }
+  .coupon .cp-title { font-weight: 800; color: var(--caramel); }
+  .coupon .cp-sub { font-size: .78rem; color: var(--muted); margin-top: .15rem; }
+  .mt-stamp { flex: none; width: 58px; height: 58px; border-radius: 50%; border: 2px dashed #d8b98a; color: #b99a6a; font-size: .68rem; font-weight: 800; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; background: none; font-family: inherit; line-height: 1.3; }
+  .mt-stamp.on { border: 2.5px solid #d9534f; color: #d9534f; transform: rotate(-12deg); font-size: .74rem; animation: stampPop .3s; }
+  @keyframes stampPop { 0% { transform: scale(1.6) rotate(-12deg); opacity: 0; } 100% { transform: scale(1) rotate(-12deg); opacity: 1; } }
+  .mt-confetti { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .mt-piece { position: absolute; top: -8%; font-size: 1.4rem; animation: mtFall linear forwards; }
+  @keyframes mtFall { to { transform: translateY(115vh) rotate(360deg); } }
 
   /* ===== 作文輸入＋回饋 ===== */
   .essay-tools { display: flex; gap: .5rem; margin-bottom: .5rem; }
@@ -499,7 +527,14 @@
       <div id="game-area"></div>
     </section>
 
-    <footer>之盈的學習樂園 · 用 💛 做給你 · 更新 2026/07/19</footer>
+    <!-- ===== 奶茶兌換 ===== -->
+    <section class="tab" id="milktea">
+      <div class="sec-title">🧋 奶茶兌換</div>
+      <p class="lead">在闖關遊戲收集星星，每 <b>100</b> 顆可以換一杯珍珠鮮奶茶！輸入要兌換的點數，讓拉布布抽推薦口味，再把兌換券拿給媽媽蓋章～</p>
+      <div id="milktea-area"></div>
+    </section>
+
+    <footer>之盈的學習樂園 · 用 💛 做給你 · 更新 2026/07/20</footer>
   </div>
 </div>
 
@@ -511,6 +546,7 @@
   <button data-tab="dict"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>國語辭典</button>
   <button data-tab="jokes"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></span>笑話收集</button>
   <button data-tab="game"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>闖關遊戲</button>
+  <button data-tab="milktea"><span class="ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h10l-1.2 12.2a1.8 1.8 0 0 1-1.8 1.6h-4a1.8 1.8 0 0 1-1.8-1.6L7 8z"/><path d="M5.5 8h13"/><path d="M12 8l3.5-6"/><circle cx="10.6" cy="17" r="0.5"/><circle cx="13.4" cy="17" r="0.5"/></svg></span>奶茶兌換</button>
 </nav>
 
 <!-- 拉布布聊聊（頭像＝自繪鴨鴨裝拉布布 SVG） -->
@@ -1057,11 +1093,13 @@ let gameQs = [], gameIdx = 0, gameScore = 0, gameLocked = false;
 /* 累積星星（存 localStorage，永遠累加不歸零） */
 function getTotalStars(){ return parseInt(localStorage.getItem('totalStars') || '0', 10) || 0; }
 function addStars(n){ const t = getTotalStars() + n; localStorage.setItem('totalStars', t); return t; }
-/* 星星銀行：每滿 100 顆星星可以跟媽媽換一杯珍珠鮮奶茶 */
-function starCups(){ return Math.floor(getTotalStars() / 100); }
+/* 星星銀行：每滿 100 顆星星可以跟媽媽換一杯珍珠鮮奶茶（兌換掉的星星另外記，累積數永不歸零） */
+function getRedeemedStars(){ return parseInt(localStorage.getItem('zyRedeemedStars') || '0', 10) || 0; }
+function getAvailStars(){ return Math.max(0, getTotalStars() - getRedeemedStars()); }
+function starCups(){ return Math.floor(getAvailStars() / 100); }
 function updateStarTotal(){
   const el = document.getElementById('starTotal');
-  if (el) el.innerHTML = '🌟 累積星星 <b>' + getTotalStars() + '</b> 顆 ・ 可跟媽媽換 <b>' + starCups() + '</b> 杯珍珠鮮奶茶';
+  if (el) el.innerHTML = '🌟 星星 <b>' + getAvailStars() + '</b> 顆 ・ 可換 <b>' + starCups() + '</b> 杯珍珠鮮奶茶';
 }
 const GAME_ROUND = 10; // 每局隨機抽幾題
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -1168,7 +1206,7 @@ function mapHome(){
       <div class="lv-stars">${starStr}</div>
       <div class="lv-type">${TYPE_NAME[levelType(lv)]}</div></div>`;
   }
-  const stars = getTotalStars();
+  const stars = getAvailStars();
   const cups = starCups();
   const toNext = 100 - (stars % 100);
   document.getElementById('game-area').innerHTML = `
@@ -1177,7 +1215,7 @@ function mapHome(){
       <div class="map-grid">${nodes}</div>
     </div>
     <div class="note" style="text-align:center">🌟 <b>星星銀行</b>：每滿 <b>100</b> 顆星星，可以跟媽媽換 <b>一杯珍珠鮮奶茶</b>！<br>
-      目前 <b>${stars}</b> 顆${cups > 0 ? '，已經可以換 <b>' + cups + '</b> 杯珍珠鮮奶茶，再收集 <b>' + toNext + '</b> 顆又能多換一杯～' : '，再收集 <b>' + toNext + '</b> 顆就能換一杯珍珠鮮奶茶囉～'}</div>
+      目前 <b>${stars}</b> 顆${cups > 0 ? '，已經可以換 <b>' + cups + '</b> 杯珍珠鮮奶茶，快到「奶茶兌換」分頁換！' : '，再收集 <b>' + toNext + '</b> 顆就能到「奶茶兌換」分頁換一杯囉～'}</div>
     <div class="sec-title">成就徽章</div>
     <div class="badge-row">${computeBadges().map(b => `<span class="badge${b.on ? '' : ' off'}">${b.name}</span>`).join('')}</div>
     <div class="lv-exit"><button class="btn-primary btn-ghost" onclick="practiceHome()">自由練習</button></div>`;
@@ -1912,6 +1950,119 @@ function gameResult(){
      </div>`;
 }
 
+/* ================= 奶茶兌換 ================= */
+const MT_FLAVORS = ['珍珠鮮奶茶', '黑糖珍珠奶茶', '布丁奶茶', '草莓奶茶', '巧克力奶茶', '椰果奶茶'];
+function getMtLog(){ try { return JSON.parse(localStorage.getItem('zyMilkteaLog') || '[]'); } catch(e){ return []; } }
+function saveMtLog(l){ localStorage.setItem('zyMilkteaLog', JSON.stringify(l)); }
+/* 奶茶杯：p=0~1 裝滿程度 */
+function mtCupSVG(p, w, uid){
+  const fh = Math.round(52 * p);
+  const y = 74 - fh;
+  const pearls = p > 0.1 ? '<circle cx="25" cy="69" r="3" fill="#4a2c14"/><circle cx="32" cy="70" r="3" fill="#4a2c14"/><circle cx="39" cy="69" r="3" fill="#4a2c14"/>' : '';
+  return `<svg viewBox="0 0 64 84" width="${w}" height="${Math.round(w * 84 / 64)}">
+    <path d="M37 18 L45 4" stroke="#e07a9a" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <defs><clipPath id="mtclip-${uid}"><path d="M16 21 L48 21 L44.8 71 Q44.4 75 40 75 L24 75 Q19.6 75 19.2 71 Z"/></clipPath></defs>
+    <g clip-path="url(#mtclip-${uid})"><rect x="12" y="${y}" width="40" height="${fh + 6}" fill="#eab472"/>${pearls}</g>
+    <path d="M16 21 L48 21 L44.8 71 Q44.4 75 40 75 L24 75 Q19.6 75 19.2 71 Z" fill="none" stroke="#b98a4e" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M13 21 L51 21" stroke="#b98a4e" stroke-width="3" stroke-linecap="round"/>
+  </svg>`;
+}
+function renderMilktea(){
+  const area = document.getElementById('milktea-area'); if (!area) return;
+  const avail = getAvailStars(), cups = starCups();
+  const prog = avail % 100;
+  const p = cups > 0 ? 1 : prog / 100;
+  const toNext = 100 - prog;
+  const log = getMtLog();
+  const drank = log.reduce((s, r) => s + (r.cups || 0), 0);
+  const quicks = [];
+  for (let c = 1; c <= Math.min(cups, 3); c++) quicks.push(c * 100);
+  area.innerHTML = `
+    <div class="mt-bank">
+      <div class="mt-cup">${mtCupSVG(p, 84, 'bank')}</div>
+      <div class="mt-bank-info">
+        <div class="big">🌟 ${avail} 顆</div>
+        <div class="sub">${cups > 0 ? '可以換 <b>' + cups + '</b> 杯珍珠鮮奶茶！' : '再收集 <b>' + toNext + '</b> 顆就能換一杯囉，加油！'}${drank > 0 ? '<br>之盈已經換過 <b>' + drank + '</b> 杯奶茶～' : ''}</div>
+      </div>
+    </div>
+    <div class="sec-title">我要兌換</div>
+    ${quicks.length ? '<div class="chip-row" style="grid-auto-flow:row;grid-template-columns:repeat(' + quicks.length + ',1fr)">' + quicks.map(q => `<button class="chip" onclick="document.getElementById('mtPts').value=${q}">${q} 顆換 ${q / 100} 杯</button>`).join('') + '</div>' : ''}
+    <div class="mt-input-row">
+      <input id="mtPts" type="number" inputmode="numeric" min="100" step="100" placeholder="輸入兌換點數，例如 100">
+      <button class="mt-redeem-btn" onclick="mtRedeem()">兌換</button>
+    </div>
+    <div class="mt-msg" id="mtMsg"></div>
+    <div id="mtSlot"></div>
+    <div class="sec-title">兌換紀錄</div>
+    ${log.length ? log.map((r, i) => `
+      <div class="coupon">
+        <span class="cp-ic"><svg viewBox="0 0 64 64" width="44" height="44"><use href="#labubu-icon"/></svg></span>
+        <div class="cp-body2">
+          <div class="cp-title">${r.flavor}兌換券 × ${r.cups} 杯</div>
+          <div class="cp-sub">${r.d} ・ 用掉 ${r.pts} 顆星星</div>
+        </div>
+        <button class="mt-stamp${r.ok ? ' on' : ''}" onclick="mtStamp(${i})">${r.ok ? '已請客 ✓' : '媽媽<br>蓋章'}</button>
+      </div>`).join('') : '<div class="note">還沒有兌換紀錄，收集滿 100 顆星星就來換第一杯吧！</div>'}`;
+}
+let mtBusy = false;
+function mtRedeem(){
+  if (mtBusy) return;
+  const msg = document.getElementById('mtMsg');
+  msg.className = 'mt-msg';
+  const v = parseInt(document.getElementById('mtPts').value, 10);
+  const avail = getAvailStars();
+  if (!v || v <= 0){ msg.textContent = '先輸入要兌換的點數喔～'; return; }
+  if (v % 100 !== 0){ msg.textContent = '要 100 的倍數才行喔（100 顆換 1 杯）'; return; }
+  if (v > avail){ msg.textContent = '星星還不夠呢，目前有 ' + avail + ' 顆，先去闖關收集吧！'; return; }
+  msg.textContent = '';
+  mtBusy = true;
+  const cups = v / 100;
+  const flavor = MT_FLAVORS[Math.floor(Math.random() * MT_FLAVORS.length)];
+  document.getElementById('mtSlot').innerHTML = '<div class="mt-slot">拉布布幫你抽推薦口味…<div class="fl" id="mtFl">？？？</div></div>';
+  let n = 0;
+  const tick = setInterval(() => {
+    n++;
+    const el = document.getElementById('mtFl');
+    if (!el){ clearInterval(tick); mtBusy = false; return; }
+    if (n < 16){ el.textContent = MT_FLAVORS[n % MT_FLAVORS.length]; return; }
+    clearInterval(tick);
+    el.textContent = '🧋 ' + flavor + '！';
+    mtConfetti();
+    localStorage.setItem('zyRedeemedStars', getRedeemedStars() + v);
+    const log = getMtLog();
+    log.unshift({ d: new Date().toLocaleDateString('zh-TW'), pts: v, cups: cups, flavor: flavor, ok: false });
+    saveMtLog(log);
+    updateStarTotal();
+    setTimeout(() => {
+      mtBusy = false;
+      renderMilktea();
+      const m = document.getElementById('mtMsg');
+      if (m){ m.className = 'mt-msg ok'; m.textContent = '兌換成功！把下面的兌換券拿給媽媽蓋章吧～'; }
+    }, 1800);
+  }, 110);
+}
+function mtStamp(i){
+  const log = getMtLog();
+  if (!log[i] || log[i].ok) return;
+  log[i].ok = true; saveMtLog(log); renderMilktea();
+}
+function mtConfetti(){
+  const box = document.createElement('div');
+  box.className = 'mt-confetti';
+  const em = ['🧋', '⭐', '💛', '✨', '🥤'];
+  for (let i = 0; i < 26; i++){
+    const s = document.createElement('span');
+    s.className = 'mt-piece';
+    s.textContent = em[i % em.length];
+    s.style.left = Math.random() * 100 + '%';
+    s.style.animationDuration = (1.4 + Math.random() * 1.2) + 's';
+    s.style.animationDelay = (Math.random() * 0.5) + 's';
+    box.appendChild(s);
+  }
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 3400);
+}
+
 /* nav */
 function activateTab(name) {
   const btn = document.querySelector('#nav button[data-tab="' + name + '"]');
@@ -1921,6 +2072,7 @@ function activateTab(name) {
   btn.classList.add('active');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   pane.classList.add('active');
+  if (name === 'milktea') renderMilktea();
   document.getElementById('page-scroll').scrollTop = 0;
   return true;
 }
