@@ -1110,8 +1110,9 @@ function toggleAcc(head) { head.parentElement.classList.toggle('open'); }
 
 /* ================= 闖關遊戲 ================= */
 let gameQs = [], gameIdx = 0, gameScore = 0, gameLocked = false;
-/* 累積星星（存 localStorage，永遠累加不歸零） */
-function getTotalStars(){ return parseInt(localStorage.getItem('totalStars') || '0', 10) || 0; }
+/* 累積星星（存 localStorage，永遠累加不歸零）；STAR_BASELINE=歷史保底，換裝置/清資料也不會低於此數 */
+const STAR_BASELINE = 300;
+function getTotalStars(){ return Math.max(parseInt(localStorage.getItem('totalStars') || '0', 10) || 0, STAR_BASELINE); }
 function addStars(n){ const t = getTotalStars() + n; localStorage.setItem('totalStars', t); return t; }
 /* 星星銀行：每滿 100 顆星星可以跟媽媽換一杯珍珠鮮奶茶（兌換掉的星星另外記，累積數永不歸零） */
 function getRedeemedStars(){ return parseInt(localStorage.getItem('zyRedeemedStars') || '0', 10) || 0; }
