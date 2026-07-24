@@ -1,4 +1,4 @@
-const CACHE = 'zhiying-quiz-v1';
+const CACHE = 'zhiying-quiz-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -21,8 +21,21 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+/* quiz.json 用網路優先，每週自動增題才吃得到新題 */
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+  if (e.request.url.endsWith('quiz.json')) {
+    e.respondWith(
+      fetch(e.request)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+          return res;
+        })
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then((hit) => {
       const net = fetch(e.request)
